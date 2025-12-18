@@ -1,160 +1,102 @@
-/* DISEÑO IBARRA - DASHBOARD MODULAR */
+/* DISEÑO IBARRA - ACORDEÓN TÁCTICO */
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500;700&display=swap');
 
 :root {
     --red-sparta: #D32F2F;
     --dark-red: #9a0007;
     --bg-tech: #f0f2f5;
-    --card-bg: #ffffff;
     --text-dark: #2c3e50;
-    --border-tech: #e0e0e0;
+    --border-tech: #d1d1d1;
 }
 
 body {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     background-color: var(--bg-tech);
-    background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
-    background-size: 20px 20px; /* Textura de puntos sutil */
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 20px 20px;
     font-family: 'Chakra Petch', sans-serif;
     color: var(--text-dark);
     min-height: 100vh;
 }
 
-/* --- HEADER (Estilo Ibarra) --- */
+/* HEADER */
 .ibarra-header {
     background: linear-gradient(90deg, var(--red-sparta) 0%, var(--dark-red) 100%);
-    padding: 0 40px;
-    height: 70px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 15px rgba(154, 0, 7, 0.4);
-    position: sticky; top: 0; z-index: 100;
+    padding: 0 40px; height: 70px; display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 4px 15px rgba(154, 0, 7, 0.4); position: sticky; top: 0; z-index: 100;
     clip-path: polygon(0 0, 100% 0, 100% 85%, 98% 100%, 2% 100%, 0 85%);
 }
-
 .logo-zone { display: flex; align-items: center; gap: 15px; }
 .logo-zone img { height: 45px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
 .brand-text h1 { font-family: 'Teko'; font-size: 2.2rem; color: white; margin: 0; line-height: 0.8; letter-spacing: 1px; }
 .brand-text span { font-size: 0.75rem; color: rgba(255,255,255,0.8); letter-spacing: 3px; font-weight: bold; }
-
 .user-zone { display: flex; align-items: center; gap: 15px; }
 .user-info { text-align: right; color: white; }
 .user-info span { display: block; font-weight: 700; font-size: 1.1rem; line-height: 1; }
 .user-info small { font-size: 0.7rem; opacity: 0.8; text-transform: uppercase; }
-
 .btn-logout-ibarra {
-    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3);
-    color: white; width: 40px; height: 40px; border-radius: 6px;
-    cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; width: 40px; height: 40px; border-radius: 6px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
 }
 .btn-logout-ibarra:hover { background: white; color: var(--red-sparta); }
 
-/* --- CONTENEDOR PRINCIPAL (Full Width) --- */
-.dashboard-container {
-    max-width: 1400px; /* Más ancho para aprovechar espacio */
-    width: 95%;
-    margin: 30px auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px; /* Espacio entre secciones */
-    align-items: start;
+/* CONTENEDOR */
+.dashboard-container { max-width: 900px; width: 95%; margin: 40px auto; display: flex; flex-direction: column; gap: 20px; }
+
+/* --- ESTILOS DEL ACORDEÓN --- */
+.accordion-item {
+    background: white; border: 1px solid var(--border-tech); border-radius: 8px; overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s;
 }
 
-/* --- SECCIONES --- */
-.dashboard-section {
-    background: transparent;
+/* El Botón Grande */
+.accordion-trigger {
+    width: 100%; padding: 20px 30px; background: white; border: none; border-left: 6px solid var(--red-sparta);
+    display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    transition: 0.3s; outline: none;
+}
+.accordion-trigger:hover { background: #fffbfb; padding-left: 35px; }
+.trigger-info { display: flex; align-items: center; gap: 15px; }
+.trigger-info i { font-size: 1.8rem; color: var(--red-sparta); width: 30px; text-align: center; }
+.trigger-info span { font-family: 'Teko'; font-size: 1.8rem; color: #333; text-transform: uppercase; letter-spacing: 1px; }
+.arrow { color: #999; transition: 0.4s; font-size: 1.2rem; }
+
+/* Estado Activo del Botón */
+.accordion-trigger.active { background: #f8f9fa; border-left-color: var(--dark-red); }
+.accordion-trigger.active .arrow { transform: rotate(180deg); color: var(--red-sparta); }
+
+/* Contenido Oculto/Visible */
+.accordion-content {
+    max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fcfcfc; border-top: 1px solid #eee;
 }
 
-.section-title {
-    font-family: 'Teko';
-    font-size: 1.8rem;
-    color: var(--text-dark);
-    border-bottom: 3px solid var(--red-sparta);
-    display: inline-block;
-    padding-right: 20px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-}
-.section-title i { color: var(--red-sparta); margin-right: 10px; }
-
-/* --- GRILLA DE TARJETAS --- */
-.grid-compact {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Tarjetas compactas */
-    gap: 15px;
+/* Grilla Interna */
+.grid-internal {
+    padding: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;
 }
 
-/* --- TARJETAS TECH --- */
+/* --- TARJETAS INTERNAS --- */
 .card-tech {
-    background: white;
-    border: 1px solid var(--border-tech);
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-left: 4px solid #ccc; /* Borde gris por defecto */
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    background: white; border: 1px solid #e0e0e0; padding: 15px; display: flex; align-items: center; gap: 15px;
+    cursor: pointer; transition: 0.2s; border-left: 3px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
 }
-
-.card-tech:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border-left-color: var(--red-sparta); /* Rojo al hover */
-    background: #fffafa;
-}
+.card-tech:hover { transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-left-color: var(--red-sparta); background: white; }
 
 .icon-box {
-    width: 50px; height: 50px;
-    background: #f5f5f5;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem; color: #555;
-    transition: 0.3s;
+    width: 45px; height: 45px; background: #f0f2f5; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; color: #555; transition: 0.3s;
 }
 .card-tech:hover .icon-box { background: var(--red-sparta); color: white; }
 
-.text-box { flex: 1; }
 .text-box h4 { margin: 0; font-size: 1.1rem; font-weight: 700; color: #333; }
-.text-box span { display: block; font-size: 0.8rem; color: #777; margin-top: 3px; }
+.text-box span { display: block; font-size: 0.8rem; color: #777; margin-top: 2px; }
 
-/* Tarjetas Anchas (Fuerzas Armadas) */
-.card-tech.wide {
-    grid-column: span 2; /* Ocupan 2 espacios si caben */
-}
-@media (max-width: 500px) { .card-tech.wide { grid-column: span 1; } }
+/* Estilos especiales */
+.card-tech.wide { grid-column: span 1; } /* En móvil 1 col, en desktop se adapta */
+@media(min-width: 600px) { .card-tech.wide { grid-column: span 2; } }
 
-.card-tech.wide .icon-box.warning { color: #d35400; background: #fbeee6; }
-.card-tech.wide:hover .icon-box.warning { background: #d35400; color: white; }
-.card-tech.wide:hover { border-left-color: #d35400; }
+.card-tech.featured .icon-box { color: #3498db; background: rgba(52, 152, 219, 0.1); }
+.card-tech.featured:hover { border-left-color: #3498db; }
+.card-tech.featured:hover .icon-box { background: #3498db; color: white; }
 
-.tech-deco {
-    position: absolute; right: 0; top: 0; 
-    width: 20px; height: 20px; 
-    background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.05) 50%);
-}
-
-/* Tarjeta Destacada (Global) */
-.card-tech.featured {
-    background: #2c3e50;
-    border: none;
-    border-left: 4px solid #3498db;
-}
-.card-tech.featured .text-box h4 { color: white; }
-.card-tech.featured .text-box span { color: #bdc3c7; }
-.card-tech.featured .icon-box { background: rgba(255,255,255,0.1); color: #3498db; }
-.card-tech.featured:hover { transform: scale(1.02); border-left-color: #2980b9; }
-
-/* Admin */
-.card-tech.admin { border: 2px dashed #999; opacity: 0.7; }
-.card-tech.admin:hover { opacity: 1; border-color: var(--red-sparta); }
-
-/* RESPONSIVE */
-@media (max-width: 900px) {
-    .dashboard-container { grid-template-columns: 1fr; } /* Una columna de secciones en tablets */
-}
+.card-tech.admin { border: 2px dashed #bbb; background: transparent; }
+.card-tech.admin:hover { border-color: var(--red-sparta); border-style: solid; background: white; }
