@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sparta Academy - Ibarra</title>
+    
     <link rel="stylesheet" href="CSS/style-home.css">
+    
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <script src="JS/auth.js"></script>
     <script> checkAuth(); </script>
 </head>
@@ -23,83 +26,98 @@
         <div class="user-zone">
             <div class="user-info">
                 <span id="user-name-display">CADETE</span>
-                <small>Panel Principal</small>
+                <small>Panel de Control</small>
             </div>
             <button onclick="logout()" class="btn-logout-ibarra"><i class="fas fa-power-off"></i></button>
         </div>
     </header>
 
-    <main class="dashboard-container">
+    <main class="dashboard-stack">
         
         <div class="accordion-item">
-            <button class="accordion-trigger">
-                <div class="trigger-info">
+            <button class="accordion-header" id="btn-policia">
+                <div class="header-left">
                     <i class="fas fa-shield-alt"></i>
                     <span>POLICÍA NACIONAL</span>
                 </div>
-                <i class="fas fa-chevron-down arrow"></i>
+                <i class="fas fa-plus indicator"></i>
             </button>
-            <div class="accordion-content">
-                <div class="grid-internal">
-                    <div class="card-tech" onclick="location.href='simulador.html?materia=sociales'">
-                        <div class="icon-box"><i class="fas fa-landmark"></i></div>
-                        <div class="text-box"><h4>SOCIALES</h4><span>Hist. y Cívica</span></div>
+            
+            <div class="accordion-body">
+                <div class="cards-grid">
+                    <div class="card-mini" onclick="location.href='simulador.html?materia=sociales'">
+                        <i class="fas fa-landmark"></i>
+                        <span>Sociales</span>
                     </div>
-                    <div class="card-tech" onclick="location.href='simulador.html?materia=matematicas'">
-                        <div class="icon-box"><i class="fas fa-calculator"></i></div>
-                        <div class="text-box"><h4>MATEMÁTICAS</h4><span>Raz. Numérico</span></div>
+                    <div class="card-mini" onclick="location.href='simulador.html?materia=matematicas'">
+                        <i class="fas fa-calculator"></i>
+                        <span>Matemáticas</span>
                     </div>
-                    <div class="card-tech" onclick="location.href='simulador.html?materia=lengua'">
-                        <div class="icon-box"><i class="fas fa-book"></i></div>
-                        <div class="text-box"><h4>LENGUAJE</h4><span>Literatura</span></div>
+                    <div class="card-mini" onclick="location.href='simulador.html?materia=lengua'">
+                        <i class="fas fa-book"></i>
+                        <span>Lenguaje</span>
                     </div>
-                    <div class="card-tech" onclick="location.href='simulador.html?materia=ingles'">
-                        <div class="icon-box"><i class="fas fa-language"></i></div>
-                        <div class="text-box"><h4>INGLÉS</h4><span>Gramática</span></div>
+                    <div class="card-mini" onclick="location.href='simulador.html?materia=ingles'">
+                        <i class="fas fa-language"></i>
+                        <span>Inglés</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="accordion-item">
-            <button class="accordion-trigger">
-                <div class="trigger-info">
+            <button class="accordion-header" id="btn-ffaa">
+                <div class="header-left">
                     <i class="fas fa-jet-fighter"></i>
                     <span>FUERZAS ARMADAS</span>
                 </div>
-                <i class="fas fa-chevron-down arrow"></i>
+                <i class="fas fa-plus indicator"></i>
             </button>
-            <div class="accordion-content">
-                <div class="grid-internal">
-                    <div class="card-tech wide" onclick="location.href='simulador.html?materia=int_esmil_3'">
-                        <div class="icon-box warning"><i class="fas fa-brain"></i></div>
-                        <div class="text-box"><h4>INTELIGENCIA</h4><span>Abstracto y Espacial</span></div>
+            
+            <div class="accordion-body">
+                <div class="cards-grid wide-grid">
+                    <div class="card-wide" onclick="location.href='simulador.html?materia=int_esmil_3'">
+                        <div class="card-icon warning"><i class="fas fa-brain"></i></div>
+                        <div class="card-text">
+                            <h4>INTELIGENCIA</h4>
+                            <p>Abstracto & Espacial</p>
+                        </div>
                     </div>
-                    <div class="card-tech wide" onclick="location.href='simulador.html?materia=general_esmil'">
-                        <div class="icon-box warning"><i class="fas fa-medal"></i></div>
-                        <div class="text-box"><h4>ACADÉMICO MILITAR</h4><span>Prueba unificada ESMIL/ESFORSE</span></div>
+                    <div class="card-wide" onclick="location.href='simulador.html?materia=general_esmil'">
+                        <div class="card-icon warning"><i class="fas fa-medal"></i></div>
+                        <div class="card-text">
+                            <h4>ACADÉMICO MILITAR</h4>
+                            <p>Prueba Unificada</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="accordion-item">
-            <button class="accordion-trigger">
-                <div class="trigger-info">
+            <button class="accordion-header" id="btn-general">
+                <div class="header-left">
                     <i class="fas fa-globe"></i>
                     <span>GENERAL & CONTROL</span>
                 </div>
-                <i class="fas fa-chevron-down arrow"></i>
+                <i class="fas fa-plus indicator"></i>
             </button>
-            <div class="accordion-content">
-                <div class="grid-internal">
-                    <div class="card-tech featured" onclick="location.href='simulador.html?materia=general'">
-                        <div class="icon-box"><i class="fas fa-radar"></i></div>
-                        <div class="text-box"><h4>SIMULADOR GENERAL</h4><span>Evaluación Final</span></div>
+            
+            <div class="accordion-body">
+                <div class="cards-grid wide-grid">
+                    <div class="card-wide featured" onclick="location.href='simulador.html?materia=general'">
+                        <div class="card-icon blue"><i class="fas fa-radar"></i></div>
+                        <div class="card-text">
+                            <h4>SIMULADOR GENERAL</h4>
+                            <p>Evaluación Total</p>
+                        </div>
                     </div>
-                    <div class="card-tech admin" id="admin-panel-card" onclick="location.href='resultados.html'" style="display:none;">
-                        <div class="icon-box"><i class="fas fa-user-lock"></i></div>
-                        <div class="text-box"><h4>ADMINISTRACIÓN</h4><span>Reportes</span></div>
+                    <div class="card-wide admin" id="admin-panel-card" onclick="location.href='resultados.html'" style="display:none;">
+                        <div class="card-icon dark"><i class="fas fa-user-lock"></i></div>
+                        <div class="card-text">
+                            <h4>ADMINISTRACIÓN</h4>
+                            <p>Gestión Docente</p>
+                        </div>
                     </div>
                 </div>
             </div>
