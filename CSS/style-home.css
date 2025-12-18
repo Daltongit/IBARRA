@@ -1,9 +1,9 @@
-/* DISEÑO IBARRA - FINAL JERÁRQUICO */
+/* DISEÑO IBARRA - FINAL AJUSTADO */
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500;700&display=swap');
 
 :root {
     --red-sparta: #D32F2F;
-    --dark-red: #8b0000;
+    --dark-red: #9a0007;
     --bg-tech: #f0f2f5;
     --text-dark: #2c3e50;
     --border-gray: #e0e0e0;
@@ -19,20 +19,25 @@ body {
     min-height: 100vh;
 }
 
-/* HEADER */
+/* --- HEADER CON ESQUINAS CORTADAS (Lo que pediste) --- */
 .ibarra-header {
     background: linear-gradient(90deg, var(--red-sparta) 0%, var(--dark-red) 100%);
-    padding: 0 40px; height: 60px; display: flex; justify-content: space-between; align-items: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 100;
+    padding: 0 40px; 
+    height: 75px; /* Un poco más alto para que el corte se vea bien */
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 5px 15px rgba(154, 0, 7, 0.3); 
+    position: sticky; top: 0; z-index: 100;
+    /* EL EFECTO DE ESQUINA TÁCTICA */
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 98% 100%, 2% 100%, 0 80%);
 }
-.logo-zone { display: flex; align-items: center; gap: 15px; }
-.logo-zone img { height: 40px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
-.brand-text h1 { font-family: 'Teko'; font-size: 2rem; color: white; margin: 0; letter-spacing: 1px; }
 
+.logo-zone { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; } /* Ajuste por el corte */
+.logo-zone img { height: 45px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.brand-text h1 { font-family: 'Teko'; font-size: 2.2rem; color: white; margin: 0; line-height: 0.8; letter-spacing: 1px; }
+
+.user-zone { margin-bottom: 10px; } /* Ajuste por el corte */
 .btn-logout-ibarra {
-    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; 
-    padding: 5px 15px; border-radius: 4px; cursor: pointer; transition: 0.3s; 
-    display: flex; align-items: center; gap: 8px; font-family: 'Chakra Petch';
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; width: 40px; height: 40px; border-radius: 6px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
 }
 .btn-logout-ibarra:hover { background: white; color: var(--red-sparta); }
 
@@ -44,19 +49,17 @@ body {
     max-width: 1600px; width: 95%; margin: 30px auto; align-items: start;
 }
 
-/* SIDEBAR CON CORTE (ESQUINAS) */
+/* SIDEBAR CON CORTE */
 .sidebar-profile {
     display: flex; flex-direction: column; gap: 20px;
-    /* ESTO ES LO QUE PEDISTE: */
-    clip-path: polygon(0 0, 100% 0, 100% 95%, 90% 100%, 0 100%);
-    background: transparent;
+    clip-path: polygon(0 0, 100% 0, 100% 98%, 92% 100%, 0 100%); /* Corte sutil abajo */
 }
 
 .profile-card, .info-widget {
     background: white; padding: 25px; text-align: center;
     border: 1px solid var(--border-gray); box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
-.profile-card { border-top: 5px solid var(--red-sparta); } /* Decoración superior */
+.profile-card { border-top: 5px solid var(--red-sparta); }
 
 .profile-avatar {
     width: 90px; height: 90px; background: #eee; border-radius: 50%; margin: 0 auto 15px auto;
@@ -74,13 +77,12 @@ body {
 .system-logs li { margin-bottom: 10px; font-size: 0.9rem; color: #555; display: flex; align-items: center; gap: 10px; }
 .system-logs i { color: #27ae60; }
 
-/* BOTÓN ADMIN APARTE */
 .admin-sidebar-btn {
     background: #2c3e50; color: white; border: none; padding: 15px; width: 100%;
     font-family: 'Teko'; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
     clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%); transition: 0.3s;
 }
-.admin-sidebar-btn:hover { background: var(--red-sparta); letter-spacing: 1px; }
+.admin-sidebar-btn:hover { background: var(--red-sparta); }
 
 /* CONTENIDO DERECHA */
 .dashboard-content { display: flex; flex-direction: column; gap: 15px; }
@@ -109,48 +111,65 @@ body {
 
 .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fafafa; }
 
-/* SUB-SECCIONES */
+/* SUB-SECCIONES Y TEXTO ROJO */
 .sub-section-title {
     padding: 15px 30px 5px 30px;
-    font-size: 0.9rem; font-weight: 700; color: var(--red-sparta); letter-spacing: 1px;
-    border-bottom: 1px solid #eee; margin-bottom: 10px;
+    font-size: 0.85rem; font-weight: 700; color: var(--red-sparta); letter-spacing: 1px;
+    margin-bottom: 5px; margin-top: 5px;
 }
 
-/* CARDS */
-.cards-grid { padding: 20px 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
-.cards-grid.wide-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-.cards-grid.small-grid { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
+/* --- ARREGLO DE GRILLAS ENTRECORTADAS --- */
+.cards-grid {
+    padding: 15px 30px 25px 30px; /* Más espacio abajo */
+    display: grid;
+    /* Ajuste para que se vea bien en pantallas grandes y no se corte */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+    gap: 15px;
+}
 
-.card-mini, .card-wide {
-    background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 15px;
-    cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px;
+.cards-grid.wide-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.cards-grid.small-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+
+.card-mini {
+    background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 20px;
+    cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    text-align: center; justify-content: center;
+    height: 100%; /* Para que todos tengan la misma altura */
 }
-.card-mini { flex-direction: column; text-align: center; justify-content: center; height: 100%; }
-.card-mini:hover, .card-wide:hover { transform: translateY(-3px); border-color: var(--red-sparta); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+.card-mini:hover { transform: translateY(-3px); border-color: var(--red-sparta); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
 .card-mini i { font-size: 2rem; color: #666; }
 .card-mini:hover i { color: var(--red-sparta); }
 .card-mini span { font-weight: 700; color: #333; font-size: 0.9rem; }
 
-/* Estilo para tarjetas oscuras (PPNN) */
+/* Tarjetas Oscuras (PPNN) */
 .card-mini.dark { background: #f4f4f4; }
 .card-mini.dark:hover { background: #333; border-color: #333; }
 .card-mini.dark:hover i, .card-mini.dark:hover span { color: white; }
 
-/* Estilo para tarjetas Inteligencia (Warning) */
+/* Tarjetas Warning (Inteligencia) */
 .card-mini.warning { border-left: 3px solid #d35400; }
-.card-mini.warning:hover { background: #d35400; }
+.card-mini.warning:hover { background: #d35400; border-color: #d35400; }
+.card-mini.warning:hover span { color: white; }
 
+.card-wide {
+    background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 20px;
+    cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.card-wide:hover { transform: translateX(5px); border-left: 4px solid var(--red-sparta); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
 .card-wide .card-icon { width: 50px; height: 50px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
 .card-wide:hover .card-icon { background: var(--red-sparta); color: white; }
+
+.card-wide.featured { background: #2c3e50; border: none; }
+.card-wide.featured h4 { color: white; margin: 0; }
+.card-wide.featured p { color: #ccc; margin: 0; font-size: 0.9rem;}
+.card-wide.featured .card-icon { background: rgba(255,255,255,0.1); color: #3498db; }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
     .main-grid-layout { grid-template-columns: 1fr; } 
     .sidebar-profile { clip-path: none; flex-direction: row; gap: 15px; }
     .admin-sidebar-btn { clip-path: none; border-radius: 8px; }
-}
-@media (max-width: 600px) {
-    .sidebar-profile { flex-direction: column; }
-    .hero-icon { display: none; }
+    .ibarra-header { padding: 0 20px; clip-path: none; height: auto; padding-bottom: 10px; }
 }
