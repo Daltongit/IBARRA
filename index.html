@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sparta Academy - Ibarra</title>
+    <title>Sparta Academy</title>
     
     <link rel="stylesheet" href="CSS/style-home.css">
     
@@ -20,13 +20,12 @@
             <img src="logo.png" alt="Sparta Logo">
             <div class="brand-text">
                 <h1>SPARTA</h1>
-                <span>SEDE IBARRA</span>
-            </div>
+                </div>
         </div>
         <div class="user-zone">
             <div class="user-info">
                 <span id="user-name-display">CADETE</span>
-                <small>Panel de Control</small>
+                <small>En Línea</small>
             </div>
             <button onclick="logout()" class="btn-logout-ibarra"><i class="fas fa-power-off"></i></button>
         </div>
@@ -34,8 +33,18 @@
 
     <main class="dashboard-stack">
         
+        <div class="hero-banner">
+            <div class="hero-content">
+                <h2>CENTRO DE COMANDO</h2>
+                <p>Selecciona tu objetivo y comienza el entrenamiento.</p>
+            </div>
+            <div class="hero-icon">
+                <i class="fas fa-crosshairs"></i>
+            </div>
+        </div>
+
         <div class="accordion-item">
-            <button class="accordion-header" type="button">
+            <button class="accordion-header" type="button" id="default-open">
                 <div class="header-left">
                     <i class="fas fa-shield-alt"></i>
                     <span>POLICÍA NACIONAL</span>
@@ -127,7 +136,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Mostrar nombre del usuario
+            // Nombre Usuario
             const user = getUserInfo();
             if (user) {
                 document.getElementById('user-name-display').textContent = user.nombre.split(' ')[0].toUpperCase();
@@ -137,36 +146,30 @@
                 }
             }
 
-            // 2. Lógica del Acordeón (Abrir/Cerrar)
+            // Lógica Acordeón
             const headers = document.querySelectorAll('.accordion-header');
-
             headers.forEach(header => {
                 header.addEventListener('click', () => {
-                    // Alternar la clase 'active' para girar la flecha
                     header.classList.toggle('active');
-
-                    // Seleccionar el cuerpo del acordeón
                     const body = header.nextElementSibling;
-
-                    // Si ya tiene altura, lo cerramos (null). Si no, lo abrimos (scrollHeight)
                     if (body.style.maxHeight) {
                         body.style.maxHeight = null;
                     } else {
-                        // Opcional: Cerrar los otros si quieres que solo uno quede abierto
-                        closeAll(headers);
-                        
+                        // Opcional: Cerrar los demás
+                        headers.forEach(h => {
+                            if(h !== header) {
+                                h.classList.remove('active');
+                                h.nextElementSibling.style.maxHeight = null;
+                            }
+                        });
                         body.style.maxHeight = body.scrollHeight + "px";
-                        header.classList.add('active'); // Asegurar que quede marcado
                     }
                 });
             });
 
-            function closeAll(items) {
-                items.forEach(item => {
-                    item.classList.remove('active');
-                    item.nextElementSibling.style.maxHeight = null;
-                });
-            }
+            // AUTO-ABRIR EL PRIMERO (Para que no se vea vacío al inicio)
+            const first = document.getElementById('default-open');
+            if(first) first.click();
         });
     </script>
 </body>
