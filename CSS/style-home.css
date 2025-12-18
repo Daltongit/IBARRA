@@ -1,19 +1,18 @@
-/* DISEÑO IBARRA - ACORDEÓN TÁCTICO */
+/* DISEÑO IBARRA - ACORDEÓN VERTICAL */
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500;700&display=swap');
 
 :root {
     --red-sparta: #D32F2F;
-    --dark-red: #9a0007;
-    --bg-tech: #f0f2f5;
+    --dark-red: #8b0000;
+    --bg-tech: #f4f6f8;
     --text-dark: #2c3e50;
-    --border-tech: #d1d1d1;
+    --border-gray: #dcdcdc;
 }
 
 body {
     margin: 0; padding: 0;
     background-color: var(--bg-tech);
-    background-image: radial-gradient(#ccc 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-image: linear-gradient(0deg, #eef2f5 0%, #ffffff 100%);
     font-family: 'Chakra Petch', sans-serif;
     color: var(--text-dark);
     min-height: 100vh;
@@ -23,7 +22,7 @@ body {
 .ibarra-header {
     background: linear-gradient(90deg, var(--red-sparta) 0%, var(--dark-red) 100%);
     padding: 0 40px; height: 70px; display: flex; justify-content: space-between; align-items: center;
-    box-shadow: 0 4px 15px rgba(154, 0, 7, 0.4); position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 5px 20px rgba(139, 0, 0, 0.3); position: sticky; top: 0; z-index: 100;
     clip-path: polygon(0 0, 100% 0, 100% 85%, 98% 100%, 2% 100%, 0 85%);
 }
 .logo-zone { display: flex; align-items: center; gap: 15px; }
@@ -39,64 +38,108 @@ body {
 }
 .btn-logout-ibarra:hover { background: white; color: var(--red-sparta); }
 
-/* CONTENEDOR */
-.dashboard-container { max-width: 900px; width: 95%; margin: 40px auto; display: flex; flex-direction: column; gap: 20px; }
+/* MAIN CONTAINER (Columna Vertical) */
+.dashboard-stack {
+    max-width: 800px; /* Ancho controlado para que se vea elegante */
+    width: 90%;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column; /* Vertical */
+    gap: 15px; /* Espacio entre barras */
+}
 
-/* --- ESTILOS DEL ACORDEÓN --- */
+/* ACORDEÓN ITEM */
 .accordion-item {
-    background: white; border: 1px solid var(--border-tech); border-radius: 8px; overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-gray);
+    transition: 0.3s;
 }
 
-/* El Botón Grande */
-.accordion-trigger {
-    width: 100%; padding: 20px 30px; background: white; border: none; border-left: 6px solid var(--red-sparta);
-    display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-    transition: 0.3s; outline: none;
-}
-.accordion-trigger:hover { background: #fffbfb; padding-left: 35px; }
-.trigger-info { display: flex; align-items: center; gap: 15px; }
-.trigger-info i { font-size: 1.8rem; color: var(--red-sparta); width: 30px; text-align: center; }
-.trigger-info span { font-family: 'Teko'; font-size: 1.8rem; color: #333; text-transform: uppercase; letter-spacing: 1px; }
-.arrow { color: #999; transition: 0.4s; font-size: 1.2rem; }
-
-/* Estado Activo del Botón */
-.accordion-trigger.active { background: #f8f9fa; border-left-color: var(--dark-red); }
-.accordion-trigger.active .arrow { transform: rotate(180deg); color: var(--red-sparta); }
-
-/* Contenido Oculto/Visible */
-.accordion-content {
-    max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fcfcfc; border-top: 1px solid #eee;
+/* BOTÓN DE CABECERA (Barra Roja) */
+.accordion-header {
+    width: 100%;
+    padding: 20px 25px;
+    background: white;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+    border-left: 6px solid var(--red-sparta);
+    outline: none;
 }
 
-/* Grilla Interna */
-.grid-internal {
-    padding: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;
+.accordion-header:hover { background: #fffcfc; padding-left: 30px; }
+.accordion-header.active { background: #fdfdfd; border-bottom: 1px solid #eee; }
+
+.header-left { display: flex; align-items: center; gap: 15px; }
+.header-left i { font-size: 1.5rem; color: var(--red-sparta); width: 30px; text-align: center; }
+.header-left span { font-family: 'Teko'; font-size: 1.6rem; color: #333; letter-spacing: 1px; }
+
+.indicator { font-size: 1.2rem; color: #999; transition: 0.3s; }
+.accordion-header.active .indicator { transform: rotate(45deg); color: var(--red-sparta); } /* La cruz gira a X */
+
+/* CUERPO OCULTO */
+.accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    background: #fafafa;
 }
 
-/* --- TARJETAS INTERNAS --- */
-.card-tech {
-    background: white; border: 1px solid #e0e0e0; padding: 15px; display: flex; align-items: center; gap: 15px;
-    cursor: pointer; transition: 0.2s; border-left: 3px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+/* CONTENIDO INTERNO */
+.cards-grid {
+    padding: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
 }
-.card-tech:hover { transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-left-color: var(--red-sparta); background: white; }
 
-.icon-box {
-    width: 45px; height: 45px; background: #f0f2f5; border-radius: 6px; display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; color: #555; transition: 0.3s;
+.cards-grid.wide-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
-.card-tech:hover .icon-box { background: var(--red-sparta); color: white; }
 
-.text-box h4 { margin: 0; font-size: 1.1rem; font-weight: 700; color: #333; }
-.text-box span { display: block; font-size: 0.8rem; color: #777; margin-top: 2px; }
+/* TARJETAS MINI (Policía) */
+.card-mini {
+    background: white; border: 1px solid #e0e0e0; border-radius: 8px;
+    padding: 20px; text-align: center; cursor: pointer; transition: 0.2s;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.card-mini:hover { transform: translateY(-3px); border-color: var(--red-sparta); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+.card-mini i { font-size: 2rem; color: #555; }
+.card-mini:hover i { color: var(--red-sparta); }
+.card-mini span { font-weight: 700; font-size: 0.9rem; color: #333; }
 
-/* Estilos especiales */
-.card-tech.wide { grid-column: span 1; } /* En móvil 1 col, en desktop se adapta */
-@media(min-width: 600px) { .card-tech.wide { grid-column: span 2; } }
+/* TARJETAS WIDE (FFAA / General) */
+.card-wide {
+    background: white; border: 1px solid #e0e0e0; border-radius: 8px;
+    padding: 20px; display: flex; align-items: center; gap: 15px;
+    cursor: pointer; transition: 0.2s;
+}
+.card-wide:hover { transform: translateX(5px); border-left: 4px solid var(--red-sparta); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
 
-.card-tech.featured .icon-box { color: #3498db; background: rgba(52, 152, 219, 0.1); }
-.card-tech.featured:hover { border-left-color: #3498db; }
-.card-tech.featured:hover .icon-box { background: #3498db; color: white; }
+.card-icon {
+    width: 50px; height: 50px; background: #f0f0f0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #555;
+}
+.card-wide:hover .card-icon { background: var(--red-sparta); color: white; }
 
-.card-tech.admin { border: 2px dashed #bbb; background: transparent; }
-.card-tech.admin:hover { border-color: var(--red-sparta); border-style: solid; background: white; }
+/* Estilos especiales para iconos */
+.card-icon.warning { color: #d35400; background: #fae5d3; }
+.card-wide:hover .card-icon.warning { background: #d35400; color: white; }
+
+.card-wide.featured { background: #2c3e50; border: none; }
+.card-wide.featured h4 { color: white; }
+.card-wide.featured p { color: #bdc3c7; }
+.card-wide.featured .card-icon { background: rgba(255,255,255,0.1); color: #3498db; }
+.card-wide.featured:hover .card-icon { background: #3498db; color: white; }
+
+.card-wide.admin { border: 2px dashed #999; }
+.card-wide.admin:hover { border: 2px solid var(--red-sparta); background: white; }
+
+.card-text h4 { margin: 0; font-size: 1.1rem; font-weight: 700; color: #333; }
+.card-text p { margin: 2px 0 0 0; font-size: 0.8rem; color: #777; }
