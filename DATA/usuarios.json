@@ -1,0 +1,159 @@
+[
+  {
+    "usuario": "milton",
+    "contrasena": "pepe",
+    "nombre": "Milton Fuel",
+    "rol": "admin",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "geomi",
+    "contrasena": "administradora",
+    "nombre": "Geo",
+    "rol": "admin",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "michael_arcos",
+    "contrasena": "michael_arcos",
+    "nombre": "Michael Arcos",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "carlos_bedoya",
+    "contrasena": "carlos_bedoya",
+    "nombre": "Carlos Bedoya",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "mateo_benavides",
+    "contrasena": "mateo_benavides",
+    "nombre": "Mateo Benavides",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "kiara_carrillo",
+    "contrasena": "kiara_carrillo",
+    "nombre": "Kiara Carrillo",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "milton_enriquez",
+    "contrasena": "milton_enriquez",
+    "nombre": "Milton Enríquez",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "diego_herrera",
+    "contrasena": "diego_herrera",
+    "nombre": "Diego Herrera",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "franklin_imbaquingo",
+    "contrasena": "franklin_imbaquingo",
+    "nombre": "Franklin Imbaquingo",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "mateo_janeta",
+    "contrasena": "mateo_janeta",
+    "nombre": "Mateo Janeta",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "joel_lema",
+    "contrasena": "joel_lema",
+    "nombre": "Joel Lema",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "dayra_lopez",
+    "contrasena": "dayra_lopez",
+    "nombre": "Dayra López",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "deivid_montenegro",
+    "contrasena": "deivid_montenegro",
+    "nombre": "Deivid Montenegro",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "anguie_sanchez",
+    "contrasena": "anguie_sanchez",
+    "nombre": "Anguie Sánchez",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "wendy_sanchez",
+    "contrasena": "wendy_sanchez",
+    "nombre": "Wendy Sánchez",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "lesly_tulcanaza",
+    "contrasena": "lesly_tulcanaza",
+    "nombre": "Lesly Tulcanaza",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "tatamues_ayrton",
+    "contrasena": "tatamues_ayrton",
+    "nombre": "Tatamues Ayrton",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "michael_vaca",
+    "contrasena": "michael_vaca",
+    "nombre": "Michael Vaca",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "lima_sebastian",
+    "contrasena": "lima_sebastian",
+    "nombre": "Lima Sebastian",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "montalvo_jose",
+    "contrasena": "montalvo_jose",
+    "nombre": "José Montalvo",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "anthony_benavides",
+    "contrasena": "anthony_benavides",
+    "nombre": "Anthony Benavides",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "usuario": "pablo_guerrero",
+    "contrasena": "pablo_guerrero",
+    "nombre": "Pablo Guerrero",
+    "rol": "aspirante",
+    "ciudad": "Tulcán"
+  },
+  {
+    "_comment": "USUARIOS DE LA CIUDAD DE IBARRA"
+  }
+]
