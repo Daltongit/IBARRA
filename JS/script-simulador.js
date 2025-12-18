@@ -1,10 +1,9 @@
-// JS/script-simulador.js - IBARRA (CORREGIDO FINAL)
+// JS/script-simulador.js - IBARRA (FINAL: Números arreglados)
 
 // --- 1. CONEXIÓN SUPABASE IBARRA ---
 const simuladorUrl = 'https://dgnfjzzwcdfbauyamutp.supabase.co';
 const simuladorKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnbmZqenp3Y2RmYmF1eWFtdXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNTk3ODAsImV4cCI6MjA4MTYzNTc4MH0.upcZkm8dYMOlWrbxEQEraUiNHOWyOOBAAqle8rbesNY';
 
-// Usamos 'simuladorDB' para evitar conflictos con auth.js
 const simuladorDB = window.supabase.createClient(simuladorUrl, simuladorKey);
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -92,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const promises = filesToLoad.map(url => fetch(url).then(r => r.ok ? r.json() : null));
             const results = await Promise.all(promises);
             
-            // PROCESAMIENTO DE DATA
+            // PROCESAMIENTO
             if (modeType === 'multi_phase') {
                 const data = results[0];
                 if (!data || !data.parte1 || !data.parte2_bloques) throw new Error("JSON Inválido Sim 3");
@@ -159,21 +158,20 @@ document.addEventListener('DOMContentLoaded', () => {
         })));
     }
 
-    // --- FUNCIONES DE INICIO (AQUÍ ESTABA EL ERROR) ---
+    // --- START FUNCTIONS ---
     
-    function startQuiz() { // MODO NORMAL
+    function startQuiz() { 
         lobbyBanner.style.display = 'none'; 
         lobbyContainer.style.display = 'none';
         
-        // ¡ESTA LÍNEA FALTABA! Hacemos visible el contenedor
-        simulador.style.display = 'grid'; 
+        simulador.style.display = 'grid'; // Aseguramos que se vea
         simulador.className = 'quiz-layout';
         
         userAnswers = new Array(questions.length).fill(null);
         renderNav(); showQ(0); startTimer(finish);
     }
 
-    function startPhase1() { // MODO FASES
+    function startPhase1() {
         lobbyBanner.style.display = 'none'; lobbyContainer.style.display = 'none';
         simulador.style.display = 'block'; simulador.className = ''; 
         let html = `<div class="full-width-container"><div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;"><h2>VOCABULARIO</h2></div><div class="table-responsive-wrapper"><table class="vocab-table"><thead><tr><th style="width:50px;">#</th><th>PALABRA</th><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead><tbody>`;
@@ -186,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimer(finishMultiPhase);
     }
 
-    function startTableImgQuiz() { // MODO TABLA IMÁGENES
+    function startTableImgQuiz() {
         lobbyBanner.style.display = 'none'; lobbyContainer.style.display = 'none';
         simulador.style.display = 'block'; simulador.className = ''; 
         let html = `<div class="full-width-container"><div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;"><h2>RAZONAMIENTO ABSTRACTO</h2></div><div class="table-responsive-wrapper"><table class="vocab-table"><thead><tr><th style="width:40px;">#</th><th>FIGURA</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr></thead><tbody>`;
@@ -198,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
         simulador.innerHTML = html;
         startTimer(() => finishTableImg());
         
-        // Modal Event
         document.getElementById('btn-trigger-modal').onclick = () => {
             let faltantes = 0; questions.forEach((_, i) => { if(tableAnswersImg[i] === undefined) faltantes++; });
             document.getElementById('modal-mensaje').textContent = `Faltan ${faltantes} preguntas.`;
@@ -207,13 +204,14 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- LÓGICA DE PREGUNTAS (NORMAL) ---
+    // --- LOGICA PREGUNTAS (NORMAL) ---
     function showQ(idx) {
         currentIdx = idx;
         const q = questions[idx];
         document.getElementById('pregunta-numero').textContent = `Pregunta ${idx+1}`;
         document.getElementById('pregunta-texto').innerHTML = q.pregunta ? q.pregunta.replace(/\n/g, '<br>') : '';
         document.getElementById('q-image-container').innerHTML = q.imagen ? `<img src="${q.imagen}" style="max-width:100%; border-radius:10px;">` : '';
+        
         const opts = document.getElementById('opciones-container'); opts.innerHTML = '';
         if(q.opciones) q.opciones.forEach(op => {
             const btn = document.createElement('button'); btn.className = 'opcion-btn';
@@ -223,18 +221,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 userAnswers[idx] = op;
                 Array.from(opts.children).forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
-                document.getElementById('navegador-preguntas').children[idx].classList.add('answered');
+                updateNavStatus(idx, true); // Marcar como respondida
             };
             opts.appendChild(btn);
         });
+
+        // Actualizar Navegador (Highlight actual)
+        updateNavStatus(idx, false);
+
         const btnNext = document.getElementById('siguiente-btn');
         btnNext.textContent = idx === questions.length - 1 ? "FINALIZAR" : "SIGUIENTE";
         btnNext.onclick = () => idx < questions.length - 1 ? showQ(idx + 1) : document.getElementById('terminar-intento-btn').click();
     }
 
+    // --- RENDERIZADO NAVEGADOR (CORREGIDO) ---
     function renderNav() {
         const nav = document.getElementById('navegador-preguntas'); nav.innerHTML = '';
-        questions.forEach((_, i) => { const b = document.createElement('button'); b.className = 'nav-dot'; nav.appendChild(b); });
+        questions.forEach((_, i) => { 
+            const b = document.createElement('button'); 
+            b.className = 'nav-dot'; 
+            b.textContent = i + 1; // ¡AQUÍ ESTÁ EL NÚMERO QUE FALTABA!
+            b.onclick = () => showQ(i); // Ahora puedes hacer clic para saltar
+            nav.appendChild(b); 
+        });
+    }
+
+    function updateNavStatus(idx, isAnswered) {
+        const nav = document.getElementById('navegador-preguntas');
+        if(!nav || !nav.children[idx]) return;
+        
+        // Quitar 'active' de todos
+        Array.from(nav.children).forEach(b => b.style.borderColor = '#ddd');
+        
+        // Poner 'active' al actual (borde rojo o azul)
+        nav.children[idx].style.borderColor = '#d32f2f'; 
+
+        if(isAnswered) nav.children[idx].classList.add('answered');
     }
 
     // --- UTILIDADES ---
@@ -254,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- SELECCIONES FASES/TABLAS ---
+    // --- FUNCIONES EXTRA ---
     window.selectPhase1 = (idx, val, el) => {
         tableAnswersText[idx] = val;
         const row = document.getElementById(`row-p1-${idx}`);
@@ -367,7 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if(userStr) {
             const user = JSON.parse(userStr);
             try {
-                // Usamos simuladorDB para guardar
                 await simuladorDB.from('resultados').insert([{
                     usuario_id: user.usuario, 
                     usuario_nombre: user.nombre, 
