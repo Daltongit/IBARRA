@@ -1,3 +1,4 @@
+// JS/script-home.js
 const MENU_DATA = {
     'root': {
         title: 'Seleccione una Institución',
@@ -67,10 +68,8 @@ const MENU_DATA = {
         title: 'Tests Inteligencia ESMIL',
         desc: 'Simuladores Psicométricos Específicos.',
         items: [
-            // AHORA EL 1 Y EL 2 ESTÁN ACTIVOS (NORMALES)
             { label: 'SIMULADOR 1', type: 'test', link: 'simulador.html?materia=int_esmil_1', icon: 'fas fa-puzzle-piece' },
-            { label: 'SIMULADOR 2', type: 'test', link: 'simulador.html?materia=int_esmil_2', icon: 'fas fa-puzzle-piece' },
-            // EL 3 ES EL ESPECIAL
+            { label: 'SIMULADOR 2 (Abstracto)', type: 'test', link: 'simulador.html?materia=int_esmil_2', icon: 'fas fa-th' },
             { label: 'SIMULADOR 3 (Mixto)', type: 'test', link: 'simulador.html?materia=int_esmil_3', icon: 'fas fa-list-alt' },
             { label: 'SIMULADOR 4', type: 'test', link: 'simulador.html?materia=int_esmil_4', icon: 'fas fa-lightbulb' },
             { label: 'SIMULADOR 5', type: 'test', link: 'simulador.html?materia=int_esmil_5', icon: 'fas fa-lightbulb' },
@@ -106,7 +105,8 @@ let navigationHistory = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     renderMenu('root');
-    document.getElementById('btn-atras').addEventListener('click', goBack);
+    const btnAtras = document.getElementById('btn-atras');
+    if(btnAtras) btnAtras.addEventListener('click', goBack);
 });
 
 function renderMenu(menuId) {
@@ -115,35 +115,40 @@ function renderMenu(menuId) {
     if (menuId === 'root') navigationHistory = ['root'];
     else if (navigationHistory[navigationHistory.length - 1] !== menuId) navigationHistory.push(menuId);
     
-    document.getElementById('navigation-bar').style.display = navigationHistory.length > 1 ? 'flex' : 'none';
-    document.getElementById('section-title').textContent = data.title;
-    document.getElementById('section-desc').textContent = data.desc;
+    updateNavigationUI();
+    
+    const titleEl = document.getElementById('section-title');
+    const descEl = document.getElementById('section-desc');
+    if(titleEl) titleEl.textContent = data.title;
+    if(descEl) descEl.textContent = data.desc;
+
     const container = document.getElementById('dynamic-grid');
-    container.innerHTML = '';
+    if(container) {
+        container.innerHTML = '';
+        data.items.forEach(item => {
+            const card = document.createElement('a');
+            let baseClass = item.type === 'folder' ? 'materia-card card-folder' : 'materia-card card-test';
+            if (item.variant === 'wide') baseClass += ' card-wide';
+            card.className = baseClass;
+            
+            if (item.disabled) {
+                card.classList.add('disabled-card'); 
+                card.href = '#';
+            } else if (item.type === 'test') {
+                card.href = item.link;
+            } else {
+                card.href = '#'; 
+                card.onclick = (e) => { e.preventDefault(); renderMenu(item.id); };
+            }
 
-    data.items.forEach(item => {
-        const card = document.createElement('a');
-        let baseClass = item.type === 'folder' ? 'materia-card card-folder' : 'materia-card card-test';
-        if (item.variant === 'wide') baseClass += ' card-wide';
-        card.className = baseClass;
-        
-        if (item.disabled) {
-            card.classList.add('disabled-card'); 
-            card.href = '#';
-        } else if (item.type === 'test') {
-            card.href = item.link;
-        } else {
-            card.href = '#'; 
-            card.onclick = (e) => { e.preventDefault(); renderMenu(item.id); };
-        }
-
-        if (item.variant === 'wide') {
-            card.innerHTML = `<i class="${item.icon}"></i><div class="text-content"><h3>${item.label}</h3><p>${item.desc || ''}</p></div>`;
-        } else {
-            card.innerHTML = `<i class="${item.icon}"></i><h3>${item.label}${item.disabled ? ' (Próx.)' : ''}</h3>${item.desc ? `<p>${item.desc}</p>` : ''}`;
-        }
-        container.appendChild(card);
-    });
+            if (item.variant === 'wide') {
+                card.innerHTML = `<i class="${item.icon}"></i><div class="text-content"><h3>${item.label}</h3><p>${item.desc || ''}</p></div>`;
+            } else {
+                card.innerHTML = `<i class="${item.icon}"></i><h3>${item.label}${item.disabled ? ' (Próx.)' : ''}</h3>${item.desc ? `<p>${item.desc}</p>` : ''}`;
+            }
+            container.appendChild(card);
+        });
+    }
 }
 
 function goBack() {
@@ -155,6 +160,8 @@ function goBack() {
 
 function updateNavigationUI() {
     const navBar = document.getElementById('navigation-bar');
-    if (navigationHistory.length > 1) navBar.style.display = 'flex';
-    else navBar.style.display = 'none';
+    if(navBar) {
+        if (navigationHistory.length > 1) navBar.style.display = 'flex';
+        else navBar.style.display = 'none';
+    }
 }
