@@ -1,42 +1,43 @@
-// JS/auth.js - IBARRA (Conexión + Lógica)
-
-// --- CONEXIÓN SUPABASE IBARRA ---
-const supabaseUrl = 'https://dgnfjzzwcdfbauyamutp.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnbmZqenp3Y2RmYmF1eWFtdXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNTk3ODAsImV4cCI6MjA4MTYzNTc4MH0.upcZkm8dYMOlWrbxEQEraUiNHOWyOOBAAqle8rbesNY';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+// JS/auth.js - IBARRA (Lógica JSON Local)
 
 const SESSION_TIMEOUT_MS = 6 * 60 * 60 * 1000; // 6 Horas
 let inactivityTimer;
 
-// Función para Login (Usada en login.html)
+// --- LOGIN CON JSON (Igual a Tulcán) ---
 async function login(cedula, password) {
     try {
-        const { data, error } = await supabase
-            .from('usuarios')
-            .select('*')
-            .eq('usuario', cedula)
-            .eq('password', password)
-            .single();
+        // 1. Cargar el archivo JSON local
+        const response = await fetch('DATA/usuarios.json');
+        if (!response.ok) throw new Error("No se pudo cargar la base de usuarios.");
+        
+        const usuarios = await response.json();
 
-        if (error || !data) throw new Error("Credenciales incorrectas");
+        // 2. Buscar coincidencias
+        const user = usuarios.find(u => u.usuario === cedula && u.password === password);
 
-        // Guardar sesión
+        if (!user) throw new Error("Credenciales incorrectas");
+
+        // 3. Guardar sesión
         const sessionData = {
-            usuario: data.usuario,
-            nombre: data.nombre,
-            rol: data.rol,
-            ciudad: data.ciudad,
+            usuario: user.usuario,
+            nombre: user.nombre,
+            rol: user.rol,
+            ciudad: user.ciudad,
             timestamp: new Date().getTime()
         };
+        
         sessionStorage.setItem('userInfo', JSON.stringify(sessionData));
         sessionStorage.setItem('sessionExpiration', (Date.now() + SESSION_TIMEOUT_MS).toString());
         
-        return { success: true, user: data };
+        return { success: true, user: user };
+
     } catch (error) {
+        console.error("Login error:", error);
         return { success: false, message: error.message };
     }
 }
 
+// --- VERIFICACIÓN DE SESIÓN ---
 function isLoggedIn() {
     const expiration = sessionStorage.getItem('sessionExpiration');
     if (!expiration || Date.now() > parseInt(expiration)) {
@@ -52,7 +53,6 @@ function getUserInfo() {
     try {
         return JSON.parse(sessionStorage.getItem('userInfo'));
     } catch (e) {
-        console.error("Error parsing user info", e);
         clearSession();
         return null;
     }
@@ -64,16 +64,18 @@ function clearSession() {
     clearTimeout(inactivityTimer);
 }
 
-// Función principal de cierre de sesión
+// --- SALIR ---
 function logoutUser() {
     clearSession();
     window.location.href = 'login.html';
 }
 
+// --- PROTECCIÓN DE PÁGINAS ---
 function checkAuth() {
-    // No chequear en login
+    // Si estamos en login, no hacemos nada
     if (window.location.pathname.includes('login.html')) return;
     
+    // Si no hay sesión, chao
     if (!isLoggedIn()) {
         window.location.href = 'login.html';
     }
@@ -87,5 +89,5 @@ function resetInactivityTimer() {
     }, SESSION_TIMEOUT_MS);
 }
 
-// ESTO HACE QUE FUNCIONE EL BOTÓN EN TODOS LADOS
+// Exponer logout globalmente para el botón del Header
 window.logout = logoutUser;
