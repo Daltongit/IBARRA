@@ -4,96 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sparta Academy - Ibarra</title>
-    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <link rel="stylesheet" href="CSS/style.css">
     
-    <link rel="stylesheet" href="CSS/style-home.css">
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Teko:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="JS/auth.js"></script>
     <script> checkAuth(); </script>
 </head>
 <body>
-    <header>
-        <a href="index.html" class="header-main-link">
-            <div class="header-logo"><img src="logo.png" alt="Logo"></div>
-            <div class="header-titulo">
-                <h1>SPARTA ACADEMY</h1>
-                <h2 id="user-display">PLATAFORMA IBARRA</h2>
-            </div>
-        </a>
-        
-        <div class="desktop-menu">
-            <button id="btn-admin-desktop" class="user-btn" onclick="location.href='resultados.html'" style="display: none;">
-                <i class="fas fa-chart-pie"></i> Panel Admin
-            </button>
-            <button class="user-btn" onclick="logout()" style="background:#b22222; border-color:#b22222;">
-                <i class="fas fa-sign-out-alt"></i> Salir
-            </button>
-        </div>
 
-        <button class="mobile-toggle" id="hamburger-btn">
-            <i class="fas fa-bars"></i>
-        </button>
+    <header class="ibarra-header">
+        <div class="logo-zone">
+            <img src="logo.png" alt="Sparta Logo">
+            <div class="brand-text">
+                <h1>SPARTA</h1>
+                <span>SEDE IBARRA</span>
+            </div>
+        </div>
+        <div class="user-zone">
+            <span id="user-name-display">Cadete</span>
+            <button onclick="logout()" class="btn-logout-ibarra"><i class="fas fa-power-off"></i></button>
+        </div>
     </header>
 
-    <div class="side-nav" id="side-nav">
-        <button class="close-nav-btn" id="close-nav-btn">&times;</button>
-        <div style="text-align:center; padding:20px;">
-            <img src="logo.png" width="80" style="margin-bottom:10px;">
-            <h3 style="color:#b22222; font-family:'Teko'; margin:0;">MENÚ</h3>
-        </div>
-        <a href="resultados.html" id="btn-admin-mobile" style="display: none;"><i class="fas fa-chart-pie"></i> Panel Admin</a>
+    <main class="command-center">
         
-        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
-    </div>
-    <div class="overlay" id="overlay"></div>
+        <div class="welcome-banner">
+            <h2>PANEL DE CONTROL ACADÉMICO</h2>
+            <p>Selecciona tu módulo de entrenamiento.</p>
+        </div>
 
-    <main>
-        <div class="marca-de-agua"><img src="logo.png" alt="Sparta"></div>
-
-        <div class="seleccion-container">
-            <div class="nav-header">
-                <div class="title-area">
-                    <h2 id="section-title">SELECCIONE UNA INSTITUCIÓN</h2>
-                    <p id="section-desc">Elija la categoría para ver los simuladores disponibles.</p>
+        <div class="grid-ibarra">
+            
+            <div class="card-ibarra" onclick="location.href='simulador.html?materia=sociales'">
+                <div class="card-content">
+                    <h3>ENTRENAMIENTO POR MATERIA</h3>
+                    <p>Focaliza tu estudio en áreas específicas.</p>
                 </div>
-                <div class="nav-actions" id="navigation-bar" style="display: none;">
-                    <button id="btn-atras"><i class="fas fa-arrow-left"></i> REGRESAR</button>
+                <div class="card-icon">
+                    <i class="fas fa-atom"></i>
                 </div>
+                <div class="card-decor"></div>
             </div>
 
-            <div id="dynamic-grid" class="materias-grid"></div>
+            <div class="card-ibarra featured" onclick="location.href='simulador.html?materia=general'">
+                <div class="card-content">
+                    <h3>SIMULADOR GENERAL</h3>
+                    <p>Evaluación completa. Todas las materias.</p>
+                </div>
+                <div class="card-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="card-decor"></div>
+            </div>
+
+            <div class="card-ibarra" onclick="location.href='simulador.html?materia=general_esmil'">
+                <div class="card-content">
+                    <h3>ESPECIALISTAS ESMIL</h3>
+                    <p>Pruebas de admisión militar avanzada.</p>
+                </div>
+                <div class="card-icon">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div class="card-decor"></div>
+            </div>
+
+            <div class="card-ibarra" onclick="location.href='simulador.html?materia=int_esmil_3'">
+                <div class="card-content">
+                    <h3>INTELIGENCIA</h3>
+                    <p>Razonamiento lógico y abstracto.</p>
+                </div>
+                <div class="card-icon">
+                    <i class="fas fa-chess-knight"></i>
+                </div>
+                <div class="card-decor"></div>
+            </div>
+
+            <div class="card-ibarra admin-card" id="admin-panel-card" onclick="location.href='resultados.html'" style="display:none;">
+                <div class="card-content">
+                    <h3>ADMINISTRACIÓN</h3>
+                    <p>Reportes y control de cadetes.</p>
+                </div>
+                <div class="card-icon">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <div class="card-decor"></div>
+            </div>
+
         </div>
     </main>
 
-    <footer>
-        <p><strong>SPARTA ACADEMY IBARRA</strong></p>
-        <p>Dir: [Dirección Ibarra] | Ibarra - Ecuador</p>
-    </footer>
-
-    <script src="JS/script-home.js"></script>
     <script>
+        // Script simple para mostrar nombre y panel admin
         document.addEventListener('DOMContentLoaded', () => {
-            // Lógica Menú
-            const btn = document.getElementById('hamburger-btn');
-            const nav = document.getElementById('side-nav');
-            const close = document.getElementById('close-nav-btn');
-            const overlay = document.getElementById('overlay');
-
-            if(btn) btn.onclick = () => { nav.classList.add('open'); overlay.style.display = "block"; };
-            const closeMenu = () => { nav.classList.remove('open'); overlay.style.display = "none"; };
-            if(close) close.onclick = closeMenu;
-            if(overlay) overlay.onclick = closeMenu;
-
-            // --- LÓGICA DE ROLES ---
-            const user = getUserInfo(); 
-            if (user && user.rol === 'admin') {
-                const btnDesk = document.getElementById('btn-admin-desktop');
-                const btnMob = document.getElementById('btn-admin-mobile');
-                if(btnDesk) btnDesk.style.display = 'flex';
-                if(btnMob) btnMob.style.display = 'block';
+            const user = getUserInfo();
+            if (user) {
+                document.getElementById('user-name-display').textContent = user.nombre.split(' ')[0].toUpperCase();
+                if (user.rol === 'admin') {
+                    document.getElementById('admin-panel-card').style.display = 'flex';
+                }
             }
         });
     </script>
