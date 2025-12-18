@@ -1,451 +1,148 @@
-// --- CONEXIÓN SUPABASE IBARRA ---
-const simuladorUrl = 'https://dgnfjzzwcdfbauyamutp.supabase.co';
-const simuladorKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnbmZqenp3Y2RmYmF1eWFtdXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNTk3ODAsImV4cCI6MjA4MTYzNTc4MH0.upcZkm8dYMOlWrbxEQEraUiNHOWyOOBAAqle8rbesNY';
-const simuladorDB = window.supabase.createClient(simuladorUrl, simuladorKey);
+// CONEXIÓN (IBARRA)
+const supabaseUrl = 'https://dgnfjzzwcdfbauyamutp.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnbmZqenp3Y2RmYmF1eWFtdXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNTk3ODAsImV4cCI6MjA4MTYzNTc4MH0.upcZkm8dYMOlWrbxEQEraUiNHOWyOOBAAqle8rbesNY';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const { jsPDF } = window.jspdf;
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Referencias DOM
-    const lobbyBanner = document.getElementById('lobby-banner');
-    const lobbyContainer = document.getElementById('lobby-container');
-    const simulador = document.getElementById('simulador-container');
-    const resultados = document.getElementById('resultados-container');
-    const btnStart = document.getElementById('comenzar-btn');
-    const txtTituloMateria = document.getElementById('lobby-titulo-materia');
-    const txtMateria = document.getElementById('lobby-materia');
-    const txtPreguntas = document.getElementById('lobby-preguntas');
-    const txtTiempo = document.getElementById('lobby-tiempo');
-    
-    // Botón regresar
-    const btnBack = document.getElementById('btn-regresar-lobby');
-    if(btnBack) btnBack.addEventListener('click', () => window.history.length > 1 ? window.history.back() : window.location.href = 'index.html');
+document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('reporte-container');
+    const fMateria = document.getElementById('filtro-materia');
+    const fCiudad = document.getElementById('filtro-ciudad');
+    const fNombre = document.getElementById('filtro-nombre');
+    const spinner = document.getElementById('loading-spinner');
+    const btnPDFGeneral = document.getElementById('descargar-pdf-btn');
+    const btnCSV = document.getElementById('descargar-general-csv-btn');
+    const canvasHidden = document.getElementById('hidden-chart-canvas');
 
-    let questions = [];
-    let phase1Data = []; 
-    let phase2Blocks = []; 
-    let userAnswers = []; // Normal
-    let tableAnswersText = {}; 
-    let tableAnswersImg = {}; 
-    let currentIdx = 0;
-    let timerInterval;
-    let timeLeft = 3600;
-    let totalPreguntas = 50;
-    let carpetaEspecialID = null;
-    let modeType = 'normal'; // 'normal', 'multi_phase' (3), 'table_img' (2)
+    let allIntentos = [], allUsuarios = [];
+    const cleanText = (str) => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
 
-    const materias = {
-        'sociales': 'Ciencias Sociales', 'matematicas': 'Matemáticas y Física', 'lengua': 'Lengua y Literatura', 'ingles': 'Inglés', 'general': 'General (Todas)',
-        'inteligencia': 'Inteligencia', 'personalidad': 'Personalidad', 'ppnn1': 'Cuestionario 1 PPNN', 'ppnn2': 'Cuestionario 2 PPNN', 'ppnn3': 'Cuestionario 3 PPNN', 'ppnn4': 'Cuestionario 4 PPNN',
-        'sociales_esmil': 'Ciencias Sociales (ESMIL)', 'matematicas_esmil': 'Matemáticas (ESMIL)', 'lengua_esmil': 'Lenguaje (ESMIL)', 'ingles_esmil': 'Inglés (ESMIL)', 'general_esmil': 'General ESMIL',
-        'int_esmil_1': 'Inteligencia ESMIL 1', 
-        'int_esmil_2': 'Inteligencia ESMIL 2',
-        'int_esmil_3': 'Inteligencia ESMIL 3 (Mixto)', 
-        'int_esmil_4': 'Inteligencia ESMIL 4', 'int_esmil_5': 'Inteligencia ESMIL 5', 'int_esmil_6': 'Inteligencia ESMIL 6'
-    };
-    
-    const ordenGeneralPolicia = ['sociales', 'matematicas', 'lengua', 'ingles'];
-    const ordenGeneralEsmil = ['sociales_esmil', 'matematicas_esmil', 'lengua_esmil', 'ingles_esmil'];
-
-    function showError(msg) {
-        console.error(msg);
-        btnStart.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error: ${msg}`;
-        btnStart.style.background = "#c0392b";
-    }
-
-    async function init() {
-        const params = new URLSearchParams(window.location.search);
-        const materiaKey = params.get('materia') || 'sociales';
-        const title = materias[materiaKey] || 'Simulador';
+    try {
+        // Cargar Resultados de Supabase
+        const { data: intentos } = await supabase.from('resultados').select('*').order('created_at', { ascending: true });
+        allIntentos = intentos || [];
         
-        if(txtTituloMateria) txtTituloMateria.textContent = title.toUpperCase();
-        if(txtMateria) txtMateria.textContent = title;
-
-        let fetchUrl = '';
+        // Cargar Usuarios Locales
+        const res = await fetch('DATA/usuarios.json');
+        allUsuarios = await res.json();
         
-        // CONFIGURACIÓN
-        if (materiaKey === 'int_esmil_3') {
-            modeType = 'multi_phase'; 
-            fetchUrl = 'DATA/3/3.json'; 
-            timeLeft = 3600;
-        } 
-        else if (materiaKey === 'int_esmil_2') {
-            modeType = 'table_img'; 
-            carpetaEspecialID = '2';
-            fetchUrl = 'DATA/2/2.json';
-            timeLeft = 3600;
-        }
-        else if (materiaKey.startsWith('int_esmil_')) {
-            modeType = 'normal';
-            carpetaEspecialID = materiaKey.split('_')[2]; 
-            fetchUrl = `DATA/${carpetaEspecialID}/${carpetaEspecialID}.json`; 
-            timeLeft = 3600;
-        } 
-        else if (materiaKey.includes('matematicas')) {
-            timeLeft = 5400; fetchUrl = `DATA/preguntas_${materiaKey}.json`;
-        } else if (materiaKey.includes('general')) {
-            timeLeft = 10800; totalPreguntas = 200; fetchUrl = `DATA/preguntas_${materiaKey}.json`;
-        } else {
-            timeLeft = 3600; fetchUrl = `DATA/preguntas_${materiaKey}.json`;
-        }
+        // Llenar Filtro Materias
+        [...new Set(allIntentos.map(i => i.materia))].sort().forEach(m => {
+            const opt = document.createElement('option'); opt.value = m; opt.textContent = m; fMateria.appendChild(opt);
+        });
+        
+        if (spinner) spinner.style.display = 'none';
+        render();
+    } catch (e) { if (spinner) spinner.innerHTML = `<p style="color:red">Error: ${e.message}</p>`; }
 
-        if(txtTiempo) txtTiempo.textContent = Math.floor(timeLeft/60) + " Min";
+    function render() {
+        container.innerHTML = '';
+        const busqueda = cleanText(fNombre.value);
+        
+        // Filtrar usuarios aspirantes
+        const users = allUsuarios.filter(u => u.rol==='aspirante' && (fCiudad.value==='Todas'||u.ciudad===fCiudad.value) && (busqueda===''||cleanText(u.nombre).includes(busqueda)));
+        
+        if (users.length === 0) { container.innerHTML = '<p style="text-align:center;color:#666;">No se encontraron estudiantes.</p>'; return; }
+        
+        const intentosParaWeb = [...allIntentos].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
-        try {
-            let filesToLoad = [];
-            if (materiaKey.startsWith('int_esmil_')) filesToLoad = [fetchUrl];
-            else if (materiaKey === 'general') filesToLoad = ordenGeneralPolicia.map(m => `DATA/preguntas_${m}.json`);
-            else if (materiaKey === 'general_esmil') filesToLoad = ordenGeneralEsmil.map(m => `DATA/preguntas_${m}.json`);
-            else filesToLoad = [fetchUrl];
-
-            const promises = filesToLoad.map(url => fetch(url).then(r => r.ok ? r.json() : null));
-            const results = await Promise.all(promises);
+        users.forEach(user => {
+            const intentosUser = intentosParaWeb.filter(i => String(i.usuario_id).trim()===String(user.usuario).trim() && (fMateria.value==='Todas'||i.materia===fMateria.value));
+            const card = document.createElement('div'); card.className = 'user-card';
             
-            // PROCESAMIENTO
-            if (modeType === 'multi_phase') {
-                const data = results[0];
-                if (!data || !data.parte1 || !data.parte2_bloques) throw new Error("JSON Inválido Sim 3");
-                phase1Data = data.parte1;
-                phase2Blocks = data.parte2_bloques.map(b => {
-                    b.imagen_bloque = `DATA/3/IMAGES/${b.imagen_bloque}`; 
-                    return b;
+            let html = '';
+            if (intentosUser.length === 0) {
+                html = '<p style="text-align:center;padding:15px;color:#999;">Sin intentos registrados.</p>';
+            } else {
+                [...new Set(intentosUser.map(i=>i.materia))].sort().forEach(m => {
+                    const im = intentosUser.filter(i=>i.materia===m);
+                    html += `<div class="materia-block"><h4 class="materia-title">${m} (${im.length})</h4><table class="table"><thead><tr><th>NOTA</th><th>FECHA</th><th>HORA</th></tr></thead><tbody>`;
+                    im.forEach(i => {
+                        const d = new Date(i.created_at);
+                        const colorNota = i.puntaje >= 700 ? '#2e7d32' : '#c62828';
+                        html += `<tr><td style="font-weight:bold;color:${colorNota}">${i.puntaje}</td><td>${d.toLocaleDateString()}</td><td>${d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td></tr>`;
+                    });
+                    html += `</tbody></table></div>`;
                 });
-                totalPreguntas = phase1Data.length + 20; 
-            } 
-            else if (modeType === 'table_img') {
-                let allQ = [];
-                results.forEach(d => { if(d) allQ = allQ.concat(d); });
-                questions = allQ;
-                questions = questions.map(q => {
-                    if(q.imagen_pregunta && !q.imagen_pregunta.includes('DATA')) q.imagen_pregunta = `DATA/2/IMAGES/${q.imagen_pregunta}`;
-                    q.opciones = q.opciones.map(op => (!op.includes('DATA')) ? `DATA/2/IMAGES/${op}` : op);
-                    return q;
-                });
-                totalPreguntas = questions.length;
-            }
-            else {
-                let allQ = [];
-                results.forEach(d => { if(d) allQ = allQ.concat(d); });
-                questions = allQ;
-                if (materiaKey.startsWith('int_esmil_')) {
-                    questions = questions.map(q => {
-                        if (q.imagen) q.imagen = `DATA/${carpetaEspecialID}/IMAGES/${q.imagen.split('/').pop()}`;
-                        return q;
-                    }).sort(() => 0.5 - Math.random());
-                } else {
-                    questions = questions.sort(() => 0.5 - Math.random());
-                    if (!materiaKey.includes('general') && !materiaKey.startsWith('ppnn')) questions = questions.slice(0, 50);
-                }
-                totalPreguntas = questions.length;
-            }
-
-            if(txtPreguntas) txtPreguntas.textContent = totalPreguntas;
-
-            // Preload
-            if (modeType !== 'multi_phase' && questions.some(q => q.imagen || q.imagen_pregunta)) {
-                btnStart.innerHTML = "CARGANDO...";
-                await Promise.race([preloadImages(questions), new Promise(r => setTimeout(r, 2000))]);
             }
             
-            btnStart.disabled = false;
-            btnStart.innerHTML = 'COMENZAR TEST';
+            card.innerHTML = `<div class="user-header"><div style="text-align:left;"><h3>${user.nombre}</h3><small>${user.ciudad}</small></div><div style="display:flex;align-items:center;"><button class="btn-pdf-mini"><i class="fas fa-file-pdf"></i> PDF</button><div style="text-align:right; margin-left:15px;"><strong style="color:${intentosUser.length>0?'#d32f2f':'#999'};font-size:1.5rem;font-family:'Teko';">${intentosUser.length}</strong><span style="display:block;font-size:0.75rem;">INTENTOS</span></div></div></div><div class="user-attempts">${html}</div>`;
             
-            btnStart.onclick = () => {
-                if (modeType === 'multi_phase') startPhase1();
-                else if (modeType === 'table_img') startTableImgQuiz();
-                else startQuiz();
-            };
-
-        } catch (e) { showError(e.message); }
-    }
-
-    async function preloadImages(list) {
-        let imgsToLoad = [];
-        list.forEach(q => {
-            if(q.imagen) imgsToLoad.push(q.imagen);
-            if(q.imagen_pregunta) imgsToLoad.push(q.imagen_pregunta);
-            if(q.opciones && Array.isArray(q.opciones) && q.opciones[0].includes && q.opciones[0].includes('DATA')) {
-                imgsToLoad = imgsToLoad.concat(q.opciones);
-            }
+            card.querySelector('.user-header').onclick = (e) => { if(!e.target.closest('.btn-pdf-mini')){ const b = card.querySelector('.user-attempts'); b.style.display = b.style.display==='block'?'none':'block'; }};
+            card.querySelector('.btn-pdf-mini').onclick = (e) => { e.stopPropagation(); generatePDF([user], `Reporte_${user.nombre}.pdf`); };
+            container.appendChild(card);
         });
-        await Promise.all(imgsToLoad.map(src => new Promise(resolve => {
-            const i = new Image(); i.src = src; i.onload = resolve; i.onerror = resolve;
-        })));
     }
 
-    // --- FASE 1 (Texto) ---
-    function startPhase1() {
-        lobbyBanner.style.display = 'none'; lobbyContainer.style.display = 'none';
-        simulador.style.display = 'block'; simulador.className = ''; 
-        let html = `<div class="full-width-container"><div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;"><h2>VOCABULARIO</h2></div><div class="table-responsive-wrapper"><table class="vocab-table"><thead><tr><th style="width:50px;">#</th><th>PALABRA</th><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead><tbody>`;
-        phase1Data.forEach((q, i) => {
-            html += `<tr id="row-p1-${i}"><td><strong>${i+1}</strong></td><td class="vocab-word-cell">${q.palabra}</td>
-            ${q.opciones.map(op => `<td class="vocab-option-cell" onclick="selectPhase1(${i}, '${op}', this)">${op}</td>`).join('')}</tr>`;
-        });
-        html += `</tbody></table></div><button class="btn-finish-table" onclick="goToPhase2()">SIGUIENTE SECCIÓN</button></div>`;
-        simulador.innerHTML = html;
-        startTimer(finishMultiPhase);
-    }
-
-    window.selectPhase1 = (idx, val, el) => {
-        tableAnswersText[idx] = val;
-        const row = document.getElementById(`row-p1-${idx}`);
-        const cells = row.getElementsByClassName('vocab-option-cell');
-        for(let c of cells) c.classList.remove('vocab-selected');
-        el.classList.add('vocab-selected');
+    fCiudad.onchange = render; fMateria.onchange = render; fNombre.oninput = render;
+    if(btnPDFGeneral) btnPDFGeneral.onclick = () => {
+        const busqueda = cleanText(fNombre.value);
+        const users = allUsuarios.filter(u => u.rol==='aspirante' && (fCiudad.value==='Todas'||u.ciudad===fCiudad.value) && (busqueda===''||cleanText(u.nombre).includes(busqueda)));
+        if(users.length>0) generatePDF(users, "Reporte_General.pdf");
     };
 
-    window.goToPhase2 = () => { window.scrollTo(0,0); startPhase2(); };
-
-    // --- FASE 2 (Bloques) ---
-    function startPhase2() {
-        let html = `<div class="full-width-container"><div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;"><h2>ABSTRACTO</h2></div>`;
-        phase2Blocks.forEach((bloque, bIdx) => {
-            html += `<div class="block-container"><div class="block-img-wrapper"><img src="${bloque.imagen_bloque}" alt="Bloque ${bIdx+1}"></div><div class="block-table-wrapper"><table class="block-table"><thead><tr><th>#</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr></thead><tbody>`;
-            for (let q = bloque.rango_inicio; q <= bloque.rango_fin; q++) {
-                html += `<tr id="row-p2-${q}"><td><strong>${q}</strong></td>
-                <td class="opt-cell" onclick="selectPhase2(${q}, 0, this)">A</td><td class="opt-cell" onclick="selectPhase2(${q}, 1, this)">B</td><td class="opt-cell" onclick="selectPhase2(${q}, 2, this)">C</td><td class="opt-cell" onclick="selectPhase2(${q}, 3, this)">D</td><td class="opt-cell" onclick="selectPhase2(${q}, 4, this)">E</td><td class="opt-cell" onclick="selectPhase2(${q}, 5, this)">F</td></tr>`;
+    // PDF GENERATION (Standardized)
+    async function generatePDF(usersList, filename) {
+        const doc = new jsPDF(); let pageAdded = false;
+        for (const u of usersList) {
+            let ints = allIntentos.filter(i => String(i.usuario_id).trim()===String(u.usuario).trim());
+            if (fMateria.value !== 'Todas') ints = ints.filter(i => i.materia === fMateria.value);
+            if (ints.length === 0) {
+                if(pageAdded) doc.addPage(); pageAdded = true;
+                header(doc, u, fMateria.value); doc.setFontSize(20); doc.setTextColor(150); doc.text("SIN INTENTOS", 105, 100, {align:"center"});
+                continue;
             }
-            html += `</tbody></table></div></div>`;
-        });
-        html += `<button class="btn-finish-table" id="btn-trigger-modal">TERMINAR EXAMEN</button></div>`;
-        simulador.innerHTML = html;
-
-        document.getElementById('btn-trigger-modal').onclick = () => {
-            let faltantes = 0;
-            for(let i=0; i<phase1Data.length; i++) { if(!tableAnswersText[i]) faltantes++; }
-            for(let i=1; i<=20; i++) { if(!tableAnswersImg[i] || tableAnswersImg[i].length === 0) faltantes++; }
-            document.getElementById('modal-mensaje').textContent = `Faltan ${faltantes} preguntas.`;
-            document.getElementById('modal-overlay').style.display = 'flex';
-            document.getElementById('confirmar-modal-btn').onclick = () => {
-                document.getElementById('modal-overlay').style.display='none';
-                finishMultiPhase();
-            };
-        };
-    }
-
-    window.selectPhase2 = (qNum, valIdx, el) => {
-        let currentAns = tableAnswersImg[qNum] || [];
-        if (currentAns.includes(valIdx)) {
-            currentAns = currentAns.filter(v => v !== valIdx);
-            el.classList.remove('opt-selected');
-        } else {
-            currentAns.push(valIdx);
-            el.classList.add('opt-selected');
+            const mats = [...new Set(ints.map(i=>i.materia))];
+            for (const m of mats) {
+                const im = ints.filter(i=>i.materia===m);
+                if(pageAdded) doc.addPage(); pageAdded = true;
+                header(doc, u, m);
+                const prom = (im.reduce((a,b)=>a+b.puntaje,0)/im.length).toFixed(0);
+                const max = Math.max(...im.map(i=>i.puntaje));
+                stat(doc, 140, 45, "PROMEDIO", prom, 211, 47, 47); stat(doc, 170, 45, "MEJOR", max, 39,174,96);
+                const chartData = im.slice(-20);
+                const img = await getChart(chartData);
+                if(img) doc.addImage(img, 'PNG', 14, 80, 180, 65);
+                const rows = [...im].reverse().map((i,idx) => [im.length-idx, i.puntaje, new Date(i.created_at).toLocaleDateString(), new Date(i.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})]);
+                doc.autoTable({ head:[['#','Nota','Fecha','Hora']], body:rows, startY:155, theme:'grid', headStyles:{fillColor:[211, 47, 47]} });
+            }
         }
-        tableAnswersImg[qNum] = currentAns;
-    };
-
-    // --- MODO TABLA IMAGEN ÚNICA (Sim 2) ---
-    function startTableImgQuiz() {
-        lobbyBanner.style.display = 'none'; lobbyContainer.style.display = 'none';
-        simulador.style.display = 'block'; simulador.className = ''; 
-        let html = `<div class="full-width-container"><div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;"><h2>RAZONAMIENTO ABSTRACTO</h2></div><div class="table-responsive-wrapper"><table class="vocab-table"><thead><tr><th style="width:40px;">#</th><th>FIGURA</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr></thead><tbody>`;
-        questions.forEach((q, i) => {
-            html += `<tr id="row-timg-${i}"><td><strong>${q.id}</strong></td><td class="question-img-cell"><img src="${q.imagen_pregunta}" style="max-width:80px;"></td>
-            ${q.opciones.map((opImg, idx) => `<td class="img-table-cell" onclick="selectImgCell(${i}, ${idx}, this)"><img src="${opImg}" style="max-width:50px;"></td>`).join('')}</tr>`;
-        });
-        html += `</tbody></table></div><button class="btn-finish-table" id="btn-trigger-modal">TERMINAR</button></div>`;
-        simulador.innerHTML = html;
-        startTimer(() => finishTableImg());
-
-        document.getElementById('btn-trigger-modal').onclick = () => {
-            let faltantes = 0;
-            questions.forEach((_, i) => { if(tableAnswersImg[i] === undefined) faltantes++; });
-            document.getElementById('modal-mensaje').textContent = `Faltan ${faltantes} preguntas.`;
-            document.getElementById('modal-overlay').style.display = 'flex';
-            document.getElementById('confirmar-modal-btn').onclick = () => {
-                document.getElementById('modal-overlay').style.display='none';
-                finishTableImg();
-            };
-        };
+        doc.save(filename);
     }
 
-    window.selectImgCell = (idx, valIdx, el) => {
-        tableAnswersImg[idx] = valIdx;
-        const cells = document.getElementById(`row-timg-${idx}`).getElementsByClassName('img-table-cell');
-        for(let c of cells) c.classList.remove('img-selected');
-        el.classList.add('img-selected');
-    };
-
-    window.finishTableImg = async () => {
-        clearInterval(timerInterval);
-        simulador.style.display = 'none'; resultados.style.display = 'block';
-        let ok = 0;
-        let revHTML = '';
-        questions.forEach((q, i) => {
-            const userAns = tableAnswersImg[i];
-            const correctAns = q.respuesta_index;
-            if(userAns === correctAns) ok++;
-            // Revisión simple
-            revHTML += `<div style="border-bottom:1px solid #eee; padding:15px; text-align:left;">
-                <p><strong>Pregunta ${q.id}</strong></p>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <img src="${q.imagen_pregunta}" style="max-width:50px;">
-                    <span>Tu respuesta: <strong style="color:${userAns===correctAns?'green':'red'}">${userAns!==undefined ? String.fromCharCode(65+userAns) : '--'}</strong></span>
-                    ${userAns!==correctAns ? `<span style="color:green; margin-left:10px;">Correcta: <strong>${String.fromCharCode(65+correctAns)}</strong></span>` : ''}
-                </div>
-            </div>`;
-        });
-        const score = Math.round((ok * 1000) / questions.length);
-        document.getElementById('puntaje-final').textContent = score;
-        document.getElementById('stats-correctas').textContent = ok;
-        document.getElementById('stats-incorrectas').textContent = questions.length - ok;
-        document.getElementById('revision-container').innerHTML = revHTML;
-        
-        saveResult(score, questions.length, materias[new URLSearchParams(window.location.search).get('materia')]);
-    };
-
-    // --- FINISH MIXTO (Con Resultados Visibles) ---
-    window.finishMultiPhase = async () => {
-        clearInterval(timerInterval);
-        simulador.style.display = 'none';
-        resultados.style.display = 'block'; // IMPORTANTE: Muestra el contenedor de resultados
-
-        let ok1 = 0, ok2 = 0;
-        let revHTML = '';
-
-        revHTML += `<h3 style="background:#eee; padding:10px; border-radius:8px; margin-top:30px;">FASE 1</h3>`;
-        phase1Data.forEach((q, i) => {
-            const userAns = tableAnswersText[i];
-            const correct = userAns === q.respuesta;
-            if (correct) ok1++;
-            revHTML += `<div style="border-bottom:1px solid #eee; padding:15px; text-align:left;"><p><strong>${i+1}. ${q.palabra}</strong></p><p>Respuesta: <span style="font-weight:bold; color:${correct?'var(--success)':'var(--error)'}">${userAns || '---'}</span> ${!correct ? `<span style="color:var(--success)"> (Correcta: ${q.respuesta})</span>` : ''}</p></div>`;
-        });
-
-        revHTML += `<h3 style="background:#eee; padding:10px; border-radius:8px; margin-top:30px;">FASE 2</h3>`;
-        const letras = ['A','B','C','D','E','F'];
-        phase2Blocks.forEach((bloque, bIdx) => {
-            revHTML += `<div style="margin-top:20px; border:1px solid #eee; border-radius:10px; overflow:hidden;"><div style="background:#333; color:white; padding:5px;">BLOQUE ${bIdx+1}</div><div style="text-align:center; padding:10px;"><img src="${bloque.imagen_bloque}" style="max-width:100%;"></div>`;
-            bloque.respuestas_bloque.forEach((correctArr, i) => {
-                const qNum = bloque.rango_inicio + i;
-                const userArr = tableAnswersImg[qNum] || [];
-                const esCorrecto = (userArr.length === correctArr.length) && userArr.every(val => correctArr.includes(val));
-                if (esCorrecto) ok2++;
-                const userLetters = userArr.map(idx => letras[idx]).join(', ');
-                const correctLetters = correctArr.map(idx => letras[idx]).join(', ');
-                revHTML += `<div style="padding:10px; border-top:1px solid #eee; text-align:left;"><strong>P${qNum}:</strong> Tuya: <span style="color:${esCorrecto?'var(--success)':'var(--error)'}">${userLetters || '--'}</span> ${!esCorrecto ? `<span style="color:var(--success)"> (Correcta: ${correctLetters})</span>` : ''}</div>`;
+    function header(doc, u, m) {
+        doc.setFillColor(211, 47, 47); doc.rect(0,0,210,35,'F');
+        doc.setTextColor(255,255,255); doc.setFontSize(20); doc.text("SPARTA ACADEMY IBARRA", 105, 18, {align:"center"});
+        doc.setFontSize(10); doc.text("REPORTE ACADÉMICO", 105, 26, {align:"center"});
+        doc.setTextColor(0,0,0); doc.setFontSize(14); doc.text(u.nombre.toUpperCase(), 14, 48);
+        doc.setFontSize(10); doc.setTextColor(100); doc.text(`CIUDAD: ${u.ciudad}`, 14, 54); doc.text(`MATERIA: ${m}`, 14, 59);
+    }
+    function stat(doc, x, y, l, v, r, g, b) {
+        doc.setFillColor(245,245,245); doc.rect(x,y,25,20,'F');
+        doc.setFontSize(7); doc.setTextColor(100); doc.text(l, x+12.5, y+5, {align:"center"});
+        doc.setFontSize(12); doc.setTextColor(r,g,b); doc.text(String(v), x+12.5, y+15, {align:"center"});
+    }
+    async function getChart(data) {
+        return new Promise(r => {
+            const ctx = canvasHidden.getContext('2d');
+            if(window.myChart) window.myChart.destroy();
+            window.myChart = new Chart(ctx, {
+                type: 'bar', data: { labels: data.map((_,i)=>i+1), datasets: [{ data: data.map(i=>i.puntaje), backgroundColor: data.map(i=>i.puntaje>=700?'#27ae60':'#d32f2f') }] },
+                options: { animation: false, plugins: { legend: false }, scales: { y: { beginAtZero: true, max: 1000 } } }
             });
-            revHTML += `</div>`;
+            setTimeout(() => r(canvasHidden.toDataURL('image/png')), 150);
         });
-
-        const totalOk = ok1 + ok2;
-        const totalQ = phase1Data.length + 20;
-        const score = Math.round((totalOk * 1000) / totalQ);
-
-        document.getElementById('puntaje-final').textContent = score;
-        document.getElementById('stats-correctas').textContent = totalOk;
-        document.getElementById('stats-incorrectas').textContent = totalQ - totalOk;
-        document.getElementById('revision-container').innerHTML = revHTML;
-
-        // Botones finales
-        document.getElementById('retry-btn').onclick = () => location.reload();
-        document.getElementById('reiniciar-btn').onclick = () => location.href='index.html';
-
-        saveResult(score, totalQ, 'Inteligencia ESMIL 3 (Mixto)');
-    };
-
-    // --- MODO NORMAL ---
-    function startQuiz() {
-        lobbyBanner.style.display = 'none'; lobbyContainer.style.display = 'none';
-        simulador.className = 'quiz-layout';
-        userAnswers = new Array(questions.length).fill(null);
-        renderNav(); showQ(0); startTimer(finish);
     }
-
-    function showQ(idx) {
-        currentIdx = idx;
-        const q = questions[idx];
-        document.getElementById('pregunta-numero').textContent = `Pregunta ${idx+1}`;
-        document.getElementById('pregunta-texto').innerHTML = q.pregunta ? q.pregunta.replace(/\n/g, '<br>') : '';
-        document.getElementById('q-image-container').innerHTML = q.imagen ? `<img src="${q.imagen}" style="max-width:100%; border-radius:10px;">` : '';
-        const opts = document.getElementById('opciones-container'); opts.innerHTML = '';
-        if(q.opciones) q.opciones.forEach(op => {
-            const btn = document.createElement('button'); btn.className = 'opcion-btn';
-            if(userAnswers[idx] === op) btn.classList.add('selected');
-            btn.textContent = op;
-            btn.onclick = () => {
-                userAnswers[idx] = op;
-                Array.from(opts.children).forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                document.getElementById('navegador-preguntas').children[idx].classList.add('answered');
-            };
-            opts.appendChild(btn);
-        });
-        // Nav Btns
-        const btnNext = document.getElementById('siguiente-btn');
-        btnNext.textContent = idx === questions.length - 1 ? "FINALIZAR" : "SIGUIENTE";
-        btnNext.onclick = () => idx < questions.length - 1 ? showQ(idx + 1) : document.getElementById('terminar-intento-btn').click();
+    if (btnCSV) {
+        btnCSV.onclick = () => {
+            let csv = "Nombre,Ciudad,Materia,Nota,Fecha,Hora\n";
+            const visibles = allUsuarios.filter(u => u.rol==='aspirante' && (fCiudad.value==='Todas'||u.ciudad===fCiudad.value));
+            visibles.forEach(u => {
+                const ints = allIntentos.filter(i => String(i.usuario_id)===String(u.usuario) && (fMateria.value==='Todas'||i.materia===fMateria.value));
+                if(ints.length===0) csv += `${u.nombre},${u.ciudad},SIN INTENTOS,0,--,--\n`;
+                else ints.forEach(i => csv += `${u.nombre},${u.ciudad},${i.materia},${i.puntaje},${new Date(i.created_at).toLocaleDateString()},${new Date(i.created_at).toLocaleTimeString()}\n`);
+            });
+            const link = document.createElement("a"); link.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv); link.download = "Reporte_Ibarra.csv"; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        };
     }
-
-    function renderNav() {
-        const nav = document.getElementById('navegador-preguntas'); nav.innerHTML = '';
-        questions.forEach((_, i) => { const b = document.createElement('button'); b.className = 'nav-dot'; nav.appendChild(b); });
-    }
-
-    function startTimer(callback) {
-        timerInterval = setInterval(() => {
-            timeLeft--;
-            const timerEl = document.getElementById('cronometro') || document.getElementById('cronometro-tabla') || document.getElementById('cronometro-tabla-2');
-            if(timerEl) timerEl.textContent = `${Math.floor(timeLeft/60).toString().padStart(2,'0')}:${(timeLeft%60).toString().padStart(2,'0')}`;
-            if(timeLeft<=0) callback();
-        }, 1000);
-        
-        // Crear contenedor flotante si no existe (Modo Normal)
-        if(!document.querySelector('.timer-box')) {
-            const floatTimer = document.createElement('div');
-            floatTimer.className = 'timer-box';
-            floatTimer.innerHTML = `<i class="fas fa-clock"></i> <span id="cronometro">${Math.floor(timeLeft/60).toString().padStart(2,'0')}:${(timeLeft%60).toString().padStart(2,'0')}</span>`;
-            document.body.appendChild(floatTimer);
-        }
-    }
-
-    async function finish() {
-        clearInterval(timerInterval);
-        const qMain = document.querySelector('.quiz-layout'); if(qMain) qMain.style.display = 'none';
-        resultados.style.display = 'block'; // MOSTRAR RESULTADOS
-        let ok = 0; questions.forEach((q, i) => { if(userAnswers[i] === q.respuesta) ok++; });
-        const score = Math.round((ok * 1000) / questions.length);
-        document.getElementById('puntaje-final').textContent = score;
-        document.getElementById('stats-correctas').textContent = ok;
-        document.getElementById('stats-incorrectas').textContent = questions.length - ok;
-        
-        let revHTML = '';
-        questions.forEach((q, i) => {
-            const correct = userAnswers[i] === q.respuesta;
-            revHTML += `<div style="border-bottom:1px solid #eee; padding:15px; text-align:left;">
-                <p><strong>${i+1}. ${q.pregunta || 'Pregunta imagen'}</strong></p>
-                ${q.imagen ? `<img src="${q.imagen}" style="max-width:150px;">` : ''}
-                <p>Tuya: <span style="color:${correct?'var(--success)':'var(--error)'}">${userAnswers[i]||'---'}</span></p>
-                ${!correct ? `<p style="color:var(--success)">Correcta: <strong>${q.respuesta}</strong></p>` : ''}
-            </div>`;
-        });
-        document.getElementById('revision-container').innerHTML = revHTML;
-        saveResult(score, questions.length, materias[new URLSearchParams(window.location.search).get('materia')]);
-    }
-
-    async function saveResult(score, total, title) {
-        const userStr = sessionStorage.getItem('userInfo'); 
-        if(userStr) {
-            const user = JSON.parse(userStr);
-            try {
-                await simuladorDB.from('resultados').insert([{
-                    usuario_id: user.usuario, usuario_nombre: user.nombre, materia: title,
-                    puntaje: score, total_preguntas: total, ciudad: user.ciudad
-                }]);
-            } catch(e) { console.error(e); }
-        }
-    }
-
-    // Eventos Globales
-    document.getElementById('terminar-intento-btn').onclick = () => {
-        const faltan = userAnswers.filter(a => a === null).length;
-        document.getElementById('modal-mensaje').textContent = `Faltan ${faltan} preguntas.`;
-        document.getElementById('modal-overlay').style.display = 'flex';
-    };
-    
-    document.getElementById('confirmar-modal-btn').onclick = () => { document.getElementById('modal-overlay').style.display='none'; finish(); };
-    document.getElementById('cancelar-modal-btn').onclick = () => document.getElementById('modal-overlay').style.display='none';
-    document.getElementById('retry-btn').onclick = () => location.reload();
-    document.getElementById('reiniciar-btn').onclick = () => location.href='index.html';
-
-    init();
 });
