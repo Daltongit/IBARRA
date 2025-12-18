@@ -1,93 +1,54 @@
 // JS/auth.js - IBARRA (Lógica JSON Local)
 
 const SESSION_TIMEOUT_MS = 6 * 60 * 60 * 1000; // 6 Horas
-let inactivityTimer;
 
-// --- LOGIN CON JSON (Igual a Tulcán) ---
-async function login(cedula, password) {
+// --- FUNCIÓN LOGIN (Lógica Pura) ---
+async function loginUser(usuario, password) {
     try {
-        // 1. Cargar el archivo JSON local
         const response = await fetch('DATA/usuarios.json');
-        if (!response.ok) throw new Error("No se pudo cargar la base de usuarios.");
+        if (!response.ok) throw new Error("Error cargando usuarios.");
         
         const usuarios = await response.json();
+        const user = usuarios.find(u => u.usuario === usuario && u.password === password);
 
-        // 2. Buscar coincidencias
-        const user = usuarios.find(u => u.usuario === cedula && u.password === password);
+        if (!user) return { success: false, message: "Usuario o contraseña incorrectos." };
 
-        if (!user) throw new Error("Credenciales incorrectas");
-
-        // 3. Guardar sesión
+        // Guardar sesión
         const sessionData = {
             usuario: user.usuario,
             nombre: user.nombre,
             rol: user.rol,
             ciudad: user.ciudad,
-            timestamp: new Date().getTime()
+            timestamp: Date.now()
         };
-        
         sessionStorage.setItem('userInfo', JSON.stringify(sessionData));
-        sessionStorage.setItem('sessionExpiration', (Date.now() + SESSION_TIMEOUT_MS).toString());
-        
         return { success: true, user: user };
 
     } catch (error) {
-        console.error("Login error:", error);
-        return { success: false, message: error.message };
+        console.error(error);
+        return { success: false, message: "Error del sistema." };
     }
 }
 
-// --- VERIFICACIÓN DE SESIÓN ---
-function isLoggedIn() {
-    const expiration = sessionStorage.getItem('sessionExpiration');
-    if (!expiration || Date.now() > parseInt(expiration)) {
-        clearSession();
-        return false;
-    }
-    resetInactivityTimer();
-    return true;
-}
-
+// --- UTILIDADES ---
 function getUserInfo() {
-    if (!isLoggedIn()) return null;
-    try {
-        return JSON.parse(sessionStorage.getItem('userInfo'));
-    } catch (e) {
-        clearSession();
-        return null;
-    }
+    try { return JSON.parse(sessionStorage.getItem('userInfo')); } 
+    catch (e) { return null; }
 }
 
-function clearSession() {
+function isLoggedIn() {
+    return !!getUserInfo();
+}
+
+function logout() {
     sessionStorage.removeItem('userInfo');
-    sessionStorage.removeItem('sessionExpiration');
-    clearTimeout(inactivityTimer);
-}
-
-// --- SALIR ---
-function logoutUser() {
-    clearSession();
     window.location.href = 'login.html';
 }
 
-// --- PROTECCIÓN DE PÁGINAS ---
 function checkAuth() {
-    // Si estamos en login, no hacemos nada
     if (window.location.pathname.includes('login.html')) return;
-    
-    // Si no hay sesión, chao
-    if (!isLoggedIn()) {
-        window.location.href = 'login.html';
-    }
+    if (!isLoggedIn()) window.location.href = 'login.html';
 }
 
-function resetInactivityTimer() {
-    clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(() => {
-        alert("Tu sesión ha expirado por inactividad.");
-        logoutUser();
-    }, SESSION_TIMEOUT_MS);
-}
-
-// Exponer logout globalmente para el botón del Header
-window.logout = logoutUser;
+// Exponer globalmente
+window.logout = logout;
