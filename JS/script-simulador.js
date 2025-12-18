@@ -1,4 +1,4 @@
-// JS/script-simulador.js - IBARRA (FINAL: Números arreglados)
+// JS/script-simulador.js - IBARRA (BOTÓN TERMINAR ARREGLADO)
 
 // --- 1. CONEXIÓN SUPABASE IBARRA ---
 const simuladorUrl = 'https://dgnfjzzwcdfbauyamutp.supabase.co';
@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let timeLeft = 3600;
     let totalPreguntas = 50;
     let carpetaEspecialID = null;
-    let modeType = 'normal';
+    
+    // VARIABLE CLAVE PARA SABER QUÉ TERMINAR
+    let modeType = 'normal'; // 'normal', 'multi_phase', 'table_img'
 
     const materias = {
         'sociales': 'Ciencias Sociales', 'matematicas': 'Matemáticas y Física', 'lengua': 'Lengua y Literatura', 'ingles': 'Inglés', 'general': 'General (Todas)',
@@ -62,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let fetchUrl = '';
         
-        // CONFIGURACIÓN DE RUTAS
+        // CONFIGURACIÓN DE RUTAS Y MODOS
         if (materiaKey === 'int_esmil_3') {
             modeType = 'multi_phase'; fetchUrl = 'DATA/3/3.json'; timeLeft = 3600;
         } 
@@ -128,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if(txtPreguntas) txtPreguntas.textContent = totalPreguntas;
 
-            // Preload
             if (modeType !== 'multi_phase' && questions.some(q => q.imagen || q.imagen_pregunta)) {
                 btnStart.innerHTML = "CARGANDO...";
                 await Promise.race([preloadImages(questions), new Promise(r => setTimeout(r, 2000))]);
@@ -158,17 +159,12 @@ document.addEventListener('DOMContentLoaded', () => {
         })));
     }
 
-    // --- START FUNCTIONS ---
-    
+    // --- FUNCIONES DE INICIO ---
     function startQuiz() { 
-        lobbyBanner.style.display = 'none'; 
-        lobbyContainer.style.display = 'none';
-        
-        simulador.style.display = 'grid'; // Aseguramos que se vea
-        simulador.className = 'quiz-layout';
-        
+        lobbyBanner.style.display = 'none'; lobbyContainer.style.display = 'none';
+        simulador.style.display = 'grid'; simulador.className = 'quiz-layout';
         userAnswers = new Array(questions.length).fill(null);
-        renderNav(); showQ(0); startTimer(finish);
+        renderNav(); showQ(0); startTimer(() => finish());
     }
 
     function startPhase1() {
@@ -181,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         html += `</tbody></table></div><button class="btn-finish-table" onclick="goToPhase2()">SIGUIENTE SECCIÓN</button></div>`;
         simulador.innerHTML = html;
-        startTimer(finishMultiPhase);
+        startTimer(() => finishMultiPhase());
     }
 
     function startTableImgQuiz() {
@@ -196,15 +192,15 @@ document.addEventListener('DOMContentLoaded', () => {
         simulador.innerHTML = html;
         startTimer(() => finishTableImg());
         
+        // Modal Event Específico para este modo
         document.getElementById('btn-trigger-modal').onclick = () => {
             let faltantes = 0; questions.forEach((_, i) => { if(tableAnswersImg[i] === undefined) faltantes++; });
             document.getElementById('modal-mensaje').textContent = `Faltan ${faltantes} preguntas.`;
             document.getElementById('modal-overlay').style.display = 'flex';
-            document.getElementById('confirmar-modal-btn').onclick = () => { document.getElementById('modal-overlay').style.display='none'; finishTableImg(); };
         };
     }
 
-    // --- LOGICA PREGUNTAS (NORMAL) ---
+    // --- LÓGICA DE PREGUNTAS (NORMAL) ---
     function showQ(idx) {
         currentIdx = idx;
         const q = questions[idx];
@@ -221,27 +217,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 userAnswers[idx] = op;
                 Array.from(opts.children).forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
-                updateNavStatus(idx, true); // Marcar como respondida
+                updateNavStatus(idx, true);
             };
             opts.appendChild(btn);
         });
-
-        // Actualizar Navegador (Highlight actual)
         updateNavStatus(idx, false);
-
         const btnNext = document.getElementById('siguiente-btn');
         btnNext.textContent = idx === questions.length - 1 ? "FINALIZAR" : "SIGUIENTE";
         btnNext.onclick = () => idx < questions.length - 1 ? showQ(idx + 1) : document.getElementById('terminar-intento-btn').click();
     }
 
-    // --- RENDERIZADO NAVEGADOR (CORREGIDO) ---
     function renderNav() {
         const nav = document.getElementById('navegador-preguntas'); nav.innerHTML = '';
         questions.forEach((_, i) => { 
             const b = document.createElement('button'); 
             b.className = 'nav-dot'; 
-            b.textContent = i + 1; // ¡AQUÍ ESTÁ EL NÚMERO QUE FALTABA!
-            b.onclick = () => showQ(i); // Ahora puedes hacer clic para saltar
+            b.textContent = i + 1;
+            b.onclick = () => showQ(i);
             nav.appendChild(b); 
         });
     }
@@ -249,13 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateNavStatus(idx, isAnswered) {
         const nav = document.getElementById('navegador-preguntas');
         if(!nav || !nav.children[idx]) return;
-        
-        // Quitar 'active' de todos
         Array.from(nav.children).forEach(b => b.style.borderColor = '#ddd');
-        
-        // Poner 'active' al actual (borde rojo o azul)
         nav.children[idx].style.borderColor = '#d32f2f'; 
-
         if(isAnswered) nav.children[idx].classList.add('answered');
     }
 
@@ -263,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function startTimer(callback) {
         timerInterval = setInterval(() => {
             timeLeft--;
-            const timerEl = document.getElementById('cronometro') || document.getElementById('cronometro-tabla') || document.getElementById('cronometro-tabla-2');
+            const timerEl = document.getElementById('cronometro');
             if(timerEl) timerEl.textContent = `${Math.floor(timeLeft/60).toString().padStart(2,'0')}:${(timeLeft%60).toString().padStart(2,'0')}`;
             if(timeLeft<=0) callback();
         }, 1000);
@@ -276,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- FUNCIONES EXTRA ---
+    // --- SELECCIONES FASES ---
     window.selectPhase1 = (idx, val, el) => {
         tableAnswersText[idx] = val;
         const row = document.getElementById(`row-p1-${idx}`);
@@ -299,10 +286,15 @@ document.addEventListener('DOMContentLoaded', () => {
         el.classList.add('img-selected');
     };
 
-    // --- FINALIZADORES ---
+    // --- FINALIZADORES (FUNCIONES QUE GUARDAN Y MUESTRAN RESULTADOS) ---
     async function finish() {
         clearInterval(timerInterval);
-        document.querySelector('.quiz-layout').style.display = 'none';
+        
+        // AQUÍ ESTABA EL ERROR ANTES: Verificamos si existe el elemento antes de ocultarlo
+        const quizLayout = document.querySelector('.quiz-layout');
+        if (quizLayout) quizLayout.style.display = 'none';
+        else simulador.style.display = 'none'; // Si no es quiz-layout, ocultamos el contenedor genérico
+
         resultados.style.display = 'block';
         let ok = 0; questions.forEach((q, i) => { if(userAnswers[i] === q.respuesta) ok++; });
         const score = Math.round((ok * 1000) / questions.length);
@@ -325,24 +317,24 @@ document.addEventListener('DOMContentLoaded', () => {
     window.finishMultiPhase = async () => {
         clearInterval(timerInterval);
         simulador.style.display = 'none'; resultados.style.display = 'block';
+        // ... (Lógica de cálculo MultiFase) ...
         let ok1 = 0, ok2 = 0;
         let revHTML = '<h3 style="background:#eee; padding:10px; border-radius:8px; margin-top:30px;">FASE 1</h3>';
         phase1Data.forEach((q, i) => {
             const userAns = tableAnswersText[i];
-            const correct = userAns === q.respuesta;
-            if (correct) ok1++;
-            revHTML += `<div style="border-bottom:1px solid #eee; padding:15px; text-align:left;"><p><strong>${i+1}. ${q.palabra}</strong></p><p>Respuesta: <span style="font-weight:bold; color:${correct?'green':'red'}">${userAns || '---'}</span> ${!correct ? `<span style="color:green"> (Correcta: ${q.respuesta})</span>` : ''}</p></div>`;
+            if (userAns === q.respuesta) ok1++;
+            revHTML += `<div style="border-bottom:1px solid #eee; padding:15px; text-align:left;"><p><strong>${i+1}. ${q.palabra}</strong></p><p>Respuesta: <strong>${userAns||'--'}</strong> <span style="color:green">(Correcta: ${q.respuesta})</span></p></div>`;
         });
         revHTML += '<h3 style="background:#eee; padding:10px; border-radius:8px; margin-top:30px;">FASE 2</h3>';
         const letras = ['A','B','C','D','E','F'];
         phase2Blocks.forEach((bloque, bIdx) => {
-            revHTML += `<div style="margin-top:20px; border:1px solid #eee; border-radius:10px; overflow:hidden;"><div style="background:#333; color:white; padding:5px;">BLOQUE ${bIdx+1}</div><div style="text-align:center; padding:10px;"><img src="${bloque.imagen_bloque}" style="max-width:100%;"></div>`;
+            revHTML += `<div style="margin-top:20px; border:1px solid #eee; padding:10px;"><div style="text-align:center;"><img src="${bloque.imagen_bloque}" style="max-width:100%;"></div>`;
             bloque.respuestas_bloque.forEach((correctArr, i) => {
                 const qNum = bloque.rango_inicio + i;
                 const userArr = tableAnswersImg[qNum] || [];
                 const esCorrecto = (userArr.length === correctArr.length) && userArr.every(val => correctArr.includes(val));
                 if (esCorrecto) ok2++;
-                revHTML += `<div style="padding:10px; border-top:1px solid #eee; text-align:left;"><strong>P${qNum}:</strong> Tuya: <span style="color:${esCorrecto?'green':'red'}">${userArr.map(idx=>letras[idx]).join(', ')||'--'}</span> ${!esCorrecto ? `<span style="color:green"> (Correcta: ${correctArr.map(idx=>letras[idx]).join(', ')})</span>` : ''}</div>`;
+                revHTML += `<div style="padding:5px;"><strong>P${qNum}:</strong> Tuya: ${userArr.map(x=>letras[x]).join('')} | Correcta: ${correctArr.map(x=>letras[x]).join('')}</div>`;
             });
             revHTML += `</div>`;
         });
@@ -365,8 +357,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p><strong>Pregunta ${q.id}</strong></p>
                 <div style="display:flex; gap:10px; align-items:center;">
                     <img src="${q.imagen_pregunta}" style="max-width:50px;">
-                    <span>Tu respuesta: <strong style="color:${userAns===correctAns?'green':'red'}">${userAns!==undefined ? String.fromCharCode(65+userAns) : '--'}</strong></span>
-                    ${userAns!==correctAns ? `<span style="color:green; margin-left:10px;">Correcta: <strong>${String.fromCharCode(65+correctAns)}</strong></span>` : ''}
+                    <span>Tu respuesta: <strong>${userAns!==undefined ? String.fromCharCode(65+userAns) : '--'}</strong></span>
+                    <span style="color:green;">Correcta: ${String.fromCharCode(65+correctAns)}</span>
                 </div>
             </div>`;
         });
@@ -390,24 +382,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = JSON.parse(userStr);
             try {
                 await simuladorDB.from('resultados').insert([{
-                    usuario_id: user.usuario, 
-                    usuario_nombre: user.nombre, 
-                    materia: title,
-                    puntaje: score, 
-                    total_preguntas: total, 
-                    ciudad: user.ciudad
+                    usuario_id: user.usuario, usuario_nombre: user.nombre, materia: title,
+                    puntaje: score, total_preguntas: total, ciudad: user.ciudad
                 }]);
             } catch(e) { console.error("Error guardando:", e); }
         }
     }
 
-    // Modal Events
+    // --- MODAL EVENTS (CORREGIDO) ---
     document.getElementById('terminar-intento-btn').onclick = () => {
-        const faltan = userAnswers.filter(a => a === null).length;
-        document.getElementById('modal-mensaje').textContent = `Faltan ${faltan} preguntas.`;
+        let faltan = 0;
+        if(modeType === 'normal') faltan = userAnswers.filter(a => a === null).length;
+        // Para otros modos se podría calcular diferente, pero por ahora mostramos el modal simple
+        document.getElementById('modal-mensaje').textContent = `¿Estás seguro? Faltan ${faltan} preguntas.`;
         document.getElementById('modal-overlay').style.display = 'flex';
     };
-    document.getElementById('confirmar-modal-btn').onclick = () => { document.getElementById('modal-overlay').style.display='none'; finish(); };
+    
+    // AQUÍ ESTÁ EL CAMBIO CLAVE: Detecta el modo y llama a la función correcta
+    document.getElementById('confirmar-modal-btn').onclick = () => { 
+        document.getElementById('modal-overlay').style.display='none';
+        
+        if (modeType === 'multi_phase') {
+            finishMultiPhase();
+        } else if (modeType === 'table_img') {
+            finishTableImg();
+        } else {
+            finish(); // Modo Normal
+        }
+    };
+    
     document.getElementById('cancelar-modal-btn').onclick = () => document.getElementById('modal-overlay').style.display='none';
 
     init();
