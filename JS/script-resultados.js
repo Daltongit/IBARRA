@@ -1,14 +1,11 @@
-// JS/script-resultados.js - IBARRA
+// JS/script-resultados.js - IBARRA (CORREGIDO)
 
-// --- 1. CONEXIÓN SUPABASE (Solo para Resultados) ---
+// 1. CONEXIÓN SUPABASE
 const supabaseUrl = 'https://dgnfjzzwcdfbauyamutp.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnbmZqenp3Y2RmYmF1eWFtdXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNTk3ODAsImV4cCI6MjA4MTYzNTc4MH0.upcZkm8dYMOlWrbxEQEraUiNHOWyOOBAAqle8rbesNY';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-const { jsPDF } = window.jspdf;
-
 document.addEventListener('DOMContentLoaded', async () => {
-    // Referencias DOM
     const container = document.getElementById('reporte-container');
     const fMateria = document.getElementById('filtro-materia');
     const fCiudad = document.getElementById('filtro-ciudad');
@@ -21,45 +18,59 @@ document.addEventListener('DOMContentLoaded', async () => {
     let allIntentos = [];
     let allUsuarios = [];
 
+    // Normalizar texto para búsquedas
     const cleanText = (str) => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
 
-    // --- 2. CARGA DE DATOS ---
     try {
-        // A) Cargar Resultados de la Nube (Supabase)
+        console.log("Iniciando carga de datos...");
+
+        // A) Cargar Resultados desde Supabase
         const { data: intentos, error } = await supabase
             .from('resultados')
             .select('*')
             .order('created_at', { ascending: true });
 
-        if (error) throw new Error("Error conectando a BD Resultados: " + error.message);
-        allIntentos = intentos || [];
-
-        // B) Cargar Usuarios del JSON Local
-        const res = await fetch('DATA/usuarios.json');
-        if (!res.ok) throw new Error("Error cargando usuarios.json");
-        allUsuarios = await res.json();
+        if (error) throw new Error("Error Supabase: " + error.message);
         
-        // C) Llenar Filtro Materias
-        [...new Set(allIntentos.map(i => i.materia))].sort().forEach(m => {
+        allIntentos = intentos || [];
+        console.log("Intentos cargados:", allIntentos.length);
+
+        // B) Cargar Usuarios desde JSON local
+        const res = await fetch('DATA/usuarios.json');
+        if (!res.ok) throw new Error("No se encontró DATA/usuarios.json");
+        allUsuarios = await res.json();
+        console.log("Usuarios cargados:", allUsuarios.length);
+
+        // C) Llenar Select de Materias
+        const materiasUnicas = [...new Set(allIntentos.map(i => i.materia))].sort();
+        materiasUnicas.forEach(m => {
             const opt = document.createElement('option');
-            opt.value = m; opt.textContent = m;
+            opt.value = m; 
+            opt.textContent = m;
             fMateria.appendChild(opt);
         });
 
+        // Ocultar spinner y mostrar datos
         if (spinner) spinner.style.display = 'none';
         render();
 
     } catch (e) {
-        if (spinner) spinner.innerHTML = `<p style="color:red; font-weight:bold;">${e.message}</p>`;
         console.error(e);
+        if (spinner) {
+            spinner.innerHTML = `<div style="color:#d32f2f; background:#ffebee; padding:15px; border-radius:8px;">
+                <i class="fas fa-exclamation-triangle"></i> 
+                <strong>Error:</strong> ${e.message}<br>
+                <small>Verifica la conexión a internet o que la tabla 'resultados' exista en Supabase.</small>
+            </div>`;
+        }
     }
 
-    // --- 3. RENDERIZADO ---
+    // --- FUNCIÓN RENDERIZAR ---
     function render() {
         container.innerHTML = '';
         const busqueda = cleanText(fNombre.value);
         
-        // Filtramos usuarios locales (Aspirantes)
+        // 1. Filtrar Usuarios (Solo Aspirantes que coincidan con filtros)
         const users = allUsuarios.filter(u => 
             u.rol === 'aspirante' && 
             (fCiudad.value === 'Todas' || u.ciudad === fCiudad.value) && 
@@ -67,15 +78,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
 
         if (users.length === 0) { 
-            container.innerHTML = '<p style="text-align:center;color:#666;">No se encontraron estudiantes.</p>'; 
+            container.innerHTML = '<p style="text-align:center; color:#666; margin-top:20px;">No se encontraron estudiantes con esos criterios.</p>'; 
             return; 
         }
         
-        // Ordenar intentos (Más reciente arriba)
+        // 2. Ordenar intentos para mostrar (Recientes primero)
         const intentosParaWeb = [...allIntentos].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
         users.forEach(user => {
-            // Cruzar ID de usuario local con ID en base de datos
+            // Buscar intentos de este usuario
             const intentosUser = intentosParaWeb.filter(i => 
                 String(i.usuario_id).trim() === String(user.usuario).trim() && 
                 (fMateria.value === 'Todas' || i.materia === fMateria.value)
@@ -83,122 +94,190 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const card = document.createElement('div'); 
             card.className = 'user-card';
-            let html = '';
-
+            
+            let htmlDetalle = '';
             if (intentosUser.length === 0) {
-                html = '<p style="text-align:center;padding:15px;color:#999;">Sin intentos registrados.</p>';
+                htmlDetalle = '<p style="text-align:center; padding:20px; color:#999;">Sin intentos registrados.</p>';
             } else {
-                [...new Set(intentosUser.map(i=>i.materia))].sort().forEach(m => {
-                    const im = intentosUser.filter(i=>i.materia===m);
-                    html += `<div class="materia-block"><h4 class="materia-title">${m} (${im.length})</h4><table class="table"><thead><tr><th>NOTA</th><th>FECHA</th><th>HORA</th></tr></thead><tbody>`;
+                // Agrupar por materia
+                const materiasDelUser = [...new Set(intentosUser.map(i=>i.materia))].sort();
+                
+                materiasDelUser.forEach(m => {
+                    const im = intentosUser.filter(i => i.materia === m);
+                    htmlDetalle += `
+                    <div class="materia-block">
+                        <h4 class="materia-title">${m} (${im.length})</h4>
+                        <table class="table">
+                            <thead><tr><th>NOTA</th><th>FECHA</th><th>HORA</th></tr></thead>
+                            <tbody>`;
+                    
                     im.forEach(i => {
                         const d = new Date(i.created_at);
                         const colorNota = i.puntaje >= 700 ? '#2e7d32' : '#c62828';
-                        html += `<tr><td style="font-weight:bold;color:${colorNota}">${i.puntaje}</td><td>${d.toLocaleDateString()}</td><td>${d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td></tr>`;
+                        htmlDetalle += `
+                            <tr>
+                                <td style="font-weight:bold; color:${colorNota}">${i.puntaje}</td>
+                                <td>${d.toLocaleDateString()}</td>
+                                <td>${d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td>
+                            </tr>`;
                     });
-                    html += `</tbody></table></div>`;
+                    
+                    htmlDetalle += `</tbody></table></div>`;
                 });
             }
 
             card.innerHTML = `
                 <div class="user-header">
-                    <div style="text-align:left;"><h3>${user.nombre}</h3><small>${user.ciudad}</small></div>
-                    <div style="display:flex;align-items:center;">
+                    <div style="text-align:left;">
+                        <h3>${user.nombre}</h3>
+                        <small><i class="fas fa-map-marker-alt"></i> ${user.ciudad} | <i class="fas fa-id-card"></i> ${user.usuario}</small>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:15px;">
                         <button class="btn-pdf-mini"><i class="fas fa-file-pdf"></i> PDF</button>
-                        <div style="text-align:right; margin-left:15px;">
-                            <strong style="color:${intentosUser.length>0?'#d32f2f':'#999'};font-size:1.5rem;font-family:'Teko';">${intentosUser.length}</strong>
-                            <span style="display:block;font-size:0.75rem;">TOTAL</span>
+                        <div style="text-align:right;">
+                            <strong style="color:${intentosUser.length>0?'#d32f2f':'#999'}; font-size:1.5rem; font-family:'Teko';">${intentosUser.length}</strong>
+                            <span style="display:block; font-size:0.75rem;">INTENTOS</span>
                         </div>
                     </div>
                 </div>
-                <div class="user-attempts">${html}</div>`;
+                <div class="user-attempts">${htmlDetalle}</div>
+            `;
             
-            // Eventos
+            // Eventos de la tarjeta
             card.querySelector('.user-header').onclick = (e) => { 
                 if(!e.target.closest('.btn-pdf-mini')){ 
                     const b = card.querySelector('.user-attempts'); 
-                    b.style.display = b.style.display==='block'?'none':'block'; 
+                    b.style.display = b.style.display === 'block' ? 'none' : 'block'; 
                 }
             };
+            
             card.querySelector('.btn-pdf-mini').onclick = (e) => { 
                 e.stopPropagation(); 
                 generatePDF([user], `Reporte_${user.nombre}.pdf`); 
             };
+            
             container.appendChild(card);
         });
     }
 
-    fCiudad.onchange = render; fMateria.onchange = render; fNombre.oninput = render;
+    // --- EVENTOS FILTROS ---
+    fCiudad.onchange = render; 
+    fMateria.onchange = render; 
+    fNombre.oninput = render;
     
     if(btnPDFGeneral) btnPDFGeneral.onclick = () => {
         const busqueda = cleanText(fNombre.value);
         const users = allUsuarios.filter(u => u.rol==='aspirante' && (fCiudad.value==='Todas'||u.ciudad===fCiudad.value) && (busqueda===''||cleanText(u.nombre).includes(busqueda)));
-        if(users.length>0) generatePDF(users, "Reporte_General.pdf");
+        if(users.length > 0) generatePDF(users, "Reporte_General_Ibarra.pdf");
+        else alert("No hay datos visibles para generar el reporte.");
     };
 
-    // --- PDF GENERATOR (IGUAL A TULCÁN PERO CON TÍTULO IBARRA) ---
+    // --- GENERADOR PDF ---
     async function generatePDF(usersList, filename) {
-        const doc = new jsPDF(); let pageAdded = false;
+        if (!window.jspdf) { alert("Librería PDF no cargada. Recarga la página."); return; }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF(); 
+        let pageAdded = false;
+
         for (const u of usersList) {
-            let ints = allIntentos.filter(i => String(i.usuario_id).trim()===String(u.usuario).trim());
+            // Filtrar intentos
+            let ints = allIntentos.filter(i => String(i.usuario_id).trim() === String(u.usuario).trim());
             if (fMateria.value !== 'Todas') ints = ints.filter(i => i.materia === fMateria.value);
             
+            // Si no tiene intentos y es reporte individual, imprimimos "Sin Intentos"
             if (ints.length === 0) {
                 if(pageAdded) doc.addPage(); pageAdded = true;
                 header(doc, u, fMateria.value); 
-                doc.setFontSize(20); doc.setTextColor(150); doc.text("SIN INTENTOS", 105, 100, {align:"center"});
+                doc.setFontSize(16); doc.setTextColor(150); doc.text("SIN REGISTROS DE INTENTOS", 105, 100, {align:"center"});
                 continue;
             }
             
             const mats = [...new Set(ints.map(i=>i.materia))];
+            
             for (const m of mats) {
-                const im = ints.filter(i=>i.materia===m);
+                const im = ints.filter(i => i.materia === m);
                 if(pageAdded) doc.addPage(); pageAdded = true;
+                
                 header(doc, u, m);
                 
+                // Estadísticas
                 const prom = (im.reduce((a,b)=>a+b.puntaje,0)/im.length).toFixed(0);
                 const max = Math.max(...im.map(i=>i.puntaje));
-                stat(doc, 140, 45, "PROMEDIO", prom, 178,34,34); 
-                stat(doc, 170, 45, "MEJOR", max, 39,174,96);
+                
+                // Cajas Estadísticas
+                stat(doc, 140, 45, "PROMEDIO", prom, 211, 47, 47); 
+                stat(doc, 170, 45, "MEJOR NOTA", max, 46, 125, 50);
                 
                 // Gráfico
-                const chartData = im.slice(-20);
+                const chartData = im.slice(-15); // Últimos 15
                 const img = await getChart(chartData);
-                if(img) doc.addImage(img, 'PNG', 14, 80, 180, 65);
+                if(img) {
+                    doc.addImage(img, 'PNG', 15, 80, 180, 60);
+                }
 
                 // Tabla
-                const rows = [...im].reverse().map((i,idx) => [im.length-idx, i.puntaje, new Date(i.created_at).toLocaleDateString(), new Date(i.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})]);
-                doc.autoTable({ head:[['#','Nota','Fecha','Hora']], body:rows, startY:155, theme:'grid', headStyles:{fillColor:[211, 47, 47]} }); // Rojo en PDF
+                const rows = [...im].reverse().map((i,idx) => [
+                    im.length-idx, 
+                    i.puntaje, 
+                    new Date(i.created_at).toLocaleDateString(), 
+                    new Date(i.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
+                ]);
+                
+                doc.autoTable({ 
+                    head:[['#','Nota','Fecha','Hora']], 
+                    body:rows, 
+                    startY: 150, 
+                    theme:'grid', 
+                    headStyles:{fillColor:[211, 47, 47]} // Rojo Ibarra
+                });
             }
         }
         doc.save(filename);
     }
 
     function header(doc, u, m) {
-        doc.setFillColor(211, 47, 47); // Rojo Ibarra
-        doc.rect(0,0,210,35,'F');
-        doc.setTextColor(255,255,255); doc.setFontSize(20); doc.text("SPARTA ACADEMY IBARRA", 105, 18, {align:"center"});
-        doc.setFontSize(10); doc.text("REPORTE DE RENDIMIENTO", 105, 26, {align:"center"});
-        doc.setTextColor(0,0,0); doc.setFontSize(14); doc.text(u.nombre.toUpperCase(), 14, 48);
-        doc.setFontSize(10); doc.setTextColor(100); doc.text(`CIUDAD: ${u.ciudad}`, 14, 54); doc.text(`MATERIA: ${m}`, 14, 59);
+        // Fondo Rojo
+        doc.setFillColor(211, 47, 47); doc.rect(0,0,210,35,'F');
+        // Textos
+        doc.setTextColor(255,255,255); doc.setFontSize(22); doc.text("SPARTA ACADEMY", 105, 18, {align:"center"});
+        doc.setFontSize(10); doc.text("REPORTE ACADÉMICO - SEDE IBARRA", 105, 26, {align:"center"});
+        
+        // Datos Alumno
+        doc.setTextColor(0,0,0); doc.setFontSize(14); doc.text(u.nombre.toUpperCase(), 15, 50);
+        doc.setFontSize(10); doc.setTextColor(100); 
+        doc.text(`CÉDULA: ${u.usuario}`, 15, 56); 
+        doc.text(`MATERIA: ${m}`, 15, 62);
     }
     
-    function stat(doc, x, y, l, v, r, g, b) {
-        doc.setFillColor(245,245,245); doc.rect(x,y,25,20,'F');
-        doc.setFontSize(7); doc.setTextColor(100); doc.text(l, x+12.5, y+5, {align:"center"});
-        doc.setFontSize(12); doc.setTextColor(r,g,b); doc.text(String(v), x+12.5, y+15, {align:"center"});
+    function stat(doc, x, y, label, val, r, g, b) {
+        doc.setFillColor(245,245,245); doc.setDrawColor(200); doc.rect(x,y,30,22,'FD');
+        doc.setFontSize(8); doc.setTextColor(100); doc.text(label, x+15, y+6, {align:"center"});
+        doc.setFontSize(14); doc.setTextColor(r,g,b); doc.text(String(val), x+15, y+16, {align:"center"});
     }
 
     async function getChart(data) {
         return new Promise(r => {
             const ctx = canvasHidden.getContext('2d');
             if(window.myChart) window.myChart.destroy();
+            
             window.myChart = new Chart(ctx, {
                 type: 'bar', 
-                data: { labels: data.map((_,i)=>i+1), datasets: [{ data: data.map(i=>i.puntaje), backgroundColor: data.map(i=>i.puntaje>=700?'#2e7d32':'#c62828') }] },
-                options: { animation: false, plugins: { legend: false }, scales: { y: { beginAtZero: true, max: 1000 } } }
+                data: { 
+                    labels: data.map((_,i)=>i+1), 
+                    datasets: [{ 
+                        data: data.map(i=>i.puntaje), 
+                        backgroundColor: data.map(i=>i.puntaje>=700?'#2e7d32':'#d32f2f'),
+                        borderRadius: 3
+                    }] 
+                },
+                options: { 
+                    animation: false, 
+                    plugins: { legend: false }, 
+                    scales: { y: { beginAtZero: true, max: 1000, ticks: { display: false } }, x: { display: false } } 
+                }
             });
-            setTimeout(() => r(canvasHidden.toDataURL('image/png')), 150);
+            // Esperar renderizado
+            setTimeout(() => r(canvasHidden.toDataURL('image/png')), 200);
         });
     }
     
