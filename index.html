@@ -20,133 +20,153 @@
             <img src="logo.png" alt="Sparta Logo">
             <div class="brand-text">
                 <h1>SPARTA</h1>
-                </div>
+            </div>
         </div>
         <div class="user-zone">
-            <div class="user-info">
-                <span id="user-name-display">CADETE</span>
-                <small>En Línea</small>
-            </div>
-            <button onclick="logout()" class="btn-logout-ibarra"><i class="fas fa-power-off"></i></button>
+            <button onclick="logout()" class="btn-logout-ibarra">
+                <span>SALIR</span>
+                <i class="fas fa-power-off"></i>
+            </button>
         </div>
     </header>
 
-    <main class="dashboard-stack">
+    <div class="main-grid-layout">
         
-        <div class="hero-banner">
-            <div class="hero-content">
-                <h2>CENTRO DE COMANDO</h2>
-                <p>Selecciona tu objetivo y comienza el entrenamiento.</p>
-            </div>
-            <div class="hero-icon">
-                <i class="fas fa-crosshairs"></i>
-            </div>
-        </div>
-
-        <div class="accordion-item">
-            <button class="accordion-header" type="button" id="default-open">
-                <div class="header-left">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>POLICÍA NACIONAL</span>
+        <aside class="sidebar-profile">
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-astronaut"></i>
                 </div>
-                <i class="fas fa-plus indicator"></i>
-            </button>
+                <h3 id="sidebar-name">CADETE</h3>
+                <span class="badge">ASPIRANTE ACTIVO</span>
+                
+                <div class="stats-row">
+                    <div class="stat">
+                        <strong>NIVEL</strong>
+                        <span>1</span>
+                    </div>
+                    <div class="stat">
+                        <strong>SEDE</strong>
+                        <span>IBARRA</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-widget">
+                <h4><i class="fas fa-broadcast-tower"></i> ESTADO DEL SISTEMA</h4>
+                <ul class="system-logs">
+                    <li><i class="fas fa-check-circle"></i> Servidor: <strong>En Línea</strong></li>
+                    <li><i class="fas fa-check-circle"></i> Simuladores: <strong>Activos</strong></li>
+                    <li><i class="fas fa-clock"></i> <span id="clock-display">00:00:00</span></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="dashboard-content">
             
-            <div class="accordion-body">
-                <div class="cards-grid">
-                    <div class="card-mini" onclick="location.href='simulador.html?materia=sociales'">
-                        <i class="fas fa-landmark"></i>
-                        <span>Sociales</span>
-                    </div>
-                    <div class="card-mini" onclick="location.href='simulador.html?materia=matematicas'">
-                        <i class="fas fa-calculator"></i>
-                        <span>Matemáticas</span>
-                    </div>
-                    <div class="card-mini" onclick="location.href='simulador.html?materia=lengua'">
-                        <i class="fas fa-book"></i>
-                        <span>Lenguaje</span>
-                    </div>
-                    <div class="card-mini" onclick="location.href='simulador.html?materia=ingles'">
-                        <i class="fas fa-language"></i>
-                        <span>Inglés</span>
-                    </div>
+            <div class="hero-banner">
+                <div class="hero-text">
+                    <h2>CENTRO DE COMANDO</h2>
+                    <p>Selecciona tu módulo de entrenamiento táctico.</p>
                 </div>
+                <i class="fas fa-crosshairs hero-icon"></i>
             </div>
-        </div>
 
-        <div class="accordion-item">
-            <button class="accordion-header" type="button">
-                <div class="header-left">
-                    <i class="fas fa-jet-fighter"></i>
-                    <span>FUERZAS ARMADAS</span>
-                </div>
-                <i class="fas fa-plus indicator"></i>
-            </button>
-            
-            <div class="accordion-body">
-                <div class="cards-grid wide-grid">
-                    <div class="card-wide" onclick="location.href='simulador.html?materia=int_esmil_3'">
-                        <div class="card-icon warning"><i class="fas fa-brain"></i></div>
-                        <div class="card-text">
-                            <h4>INTELIGENCIA</h4>
-                            <p>Abstracto & Espacial</p>
+            <div class="accordion-container">
+                
+                <div class="accordion-item">
+                    <button class="accordion-header" type="button" id="default-open">
+                        <div class="header-left">
+                            <i class="fas fa-shield-alt icon-box"></i>
+                            <span>POLICÍA NACIONAL</span>
+                        </div>
+                        <i class="fas fa-plus indicator"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="cards-grid">
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=sociales'">
+                                <i class="fas fa-landmark"></i><span>Sociales</span>
+                            </div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=matematicas'">
+                                <i class="fas fa-calculator"></i><span>Matemáticas</span>
+                            </div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=lengua'">
+                                <i class="fas fa-book"></i><span>Lenguaje</span>
+                            </div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=ingles'">
+                                <i class="fas fa-language"></i><span>Inglés</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-wide" onclick="location.href='simulador.html?materia=general_esmil'">
-                        <div class="card-icon warning"><i class="fas fa-medal"></i></div>
-                        <div class="card-text">
-                            <h4>ACADÉMICO MILITAR</h4>
-                            <p>Prueba Unificada</p>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header" type="button">
+                        <div class="header-left">
+                            <i class="fas fa-jet-fighter icon-box"></i>
+                            <span>FUERZAS ARMADAS</span>
+                        </div>
+                        <i class="fas fa-plus indicator"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="cards-grid wide-grid">
+                            <div class="card-wide" onclick="location.href='simulador.html?materia=int_esmil_3'">
+                                <div class="card-icon warning"><i class="fas fa-brain"></i></div>
+                                <div class="card-text"><h4>INTELIGENCIA</h4><p>Abstracto & Espacial</p></div>
+                            </div>
+                            <div class="card-wide" onclick="location.href='simulador.html?materia=general_esmil'">
+                                <div class="card-icon warning"><i class="fas fa-medal"></i></div>
+                                <div class="card-text"><h4>ACADÉMICO MILITAR</h4><p>Prueba Unificada</p></div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header" type="button">
+                        <div class="header-left">
+                            <i class="fas fa-globe icon-box"></i>
+                            <span>GENERAL & CONTROL</span>
+                        </div>
+                        <i class="fas fa-plus indicator"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <div class="cards-grid wide-grid">
+                            <div class="card-wide featured" onclick="location.href='simulador.html?materia=general'">
+                                <div class="card-icon blue"><i class="fas fa-radar"></i></div>
+                                <div class="card-text"><h4>SIMULADOR GENERAL</h4><p>Evaluación Total</p></div>
+                            </div>
+                            <div class="card-wide admin" id="admin-panel-card" onclick="location.href='resultados.html'" style="display:none;">
+                                <div class="card-icon dark"><i class="fas fa-user-lock"></i></div>
+                                <div class="card-text"><h4>ADMINISTRACIÓN</h4><p>Gestión</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
-
-        <div class="accordion-item">
-            <button class="accordion-header" type="button">
-                <div class="header-left">
-                    <i class="fas fa-globe"></i>
-                    <span>GENERAL & CONTROL</span>
-                </div>
-                <i class="fas fa-plus indicator"></i>
-            </button>
-            
-            <div class="accordion-body">
-                <div class="cards-grid wide-grid">
-                    <div class="card-wide featured" onclick="location.href='simulador.html?materia=general'">
-                        <div class="card-icon blue"><i class="fas fa-radar"></i></div>
-                        <div class="card-text">
-                            <h4>SIMULADOR GENERAL</h4>
-                            <p>Evaluación Total</p>
-                        </div>
-                    </div>
-                    <div class="card-wide admin" id="admin-panel-card" onclick="location.href='resultados.html'" style="display:none;">
-                        <div class="card-icon dark"><i class="fas fa-user-lock"></i></div>
-                        <div class="card-text">
-                            <h4>ADMINISTRACIÓN</h4>
-                            <p>Gestión Docente</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </main>
+        </main>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Nombre Usuario
             const user = getUserInfo();
             if (user) {
-                document.getElementById('user-name-display').textContent = user.nombre.split(' ')[0].toUpperCase();
+                document.getElementById('sidebar-name').textContent = user.nombre.split(' ')[0].toUpperCase();
                 if (user.rol === 'admin') {
                     const adminCard = document.getElementById('admin-panel-card');
                     if(adminCard) adminCard.style.display = 'flex';
                 }
             }
 
-            // Lógica Acordeón
+            // Reloj
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('clock-display').textContent = now.toLocaleTimeString();
+            }, 1000);
+
+            // Acordeón
             const headers = document.querySelectorAll('.accordion-header');
             headers.forEach(header => {
                 header.addEventListener('click', () => {
@@ -155,19 +175,14 @@
                     if (body.style.maxHeight) {
                         body.style.maxHeight = null;
                     } else {
-                        // Opcional: Cerrar los demás
-                        headers.forEach(h => {
-                            if(h !== header) {
-                                h.classList.remove('active');
-                                h.nextElementSibling.style.maxHeight = null;
-                            }
-                        });
+                        // Opcional: Cerrar otros
+                        headers.forEach(h => { if(h!==header){ h.classList.remove('active'); h.nextElementSibling.style.maxHeight = null; }});
                         body.style.maxHeight = body.scrollHeight + "px";
                     }
                 });
             });
 
-            // AUTO-ABRIR EL PRIMERO (Para que no se vea vacío al inicio)
+            // Abrir primero
             const first = document.getElementById('default-open');
             if(first) first.click();
         });
