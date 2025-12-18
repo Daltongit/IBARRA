@@ -1,10 +1,11 @@
-// JS/script-resultados.js - IBARRA (Versión Final)
+// JS/script-resultados.js - IBARRA (ARREGLADO: Variable 'adminDB')
 
-// 1. CONEXIÓN SUPABASE IBARRA
+// 1. CONEXIÓN SUPABASE
 const supabaseUrl = 'https://dgnfjzzwcdfbauyamutp.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnbmZqenp3Y2RmYmF1eWFtdXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNTk3ODAsImV4cCI6MjA4MTYzNTc4MH0.upcZkm8dYMOlWrbxEQEraUiNHOWyOOBAAqle8rbesNY';
 
-// IMPORTANTE: Usamos 'adminDB' para evitar conflictos con otros scripts
+// --- CAMBIO CLAVE AQUÍ ---
+// Usamos 'adminDB' en lugar de 'supabase' para que no choque con auth.js
 const adminDB = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // Librerías
@@ -16,8 +17,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const fCiudad = document.getElementById('filtro-ciudad');
     const fNombre = document.getElementById('filtro-nombre');
     const spinner = document.getElementById('loading-spinner');
-    
-    // Botones de descarga
     const btnPDFGeneral = document.getElementById('descargar-pdf-btn');
     const btnCSV = document.getElementById('descargar-general-csv-btn');
     const canvasHidden = document.getElementById('hidden-chart-canvas');
@@ -27,17 +26,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const cleanText = (str) => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
 
-    // --- 2. CARGA DE DATOS ---
     try {
         console.log("Iniciando carga de datos Ibarra...");
 
-        // A) Cargar Resultados desde Supabase (Usando adminDB)
+        // A) Cargar Resultados desde Supabase USANDO 'adminDB'
         const { data: intentos, error } = await adminDB
             .from('resultados')
             .select('*')
             .order('created_at', { ascending: true });
 
-        if (error) throw new Error("Error conectando a BD: " + error.message);
+        if (error) throw new Error("Error Supabase: " + error.message);
         
         allIntentos = intentos || [];
         console.log("Intentos cargados:", allIntentos.length);
@@ -48,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         allUsuarios = await res.json();
         console.log("Usuarios cargados:", allUsuarios.length);
 
-        // C) Llenar Filtro de Materias
+        // C) Llenar Select de Materias
         const materiasUnicas = [...new Set(allIntentos.map(i => i.materia))].sort();
         materiasUnicas.forEach(m => {
             const opt = document.createElement('option');
@@ -66,17 +64,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             spinner.innerHTML = `<div style="color:#d32f2f; background:#ffebee; padding:15px; border-radius:8px;">
                 <i class="fas fa-exclamation-triangle"></i> 
                 <strong>Error:</strong> ${e.message}<br>
-                <small>Verifica que la base de datos tenga las Policies activas.</small>
+                <small>Revisa la consola (F12) para más detalles.</small>
             </div>`;
         }
     }
 
-    // --- 3. RENDERIZADO ---
+    // --- FUNCIÓN RENDERIZAR ---
     function render() {
         container.innerHTML = '';
         const busqueda = cleanText(fNombre.value);
         
-        // Filtrar solo usuarios "aspirante" y aplicar filtros de búsqueda
         const users = allUsuarios.filter(u => 
             u.rol === 'aspirante' && 
             (fCiudad.value === 'Todas' || u.ciudad === fCiudad.value) && 
@@ -84,7 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
 
         if (users.length === 0) { 
-            container.innerHTML = '<p style="text-align:center; color:#666; margin-top:20px;">No se encontraron estudiantes.</p>'; 
+            container.innerHTML = '<p style="text-align:center; color:#666; margin-top:20px;">No se encontraron estudiantes con esos criterios.</p>'; 
             return; 
         }
         
@@ -115,7 +112,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     im.forEach(i => {
                         const d = new Date(i.created_at);
-                        const colorNota = i.puntaje >= 700 ? '#2e7d32' : '#c62828'; // Verde si aprueba, rojo si reprueba
+                        const colorNota = i.puntaje >= 700 ? '#2e7d32' : '#c62828';
                         htmlDetalle += `
                             <tr>
                                 <td style="font-weight:bold; color:${colorNota}">${i.puntaje}</td>
@@ -144,7 +141,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="user-attempts">${htmlDetalle}</div>
             `;
             
-            // Toggle acordeón
             card.querySelector('.user-header').onclick = (e) => { 
                 if(!e.target.closest('.btn-pdf-mini')){ 
                     const b = card.querySelector('.user-attempts'); 
@@ -152,7 +148,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             };
             
-            // Botón PDF individual
             card.querySelector('.btn-pdf-mini').onclick = (e) => { 
                 e.stopPropagation(); 
                 generatePDF([user], `Reporte_${user.nombre}.pdf`); 
@@ -161,20 +156,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Eventos Filtros
-    fCiudad.onchange = render; 
-    fMateria.onchange = render; 
-    fNombre.oninput = render;
+    fCiudad.onchange = render; fMateria.onchange = render; fNombre.oninput = render;
     
-    // Botón PDF General
-    if (btnPDFGeneral) btnPDFGeneral.onclick = () => {
+    if(btnPDFGeneral) btnPDFGeneral.onclick = () => {
         const busqueda = cleanText(fNombre.value);
         const users = allUsuarios.filter(u => u.rol==='aspirante' && (fCiudad.value==='Todas'||u.ciudad===fCiudad.value) && (busqueda===''||cleanText(u.nombre).includes(busqueda)));
         if(users.length > 0) generatePDF(users, "Reporte_General_Ibarra.pdf");
         else alert("No hay datos visibles.");
     };
 
-    // --- GENERADOR PDF ---
+    // PDF GENERATION
     async function generatePDF(usersList, filename) {
         if (!window.jspdf) { alert("Error: Librería PDF no cargada."); return; }
         const { jsPDF } = window.jspdf;
@@ -195,11 +186,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const im = ints.filter(i => i.materia === m);
                 if(pageAdded) doc.addPage(); pageAdded = true;
                 header(doc, u, m);
-                
                 const prom = (im.reduce((a,b)=>a+b.puntaje,0)/im.length).toFixed(0);
                 const max = Math.max(...im.map(i=>i.puntaje));
-                stat(doc, 140, 45, "PROMEDIO", prom, 211, 47, 47); 
-                stat(doc, 170, 45, "MEJOR NOTA", max, 46, 125, 50);
+                stat(doc, 140, 45, "PROMEDIO", prom, 211, 47, 47); stat(doc, 170, 45, "MEJOR NOTA", max, 46, 125, 50);
                 
                 const chartData = im.slice(-15);
                 const img = await getChart(chartData);
