@@ -1,148 +1,160 @@
-/* DISEÑO IBARRA - STYLE-HOME.CSS */
-@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500&display=swap');
+/* DISEÑO IBARRA - DASHBOARD MODULAR */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500;700&display=swap');
 
 :root {
     --red-sparta: #D32F2F;
-    --dark-bg: #121212;
+    --dark-red: #9a0007;
+    --bg-tech: #f0f2f5;
     --card-bg: #ffffff;
-    --text-main: #333;
-    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --text-dark: #2c3e50;
+    --border-tech: #e0e0e0;
 }
 
 body {
     margin: 0;
     padding: 0;
-    background: var(--bg-gradient);
-    font-family: 'Chakra Petch', sans-serif; /* Fuente tecnológica */
-    color: var(--text-main);
+    background-color: var(--bg-tech);
+    background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
+    background-size: 20px 20px; /* Textura de puntos sutil */
+    font-family: 'Chakra Petch', sans-serif;
+    color: var(--text-dark);
     min-height: 100vh;
 }
 
-/* HEADER FLOTANTE CON CORTE */
+/* --- HEADER (Estilo Ibarra) --- */
 .ibarra-header {
-    background: var(--red-sparta);
-    padding: 10px 40px;
+    background: linear-gradient(90deg, var(--red-sparta) 0%, var(--dark-red) 100%);
+    padding: 0 40px;
+    height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    /* Corte angular en la esquina inferior */
-    clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 5% 100%, 0 80%);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    height: 70px;
+    box-shadow: 0 4px 15px rgba(154, 0, 7, 0.4);
+    position: sticky; top: 0; z-index: 100;
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 98% 100%, 2% 100%, 0 85%);
 }
 
 .logo-zone { display: flex; align-items: center; gap: 15px; }
-.logo-zone img { height: 45px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
-
-.brand-text h1 {
-    font-family: 'Teko', sans-serif;
-    font-size: 2rem;
-    line-height: 0.9;
-    color: white;
-    margin: 0;
-    letter-spacing: 1px;
-}
-.brand-text span {
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.9);
-    letter-spacing: 3px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
+.logo-zone img { height: 45px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.brand-text h1 { font-family: 'Teko'; font-size: 2.2rem; color: white; margin: 0; line-height: 0.8; letter-spacing: 1px; }
+.brand-text span { font-size: 0.75rem; color: rgba(255,255,255,0.8); letter-spacing: 3px; font-weight: bold; }
 
 .user-zone { display: flex; align-items: center; gap: 15px; }
-#user-name-display { color: white; font-weight: 700; font-size: 1rem; }
+.user-info { text-align: right; color: white; }
+.user-info span { display: block; font-weight: 700; font-size: 1.1rem; line-height: 1; }
+.user-info small { font-size: 0.7rem; opacity: 0.8; text-transform: uppercase; }
 
 .btn-logout-ibarra {
-    background: rgba(0,0,0,0.2);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    width: 35px;
-    height: 35px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3);
+    color: white; width: 40px; height: 40px; border-radius: 6px;
+    cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
 }
 .btn-logout-ibarra:hover { background: white; color: var(--red-sparta); }
 
-/* MAIN */
-.command-center { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-
-.welcome-banner {
-    border-left: 6px solid var(--red-sparta);
-    padding-left: 20px;
-    margin-bottom: 30px;
-}
-.welcome-banner h2 { font-size: 2.2rem; margin: 0; color: #222; text-transform: uppercase; font-weight: 700; }
-.welcome-banner p { color: #555; margin: 5px 0 0 0; font-size: 1rem; }
-
-/* GRILLA HORIZONTAL */
-.grid-ibarra {
+/* --- CONTENEDOR PRINCIPAL (Full Width) --- */
+.dashboard-container {
+    max-width: 1400px; /* Más ancho para aprovechar espacio */
+    width: 95%;
+    margin: 30px auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Tarjetas anchas */
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px; /* Espacio entre secciones */
+    align-items: start;
 }
 
-/* TARJETAS HORIZONTALES (Diferentes a Tulcán) */
-.card-ibarra {
+/* --- SECCIONES --- */
+.dashboard-section {
+    background: transparent;
+}
+
+.section-title {
+    font-family: 'Teko';
+    font-size: 1.8rem;
+    color: var(--text-dark);
+    border-bottom: 3px solid var(--red-sparta);
+    display: inline-block;
+    padding-right: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+.section-title i { color: var(--red-sparta); margin-right: 10px; }
+
+/* --- GRILLA DE TARJETAS --- */
+.grid-compact {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Tarjetas compactas */
+    gap: 15px;
+}
+
+/* --- TARJETAS TECH --- */
+.card-tech {
     background: white;
+    border: 1px solid var(--border-tech);
+    padding: 15px;
     display: flex;
-    flex-direction: row; /* Horizontal */
-    justify-content: space-between;
     align-items: center;
-    padding: 25px;
-    position: relative;
+    gap: 15px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    border-radius: 0; /* Sin bordes redondos */
-    /* Corte tecnológico en la esquina */
-    clip-path: polygon(0 0, 92% 0, 100% 25%, 100% 100%, 0 100%);
-    border-left: 1px solid #ddd;
+    transition: all 0.2s ease;
+    border-left: 4px solid #ccc; /* Borde gris por defecto */
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.card-ibarra:hover {
-    transform: translateX(5px); /* Se mueve a la derecha, no arriba */
-    background: #fffdfd;
-    border-left: 5px solid var(--red-sparta);
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+.card-tech:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-left-color: var(--red-sparta); /* Rojo al hover */
+    background: #fffafa;
 }
 
-.card-content { z-index: 2; flex: 1; }
-.card-content h3 { margin: 0; font-size: 1.4rem; color: #222; font-family: 'Teko'; letter-spacing: 1px; }
-.card-content p { margin: 5px 0 0 0; color: #666; font-size: 0.85rem; }
+.icon-box {
+    width: 50px; height: 50px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; color: #555;
+    transition: 0.3s;
+}
+.card-tech:hover .icon-box { background: var(--red-sparta); color: white; }
 
-.card-icon {
-    font-size: 2.5rem;
-    color: #e0e0e0;
-    transition: 0.4s;
+.text-box { flex: 1; }
+.text-box h4 { margin: 0; font-size: 1.1rem; font-weight: 700; color: #333; }
+.text-box span { display: block; font-size: 0.8rem; color: #777; margin-top: 3px; }
+
+/* Tarjetas Anchas (Fuerzas Armadas) */
+.card-tech.wide {
+    grid-column: span 2; /* Ocupan 2 espacios si caben */
+}
+@media (max-width: 500px) { .card-tech.wide { grid-column: span 1; } }
+
+.card-tech.wide .icon-box.warning { color: #d35400; background: #fbeee6; }
+.card-tech.wide:hover .icon-box.warning { background: #d35400; color: white; }
+.card-tech.wide:hover { border-left-color: #d35400; }
+
+.tech-deco {
+    position: absolute; right: 0; top: 0; 
+    width: 20px; height: 20px; 
+    background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.05) 50%);
 }
 
-.card-ibarra:hover .card-icon {
-    color: var(--red-sparta);
-    transform: scale(1.2) rotate(-10deg);
-}
-
-/* TARJETA DESTACADA */
-.card-ibarra.featured {
+/* Tarjeta Destacada (Global) */
+.card-tech.featured {
     background: #2c3e50;
-    color: white;
+    border: none;
+    border-left: 4px solid #3498db;
 }
-.card-ibarra.featured h3 { color: white; }
-.card-ibarra.featured p { color: #aaa; }
-.card-ibarra.featured .card-icon { color: rgba(255,255,255,0.1); }
-.card-ibarra.featured:hover .card-icon { color: #ff5252; }
+.card-tech.featured .text-box h4 { color: white; }
+.card-tech.featured .text-box span { color: #bdc3c7; }
+.card-tech.featured .icon-box { background: rgba(255,255,255,0.1); color: #3498db; }
+.card-tech.featured:hover { transform: scale(1.02); border-left-color: #2980b9; }
 
-/* ADMIN */
-.admin-card { border: 2px dashed #ccc; background: transparent; clip-path: none; }
-.admin-card:hover { border-color: var(--red-sparta); background: white; }
+/* Admin */
+.card-tech.admin { border: 2px dashed #999; opacity: 0.7; }
+.card-tech.admin:hover { opacity: 1; border-color: var(--red-sparta); }
 
 /* RESPONSIVE */
-@media (max-width: 600px) {
-    .ibarra-header { clip-path: none; padding: 10px 20px; }
-    .card-ibarra { clip-path: none; border-radius: 8px; }
+@media (max-width: 900px) {
+    .dashboard-container { grid-template-columns: 1fr; } /* Una columna de secciones en tablets */
 }
