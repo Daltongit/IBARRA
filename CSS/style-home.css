@@ -1,163 +1,148 @@
-/* --- DISEÑO IBARRA (ROJO SPARTA) --- */
+/* DISEÑO IBARRA - STYLE-HOME.CSS */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500&display=swap');
+
 :root {
-    --primary: #d32f2f;        /* ROJO INTENSO */
-    --primary-dark: #b71c1c;   /* ROJO OSCURO */
-    --dark: #222;              /* TEXTO OSCURO */
-    --light: #f4f4f4;          /* FONDO CLARO */
-    --white: #ffffff;
-    --card-bg: #ffffff;        /* TARJETAS BLANCAS */
-    --shadow: 0 10px 30px rgba(211, 47, 47, 0.15); /* SOMBRA ROJIZA */
+    --red-sparta: #D32F2F;
+    --dark-bg: #121212;
+    --card-bg: #ffffff;
+    --text-main: #333;
+    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { 
-    font-family: 'Work Sans', sans-serif; 
-    background-color: var(--light); 
-    color: var(--dark); 
-    min-height: 100vh; 
-    display: flex; flex-direction: column; 
-    overflow-x: hidden; 
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-gradient);
+    font-family: 'Chakra Petch', sans-serif; /* Fuente tecnológica */
+    color: var(--text-main);
+    min-height: 100vh;
 }
 
-/* --- HEADER ROJO --- */
-header { 
-    background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%); 
-    color: var(--white); padding: 12px 5%; 
-    display: flex; align-items: center; justify-content: space-between; 
-    position: sticky; top: 0; z-index: 1000; 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3); 
-}
-.header-main-link { display: flex; align-items: center; gap: 15px; text-decoration: none; color: white; }
-.header-logo img { height: 45px; background: white; border-radius: 50%; padding: 2px; }
-.header-titulo h1 { font-family: 'Teko', sans-serif; font-size: 2rem; margin: 0; line-height: 1; letter-spacing: 1px; }
-.header-titulo h2 { font-family: 'Work Sans', sans-serif; font-size: 0.8rem; color: #ffcccc; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
-
-/* Botones Header */
-.desktop-menu { display: flex; align-items: center; gap: 15px; }
-.user-btn { 
-    background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); 
-    color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; 
-    font-size: 0.9rem; transition: 0.3s; display: flex; align-items: center; gap: 8px; text-decoration: none;
-}
-.user-btn:hover { background: white; color: var(--primary); }
-.mobile-toggle { display: none; background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; padding: 5px; }
-
-/* Side Nav */
-.side-nav { height: 100%; width: 0; position: fixed; z-index: 2000; top: 0; right: 0; background-color: var(--white); overflow-x: hidden; transition: 0.3s; padding-top: 60px; white-space: nowrap; visibility: hidden; }
-.side-nav.open { width: 280px; visibility: visible; }
-.side-nav a { padding: 15px 30px; text-decoration: none; font-size: 1.2rem; color: var(--dark); display: block; border-bottom: 1px solid #eee; transition: 0.2s; }
-.side-nav a:hover { background: var(--primary); color: white; }
-.close-nav-btn { position: absolute; top: 15px; right: 25px; font-size: 36px; background: none; border: none; color: var(--primary); cursor: pointer; }
-.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1500; backdrop-filter: blur(3px); }
-
-/* --- CONTENIDO PRINCIPAL --- */
-main { 
-    flex: 1; padding: 40px 5%; width: 100%; max-width: 1400px; margin: 0 auto; 
-    display: flex; flex-direction: column; justify-content: flex-start;
+/* HEADER FLOTANTE CON CORTE */
+.ibarra-header {
+    background: var(--red-sparta);
+    padding: 10px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    /* Corte angular en la esquina inferior */
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 5% 100%, 0 80%);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 70px;
 }
 
-.marca-de-agua {
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    z-index: 0; opacity: 0.05; pointer-events: none;
-}
-.marca-de-agua img { width: 500px; }
+.logo-zone { display: flex; align-items: center; gap: 15px; }
+.logo-zone img { height: 45px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
 
-.seleccion-container { width: 100%; z-index: 1; position: relative; }
-
-/* Banner Blanco con Borde Rojo */
-.nav-header {
-    background: white;
-    padding: 40px; border-radius: 15px; color: var(--dark); margin-bottom: 40px;
-    box-shadow: var(--shadow); border-top: 8px solid var(--primary);
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
-}
-.title-area h2 { font-family: 'Teko', sans-serif; font-size: 3.5rem; margin: 0; line-height: 0.9; text-transform: uppercase; color: var(--primary); }
-.title-area p { color: #666; margin: 10px 0 0 0; font-size: 1.2rem; font-weight: 300; }
-.nav-actions button {
-    background: var(--dark); border: none; color: white;
-    padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: bold;
-    display: flex; align-items: center; gap: 10px; transition: 0.3s;
-}
-.nav-actions button:hover { background: var(--primary); transform: translateY(-3px); }
-
-/* --- GRID DE TARJETAS --- */
-.materias-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    padding-bottom: 40px;
-}
-
-/* Tarjeta Base (Blanca) */
-.materia-card {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 50px 30px; border-radius: 15px; text-decoration: none; cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
-    position: relative; overflow: hidden; text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    border: 1px solid #eee;
-    min-height: 250px;
-    background: white;
-}
-.materia-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(211, 47, 47, 0.2); border-color: var(--primary); }
-
-/* TIPO INSTITUCIÓN (Carpetas) */
-.card-folder {
-    background: white; 
-    color: var(--dark);
-    border-top: 5px solid #ccc;
-}
-.card-folder:hover { border-top-color: var(--primary); }
-.card-folder i {
-    font-size: 4.5rem; margin-bottom: 25px; 
-    color: var(--primary); /* Ícono Rojo */
-    transition: 0.3s;
-}
-.card-folder:hover i { transform: scale(1.1); }
-.card-folder h3 { font-family: 'Teko', sans-serif; font-size: 2.2rem; margin: 0; letter-spacing: 1px; font-weight: 500; }
-.card-folder p { color: #888; font-size: 1rem; margin-top: 5px; }
-
-/* TIPO ANCHO TOTAL (General - ROJO COMPLETO) */
-.card-wide {
-    grid-column: 1 / -1; 
-    flex-direction: row; 
-    justify-content: flex-start;
-    padding: 40px 60px;
-    
-    background: linear-gradient(45deg, #d32f2f 0%, #b71c1c 100%); /* Fondo Rojo */
+.brand-text h1 {
+    font-family: 'Teko', sans-serif;
+    font-size: 2rem;
+    line-height: 0.9;
     color: white;
-    border: none;
+    margin: 0;
+    letter-spacing: 1px;
 }
-.card-wide i { 
-    font-size: 5rem; margin-right: 40px; margin-bottom: 0; 
-    color: rgba(255,255,255,0.8); /* Icono blanco */
+.brand-text span {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-transform: uppercase;
 }
-.card-wide:hover i { transform: scale(1.1); color: white; }
-.card-wide .text-content { text-align: left; }
-.card-wide h3 { font-family: 'Teko', sans-serif; font-size: 3rem; margin: 0; color: white; line-height: 1; }
-.card-wide p { font-size: 1.2rem; color: #ffcccc; margin-top: 10px; }
 
-/* TIPO TEST (Simuladores Normales) */
-.card-test { background: white; border: 2px solid #f0f0f0; color: var(--dark); }
-.card-test:hover { border-color: var(--primary); }
-.card-test i { font-size: 3rem; margin-bottom: 20px; color: var(--dark); }
-.card-test:hover i { color: var(--primary); }
-.card-test h3 { font-family: 'Teko', sans-serif; font-size: 1.8rem; margin: 0; color: var(--dark); }
+.user-zone { display: flex; align-items: center; gap: 15px; }
+#user-name-display { color: white; font-weight: 700; font-size: 1rem; }
 
-/* FOOTER */
-footer { background: var(--dark); color: #ccc; text-align: center; padding: 30px; font-size: 0.9rem; margin-top: auto; }
+.btn-logout-ibarra {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex; align-items: center; justify-content: center;
+}
+.btn-logout-ibarra:hover { background: white; color: var(--red-sparta); }
+
+/* MAIN */
+.command-center { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+
+.welcome-banner {
+    border-left: 6px solid var(--red-sparta);
+    padding-left: 20px;
+    margin-bottom: 30px;
+}
+.welcome-banner h2 { font-size: 2.2rem; margin: 0; color: #222; text-transform: uppercase; font-weight: 700; }
+.welcome-banner p { color: #555; margin: 5px 0 0 0; font-size: 1rem; }
+
+/* GRILLA HORIZONTAL */
+.grid-ibarra {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Tarjetas anchas */
+    gap: 20px;
+}
+
+/* TARJETAS HORIZONTALES (Diferentes a Tulcán) */
+.card-ibarra {
+    background: white;
+    display: flex;
+    flex-direction: row; /* Horizontal */
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-radius: 0; /* Sin bordes redondos */
+    /* Corte tecnológico en la esquina */
+    clip-path: polygon(0 0, 92% 0, 100% 25%, 100% 100%, 0 100%);
+    border-left: 1px solid #ddd;
+}
+
+.card-ibarra:hover {
+    transform: translateX(5px); /* Se mueve a la derecha, no arriba */
+    background: #fffdfd;
+    border-left: 5px solid var(--red-sparta);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+}
+
+.card-content { z-index: 2; flex: 1; }
+.card-content h3 { margin: 0; font-size: 1.4rem; color: #222; font-family: 'Teko'; letter-spacing: 1px; }
+.card-content p { margin: 5px 0 0 0; color: #666; font-size: 0.85rem; }
+
+.card-icon {
+    font-size: 2.5rem;
+    color: #e0e0e0;
+    transition: 0.4s;
+}
+
+.card-ibarra:hover .card-icon {
+    color: var(--red-sparta);
+    transform: scale(1.2) rotate(-10deg);
+}
+
+/* TARJETA DESTACADA */
+.card-ibarra.featured {
+    background: #2c3e50;
+    color: white;
+}
+.card-ibarra.featured h3 { color: white; }
+.card-ibarra.featured p { color: #aaa; }
+.card-ibarra.featured .card-icon { color: rgba(255,255,255,0.1); }
+.card-ibarra.featured:hover .card-icon { color: #ff5252; }
+
+/* ADMIN */
+.admin-card { border: 2px dashed #ccc; background: transparent; clip-path: none; }
+.admin-card:hover { border-color: var(--red-sparta); background: white; }
 
 /* RESPONSIVE */
-@media (max-width: 900px) {
-    .desktop-menu { display: none !important; }
-    .mobile-toggle { display: block !important; }
-    .nav-header { text-align: center; justify-content: center; }
-    .title-area h2 { font-size: 2.5rem; }
-    .materias-grid { grid-template-columns: 1fr; } 
-    .card-wide { 
-        flex-direction: column; text-align: center; padding: 30px; 
-        border-top: none;
-    }
-    .card-wide i { margin-right: 0; margin-bottom: 15px; font-size: 3.5rem; }
-    .card-wide .text-content { text-align: center; }
+@media (max-width: 600px) {
+    .ibarra-header { clip-path: none; padding: 10px 20px; }
+    .card-ibarra { clip-path: none; border-radius: 8px; }
 }
