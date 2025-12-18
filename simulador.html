@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <title>Simulador - Sparta Ibarra</title>
     <link rel="stylesheet" href="CSS/style-simulador.css">
     
@@ -10,9 +15,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <script src="JS/auth.js"></script>
-    <script> checkAuth(); </script>
-</head>
+    <script> checkAuth(); </script> </head>
 <body>
     <header>
         <a href="index.html" class="header-main-link">
@@ -28,34 +34,20 @@
                 <i class="fas fa-sign-out-alt"></i> Salir
             </button>
         </div>
-
-        <button class="mobile-toggle" id="hamburger-btn">
-            <i class="fas fa-bars"></i>
-        </button>
     </header>
 
-    <div class="side-nav" id="side-nav">
-        <button class="close-nav-btn" id="close-nav-btn">&times;</button>
-        <div style="text-align:center; padding:20px;">
-            <img src="logo.png" width="80" style="margin-bottom:10px;">
-            <h3 style="color:#d32f2f; font-family:'Teko'; margin:0;">MENÚ</h3>
-        </div>
-        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
-    </div>
-    <div class="overlay" id="overlay"></div>
-
-    <main>
+    <div id="lobby-container" class="lobby-layout">
         <div id="lobby-banner" class="lobby-banner">
             <div class="banner-info">
                 <h1 id="lobby-titulo-materia">CARGANDO...</h1>
                 <p>Evaluación Académica</p>
             </div>
-            <button id="btn-regresar-lobby" class="btn-regresar-top">
+            <button id="btn-regresar-lobby" class="btn-regresar-top" onclick="location.href='index.html'">
                 <i class="fas fa-arrow-left"></i> MENÚ PRINCIPAL
             </button>
         </div>
 
-        <div id="lobby-container" class="container-box">
+        <div class="container-box">
             <div class="lobby-content">
                 <div class="lobby-header-center">
                     <h2>INSTRUCCIONES</h2>
@@ -78,11 +70,6 @@
                         <span>Tiempo</span>
                         <strong id="lobby-tiempo">...</strong>
                     </div>
-                    <div class="info-card">
-                        <i class="fas fa-star"></i>
-                        <span>Nota Máx</span>
-                        <strong>1000 Pts</strong>
-                    </div>
                 </div>
                 
                 <button id="comenzar-btn" disabled>
@@ -90,95 +77,73 @@
                 </button>
             </div>
         </div>
+    </div>
 
-        <div id="simulador-container" class="quiz-layout" style="display:none;">
-            <div class="quiz-main">
-                <div style="border-bottom:2px solid #eee; padding-bottom:10px; margin-bottom:20px;">
-                    <span class="pregunta-num-tag" id="pregunta-numero">Pregunta 1</span>
+    <div id="simulador-container" class="quiz-layout" style="display:none;">
+        <div class="quiz-main">
+            <div style="border-bottom:2px solid #eee; padding-bottom:10px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+                <span class="pregunta-num-tag" id="pregunta-numero">Pregunta 1</span>
+                <div class="timer-box">
+                    <i class="fas fa-stopwatch"></i> <span id="cronometro">00:00</span>
                 </div>
-                <div id="pregunta-texto">...</div>
-                <div id="q-image-container" style="text-align:center; margin:20px 0;"></div>
-                <div id="opciones-container"></div>
-                
-                <div style="margin-top:30px; display:flex; justify-content:flex-end;">
-                    <button id="siguiente-btn">SIGUIENTE <i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-
-            <div class="quiz-sidebar">
-                <div class="nav-box">
-                    <small style="display:block; margin-bottom:10px; font-weight:bold; color:#d32f2f;">NAVEGACIÓN</small>
-                    <div id="navegador-preguntas"></div>
-                </div>
-                <button id="terminar-intento-btn">FINALIZAR INTENTO</button>
-            </div>
-        </div>
-
-        <div id="resultados-container" class="container-box" style="display:none; text-align:center;">
-            <h2>RESULTADO OBTENIDO</h2>
-            <div class="score-circle">
-                <span id="puntaje-final">0</span>
-                <span style="font-size:0.9rem; color:#d32f2f; font-weight:bold;">PUNTOS</span>
             </div>
             
-            <div class="stats-bar">
-                <div class="stat-item" style="border-bottom-color:#2e7d32">
-                    <span id="stats-correctas" style="color:#2e7d32; font-size:1.5rem; font-weight:bold;">0</span>
-                    <small>Aciertos</small>
-                </div>
-                <div class="stat-item" style="border-bottom-color:#c62828">
-                    <span id="stats-incorrectas" style="color:#c62828; font-size:1.5rem; font-weight:bold;">0</span>
-                    <small>Errores</small>
-                </div>
-                <div class="stat-item" style="border-bottom-color:#fbc02d">
-                    <span id="stats-en-blanco" style="color:#f9a825; font-size:1.5rem; font-weight:bold;">0</span>
-                    <small>Blancos</small>
-                </div>
+            <div id="pregunta-texto" class="question-text">...</div>
+            <div id="q-image-container" style="text-align:center; margin:20px 0;"></div>
+            <div id="opciones-container"></div>
+            
+            <div style="margin-top:30px; display:flex; justify-content:flex-end;">
+                <button id="siguiente-btn">SIGUIENTE <i class="fas fa-arrow-right"></i></button>
             </div>
+        </div>
 
-            <div style="display:flex; gap:10px; justify-content:center; margin-bottom:30px;">
-                <button id="retry-btn" class="user-btn" style="background:#d32f2f; color:white;">Reintentar</button>
-                <button id="reiniciar-btn" class="user-btn" style="background:#333; color:white;">Salir</button>
+        <div class="quiz-sidebar">
+            <div class="nav-box">
+                <small style="display:block; margin-bottom:10px; font-weight:bold; color:#d32f2f;">NAVEGACIÓN</small>
+                <div id="navegador-preguntas"></div>
             </div>
-
-            <hr style="border:0; border-top:1px solid #eee; margin:30px 0;">
-            <div id="revision-container" style="text-align:left;"></div>
+            <button id="terminar-intento-btn">FINALIZAR INTENTO</button>
         </div>
-    </main>
+    </div>
 
-    <div id="error-modal" class="modal-overlay" style="display:none;">
-        <div class="modal-content">
-            <h3 style="color:#c62828">¡Error!</h3>
-            <p id="error-text"></p>
-            <button onclick="document.getElementById('error-modal').style.display='none'" id="confirmar-modal-btn">Cerrar</button>
+    <div id="resultados-container" class="container-box" style="display:none; text-align:center; margin-top: 40px;">
+        <h2>RESULTADO OBTENIDO</h2>
+        <div class="score-circle">
+            <span id="puntaje-final">0</span>
+            <span style="font-size:0.9rem; color:#d32f2f; font-weight:bold;">PUNTOS</span>
         </div>
+        
+        <div class="stats-bar">
+            <div class="stat-item" style="border-bottom-color:#2e7d32">
+                <span id="stats-correctas" style="color:#2e7d32; font-size:1.5rem; font-weight:bold;">0</span>
+                <small>Aciertos</small>
+            </div>
+            <div class="stat-item" style="border-bottom-color:#c62828">
+                <span id="stats-incorrectas" style="color:#c62828; font-size:1.5rem; font-weight:bold;">0</span>
+                <small>Errores</small>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:30px;">
+            <button id="retry-btn" class="user-btn" style="background:#d32f2f; color:white;">Reintentar</button>
+            <button id="reiniciar-btn" class="user-btn" style="background:#333; color:white;">Salir</button>
+        </div>
+
+        <hr style="border:0; border-top:1px solid #eee; margin:30px 0;">
+        <div id="revision-container" style="text-align:left;"></div>
     </div>
 
     <div id="modal-overlay" class="modal-overlay" style="display:none;">
         <div class="modal-content">
             <h3>¿Estás seguro?</h3>
             <p id="modal-mensaje">Se finalizará la evaluación.</p>
-            <div style="margin-top:20px;">
-                <button id="cancelar-modal-btn">Cancelar</button>
-                <button id="confirmar-modal-btn">Sí, Terminar</button>
+            <div style="margin-top:20px; display:flex; gap:10px; justify-content:center;">
+                <button id="cancelar-modal-btn" style="background:#666; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">Cancelar</button>
+                <button id="confirmar-modal-btn" style="background:#d32f2f; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">Sí, Terminar</button>
             </div>
         </div>
     </div>
 
     <script src="JS/script-simulador.js"></script>
-    <script>
-        // Lógica simple para menú móvil
-        document.addEventListener('DOMContentLoaded', () => {
-            const btn = document.getElementById('hamburger-btn');
-            const nav = document.getElementById('side-nav');
-            const close = document.getElementById('close-nav-btn');
-            const overlay = document.getElementById('overlay');
-
-            if(btn) btn.onclick = () => { nav.classList.add('open'); overlay.style.display = "block"; };
-            const closeMenu = () => { nav.classList.remove('open'); overlay.style.display = "none"; };
-            if(close) close.onclick = closeMenu;
-            if(overlay) overlay.onclick = closeMenu;
-        });
-    </script>
 </body>
 </html>
