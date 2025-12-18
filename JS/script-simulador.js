@@ -1,10 +1,10 @@
-// JS/script-simulador.js - IBARRA (CORREGIDO)
+// JS/script-simulador.js - IBARRA (CORREGIDO: Variable 'simuladorDB')
 
 // --- 1. CONEXIÓN SUPABASE IBARRA ---
 const simuladorUrl = 'https://dgnfjzzwcdfbauyamutp.supabase.co';
 const simuladorKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnbmZqenp3Y2RmYmF1eWFtdXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNTk3ODAsImV4cCI6MjA4MTYzNTc4MH0.upcZkm8dYMOlWrbxEQEraUiNHOWyOOBAAqle8rbesNY';
 
-// CAMBIO AQUÍ: Usamos 'simuladorDB' en lugar de 'supabase' para no chocar con auth.js
+// CAMBIO IMPORTANTE: Usamos 'simuladorDB' para no chocar con auth.js
 const simuladorDB = window.supabase.createClient(simuladorUrl, simuladorKey);
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -423,16 +423,17 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
         });
         document.getElementById('revision-container').innerHTML = revHTML;
+        
+        // USAMOS simuladorDB AQUÍ TAMBIÉN
         saveResult(score, questions.length, materias[new URLSearchParams(window.location.search).get('materia')]);
     }
 
-    // --- FUNCIÓN GUARDAR (Usando simuladorDB) ---
     async function saveResult(score, total, title) {
         const userStr = sessionStorage.getItem('userInfo'); 
         if(userStr) {
             const user = JSON.parse(userStr);
             try {
-                // CAMBIO AQUÍ TAMBIÉN: Usamos 'simuladorDB'
+                // CAMBIO AQUÍ: simuladorDB
                 await simuladorDB.from('resultados').insert([{
                     usuario_id: user.usuario, 
                     usuario_nombre: user.nombre, 
