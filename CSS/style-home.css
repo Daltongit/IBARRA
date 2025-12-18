@@ -1,14 +1,12 @@
-/* --- DISEÑO IBARRA: MODERNO & LIMPIO --- */
+/* DISEÑO IBARRA (ROJO SPARTA) */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
 
 :root {
-    --primary: #d32f2f; /* Rojo Ibarra */
-    --primary-light: #ffcdd2;
-    --dark: #2c3e50;
-    --bg-body: #f0f2f5;
-    --white: #ffffff;
-    --shadow-card: 0 10px 20px rgba(0,0,0,0.05);
-    --radius-card: 20px;
+    --primary: #d32f2f;
+    --primary-dark: #b71c1c;
+    --dark: #111;
+    --light: #fff;
+    --bg-body: #f4f4f4;
 }
 
 body {
@@ -18,14 +16,14 @@ body {
     color: var(--dark);
 }
 
-/* HEADER: Barra Superior Limpia */
+/* HEADER */
 header {
-    background: var(--white);
+    background: linear-gradient(to right, #b71c1c, #d32f2f);
     padding: 15px 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -36,133 +34,97 @@ header {
     display: flex;
     align-items: center;
     gap: 15px;
+    color: white;
 }
 
-.header-logo img { height: 50px; }
+.header-logo img { height: 50px; background: white; border-radius: 50%; padding: 2px; }
 
 .header-titulo h1 {
+    font-family: 'Poppins', sans-serif; /* Quitamos Teko si da problemas */
     font-weight: 800;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     margin: 0;
-    color: var(--primary);
-    letter-spacing: -1px;
+    text-transform: uppercase;
 }
 
 .header-titulo h2 {
-    font-size: 0.85rem;
-    color: #888;
+    font-size: 0.8rem;
+    color: #ffcdd2;
     margin: 0;
     font-weight: 400;
+    letter-spacing: 1px;
 }
 
-/* MENÚ DE USUARIO (Píldoras) */
-.desktop-menu { display: flex; gap: 10px; }
+/* BOTONES HEADER */
+.desktop-menu { display: flex; gap: 10px; align-items: center; }
 
 .user-btn {
-    background: var(--bg-body);
-    color: var(--dark);
-    padding: 10px 20px;
-    border-radius: 50px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
     text-decoration: none;
-    font-weight: 600;
     font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
     transition: 0.3s;
-    border: none;
-    display: flex;
+    display: inline-flex; /* Asegura que se vea */
     align-items: center;
     gap: 8px;
 }
 
-.user-btn:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
-}
+.user-btn:hover { background: white; color: var(--primary); }
 
 /* MAIN */
 main {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
-}
-
-/* SECCIÓN DE BIENVENIDA */
-.nav-header {
     text-align: center;
-    margin-bottom: 50px;
 }
 
 .nav-header h2 {
+    color: var(--primary);
     font-size: 2.5rem;
     font-weight: 800;
     margin-bottom: 10px;
 }
 
-.nav-header p {
-    font-size: 1.1rem;
-    color: #666;
-    max-width: 600px;
-    margin: 0 auto;
-}
+.nav-header p { color: #666; font-size: 1.1rem; margin-bottom: 40px; }
 
-/* GRID DE TARJETAS (Diseño Flotante) */
+/* GRID TARJETAS */
 .materias-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    gap: 25px;
+    justify-content: center;
 }
 
 .materia-card {
-    background: var(--white);
-    border-radius: var(--radius-card);
-    padding: 40px 30px;
+    background: white;
+    border-radius: 12px;
+    padding: 40px 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     text-decoration: none;
     color: var(--dark);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid transparent;
+    transition: 0.3s;
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.materia-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 5px;
-    background: var(--primary);
-    transform: scaleX(0);
-    transition: 0.3s;
+    border-top: 5px solid transparent;
 }
 
 .materia-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(211, 47, 47, 0.15);
+    border-top-color: var(--primary);
 }
-
-.materia-card:hover::before { transform: scaleX(1); }
 
 .materia-card i {
-    font-size: 3.5rem;
+    font-size: 3rem;
     color: var(--primary);
     margin-bottom: 20px;
-    background: var(--primary-light);
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: 0.3s;
-}
-
-.materia-card:hover i {
-    background: var(--primary);
-    color: white;
-    transform: rotate(10deg);
 }
 
 .materia-card h3 {
@@ -172,25 +134,29 @@ main {
 }
 
 .materia-card p {
-    font-size: 0.9rem;
-    color: #777;
-    line-height: 1.5;
+    font-size: 0.95rem;
+    color: #666;
 }
 
-/* Disabled Card */
-.disabled-card {
-    opacity: 0.6;
-    pointer-events: none;
-    filter: grayscale(100%);
+.card-wide { grid-column: 1 / -1; flex-direction: row; text-align: left; justify-content: center; gap: 30px; }
+.card-wide i { font-size: 4rem; margin: 0; }
+
+/* FOOTER */
+.footer-sparta {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    color: #888;
+    font-size: 0.9rem;
 }
 
 /* RESPONSIVE */
-.mobile-toggle { display: none; font-size: 1.5rem; background: none; border: none; }
-.side-nav { display: none; } /* Ocultamos side-nav de Tulcan */
+.mobile-toggle { display: none; background: none; border: none; color: white; font-size: 1.8rem; }
+.side-nav { display: none; } 
 
 @media (max-width: 768px) {
     .desktop-menu { display: none; }
     .mobile-toggle { display: block; }
-    .header-titulo h1 { font-size: 1.4rem; }
-    .materia-card { padding: 30px; }
+    .card-wide { flex-direction: column; text-align: center; }
+    .header-titulo h1 { font-size: 1.2rem; }
 }
