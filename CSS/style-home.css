@@ -1,10 +1,10 @@
-/* DISEÑO IBARRA - ACORDEÓN VERTICAL */
+/* DISEÑO IBARRA - FINAL LLENO */
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500;700&display=swap');
 
 :root {
     --red-sparta: #D32F2F;
     --dark-red: #8b0000;
-    --bg-tech: #f4f6f8;
+    --bg-tech: #f0f2f5;
     --text-dark: #2c3e50;
     --border-gray: #dcdcdc;
 }
@@ -12,7 +12,8 @@
 body {
     margin: 0; padding: 0;
     background-color: var(--bg-tech);
-    background-image: linear-gradient(0deg, #eef2f5 0%, #ffffff 100%);
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 20px 20px;
     font-family: 'Chakra Petch', sans-serif;
     color: var(--text-dark);
     min-height: 100vh;
@@ -28,7 +29,7 @@ body {
 .logo-zone { display: flex; align-items: center; gap: 15px; }
 .logo-zone img { height: 45px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
 .brand-text h1 { font-family: 'Teko'; font-size: 2.2rem; color: white; margin: 0; line-height: 0.8; letter-spacing: 1px; }
-.brand-text span { font-size: 0.75rem; color: rgba(255,255,255,0.8); letter-spacing: 3px; font-weight: bold; }
+
 .user-zone { display: flex; align-items: center; gap: 15px; }
 .user-info { text-align: right; color: white; }
 .user-info span { display: block; font-weight: 700; font-size: 1.1rem; line-height: 1; }
@@ -38,97 +39,89 @@ body {
 }
 .btn-logout-ibarra:hover { background: white; color: var(--red-sparta); }
 
-/* MAIN CONTAINER (Columna Vertical) */
+/* MAIN CONTAINER */
 .dashboard-stack {
-    max-width: 800px; /* Ancho controlado para que se vea elegante */
-    width: 90%;
-    margin: 40px auto;
+    max-width: 900px;
+    width: 92%;
+    margin: 30px auto 50px auto;
     display: flex;
-    flex-direction: column; /* Vertical */
-    gap: 15px; /* Espacio entre barras */
+    flex-direction: column;
+    gap: 20px;
 }
 
-/* ACORDEÓN ITEM */
-.accordion-item {
+/* --- NUEVO: HERO BANNER (LLENA EL ESPACIO VACÍO) --- */
+.hero-banner {
     background: white;
-    border-radius: 8px;
-    overflow: hidden;
+    border-radius: 12px;
+    padding: 30px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border-left: 8px solid var(--red-sparta);
+    margin-bottom: 10px;
+}
+.hero-content h2 { font-family: 'Teko'; font-size: 2.5rem; margin: 0; color: #333; line-height: 1; }
+.hero-content p { margin: 5px 0 0 0; color: #666; font-size: 1.1rem; }
+.hero-icon { font-size: 4rem; color: #eee; }
+
+/* ACORDEÓN */
+.accordion-item {
+    background: white; border-radius: 8px; overflow: hidden;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     border: 1px solid var(--border-gray);
     transition: 0.3s;
 }
 
-/* BOTÓN DE CABECERA (Barra Roja) */
 .accordion-header {
-    width: 100%;
-    padding: 20px 25px;
-    background: white;
-    border: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    transition: 0.3s;
-    border-left: 6px solid var(--red-sparta);
-    outline: none;
+    width: 100%; padding: 25px 30px; /* Más padding para que se vea más grande */
+    background: white; border: none; display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; transition: 0.3s; border-left: 6px solid #ccc; outline: none;
 }
+.accordion-header:hover { background: #fffcfc; padding-left: 35px; border-left-color: var(--red-sparta); }
+.accordion-header.active { background: #fff; border-left-color: var(--red-sparta); border-bottom: 1px solid #eee; }
 
-.accordion-header:hover { background: #fffcfc; padding-left: 30px; }
-.accordion-header.active { background: #fdfdfd; border-bottom: 1px solid #eee; }
-
-.header-left { display: flex; align-items: center; gap: 15px; }
-.header-left i { font-size: 1.5rem; color: var(--red-sparta); width: 30px; text-align: center; }
-.header-left span { font-family: 'Teko'; font-size: 1.6rem; color: #333; letter-spacing: 1px; }
+.header-left { display: flex; align-items: center; gap: 20px; }
+.header-left i { font-size: 1.8rem; color: var(--red-sparta); width: 30px; text-align: center; }
+.header-left span { font-family: 'Teko'; font-size: 1.8rem; color: #333; letter-spacing: 1px; }
 
 .indicator { font-size: 1.2rem; color: #999; transition: 0.3s; }
-.accordion-header.active .indicator { transform: rotate(45deg); color: var(--red-sparta); } /* La cruz gira a X */
+.accordion-header.active .indicator { transform: rotate(45deg); color: var(--red-sparta); }
 
-/* CUERPO OCULTO */
 .accordion-body {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out;
-    background: #fafafa;
+    max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fafafa;
 }
 
-/* CONTENIDO INTERNO */
+/* CARDS INTERNAS */
 .cards-grid {
-    padding: 25px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
+    padding: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px;
 }
+.cards-grid.wide-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
 
-.cards-grid.wide-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-/* TARJETAS MINI (Policía) */
 .card-mini {
     background: white; border: 1px solid #e0e0e0; border-radius: 8px;
-    padding: 20px; text-align: center; cursor: pointer; transition: 0.2s;
+    padding: 25px; text-align: center; cursor: pointer; transition: 0.2s;
     display: flex; flex-direction: column; align-items: center; gap: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
-.card-mini:hover { transform: translateY(-3px); border-color: var(--red-sparta); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-.card-mini i { font-size: 2rem; color: #555; }
+.card-mini:hover { transform: translateY(-3px); border-color: var(--red-sparta); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+.card-mini i { font-size: 2.2rem; color: #555; }
 .card-mini:hover i { color: var(--red-sparta); }
-.card-mini span { font-weight: 700; font-size: 0.9rem; color: #333; }
+.card-mini span { font-weight: 700; font-size: 1rem; color: #333; }
 
-/* TARJETAS WIDE (FFAA / General) */
 .card-wide {
     background: white; border: 1px solid #e0e0e0; border-radius: 8px;
-    padding: 20px; display: flex; align-items: center; gap: 15px;
+    padding: 25px; display: flex; align-items: center; gap: 20px;
     cursor: pointer; transition: 0.2s;
 }
 .card-wide:hover { transform: translateX(5px); border-left: 4px solid var(--red-sparta); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
 
 .card-icon {
-    width: 50px; height: 50px; background: #f0f0f0; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #555;
+    width: 60px; height: 60px; background: #f0f0f0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #555;
 }
 .card-wide:hover .card-icon { background: var(--red-sparta); color: white; }
 
-/* Estilos especiales para iconos */
 .card-icon.warning { color: #d35400; background: #fae5d3; }
 .card-wide:hover .card-icon.warning { background: #d35400; color: white; }
 
@@ -141,5 +134,12 @@ body {
 .card-wide.admin { border: 2px dashed #999; }
 .card-wide.admin:hover { border: 2px solid var(--red-sparta); background: white; }
 
-.card-text h4 { margin: 0; font-size: 1.1rem; font-weight: 700; color: #333; }
-.card-text p { margin: 2px 0 0 0; font-size: 0.8rem; color: #777; }
+.card-text h4 { margin: 0; font-size: 1.2rem; font-weight: 700; color: #333; }
+.card-text p { margin: 3px 0 0 0; font-size: 0.9rem; color: #777; }
+
+/* Responsive */
+@media (max-width: 600px) {
+    .hero-banner { flex-direction: column; text-align: center; gap: 15px; }
+    .hero-icon { display: none; }
+    .ibarra-header { padding: 0 20px; }
+}
