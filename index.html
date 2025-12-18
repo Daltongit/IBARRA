@@ -23,8 +23,7 @@
             </div>
         </div>
         <div class="user-zone">
-            <button onclick="logout()" class="btn-logout-ibarra">
-                <span>SALIR</span>
+            <button onclick="logout()" class="btn-logout-ibarra" title="Salir">
                 <i class="fas fa-power-off"></i>
             </button>
         </div>
@@ -34,18 +33,14 @@
         
         <aside class="sidebar-profile">
             <div class="profile-card">
-                <div class="profile-avatar">
-                    <i class="fas fa-user-astronaut"></i>
-                </div>
+                <div class="profile-avatar"><i class="fas fa-user-astronaut"></i></div>
                 <h3 id="sidebar-name">CADETE</h3>
                 <span class="badge">ASPIRANTE ACTIVO</span>
-                
                 <div class="stats-row">
                     <div class="stat"><strong>NIVEL</strong><span>1</span></div>
                     <div class="stat"><strong>SEDE</strong><span>IBARRA</span></div>
                 </div>
             </div>
-
             <div class="info-widget">
                 <h4>ESTADO</h4>
                 <ul class="system-logs">
@@ -53,15 +48,12 @@
                     <li><i class="fas fa-clock"></i> <span id="clock-display">00:00</span></li>
                 </ul>
             </div>
-
             <button id="admin-panel-btn" class="admin-sidebar-btn" onclick="location.href='resultados.html'" style="display:none;">
-                <i class="fas fa-user-shield"></i>
-                PANEL ADMINISTRATIVO
+                <i class="fas fa-user-shield"></i> PANEL ADMIN
             </button>
         </aside>
 
         <main class="dashboard-content">
-            
             <div class="hero-banner">
                 <div class="hero-text">
                     <h2>CENTRO DE COMANDO</h2>
@@ -74,115 +66,64 @@
                 
                 <div class="accordion-item">
                     <button class="accordion-header" type="button" id="default-open">
-                        <div class="header-left">
-                            <i class="fas fa-shield-alt icon-box"></i>
-                            <span>POLICÍA NACIONAL</span>
-                        </div>
+                        <div class="header-left"><i class="fas fa-shield-alt icon-box"></i><span>POLICÍA NACIONAL</span></div>
                         <i class="fas fa-plus indicator"></i>
                     </button>
                     <div class="accordion-body">
-                        
                         <div class="sub-section-title">SIMULADORES PRUEBAS ACADÉMICAS</div>
                         <div class="cards-grid">
-                            <div class="card-mini" onclick="location.href='simulador.html?materia=sociales'">
-                                <i class="fas fa-landmark"></i><span>Sociales</span>
-                            </div>
-                            <div class="card-mini" onclick="location.href='simulador.html?materia=matematicas'">
-                                <i class="fas fa-calculator"></i><span>Matemáticas</span>
-                            </div>
-                            <div class="card-mini" onclick="location.href='simulador.html?materia=lengua'">
-                                <i class="fas fa-book"></i><span>Lenguaje</span>
-                            </div>
-                            <div class="card-mini" onclick="location.href='simulador.html?materia=ingles'">
-                                <i class="fas fa-language"></i><span>Inglés</span>
-                            </div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=sociales'"><i class="fas fa-landmark"></i><span>Sociales</span></div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=matematicas'"><i class="fas fa-calculator"></i><span>Matemáticas</span></div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=lengua'"><i class="fas fa-book"></i><span>Lenguaje</span></div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=ingles'"><i class="fas fa-language"></i><span>Inglés</span></div>
                         </div>
-
                         <div class="sub-section-title">PRUEBAS PPNN 2025</div>
                         <div class="cards-grid">
-                            <div class="card-mini dark" onclick="location.href='simulador.html?materia=ppnn1'">
-                                <i class="fas fa-file-alt"></i><span>Cuestionario 1</span>
-                            </div>
-                            <div class="card-mini dark" onclick="location.href='simulador.html?materia=ppnn2'">
-                                <i class="fas fa-file-alt"></i><span>Cuestionario 2</span>
-                            </div>
-                            <div class="card-mini dark" onclick="location.href='simulador.html?materia=ppnn3'">
-                                <i class="fas fa-file-alt"></i><span>Cuestionario 3</span>
-                            </div>
-                            <div class="card-mini dark" onclick="location.href='simulador.html?materia=ppnn4'">
-                                <i class="fas fa-file-alt"></i><span>Cuestionario 4</span>
-                            </div>
+                            <div class="card-mini dark" onclick="location.href='simulador.html?materia=ppnn1'"><i class="fas fa-file-alt"></i><span>Cuestionario 1</span></div>
+                            <div class="card-mini dark" onclick="location.href='simulador.html?materia=ppnn2'"><i class="fas fa-file-alt"></i><span>Cuestionario 2</span></div>
+                            <div class="card-mini dark" onclick="location.href='simulador.html?materia=ppnn3'"><i class="fas fa-file-alt"></i><span>Cuestionario 3</span></div>
+                            <div class="card-mini dark" onclick="location.href='simulador.html?materia=ppnn4'"><i class="fas fa-file-alt"></i><span>Cuestionario 4</span></div>
                         </div>
-
                     </div>
                 </div>
 
                 <div class="accordion-item">
                     <button class="accordion-header" type="button">
-                        <div class="header-left">
-                            <i class="fas fa-jet-fighter icon-box"></i>
-                            <span>FUERZAS ARMADAS (ESMIL)</span>
-                        </div>
+                        <div class="header-left"><i class="fas fa-jet-fighter icon-box"></i><span>FUERZAS ARMADAS (ESMIL)</span></div>
                         <i class="fas fa-plus indicator"></i>
                     </button>
                     <div class="accordion-body">
-                        
                         <div class="sub-section-title">PRUEBAS ACADÉMICAS ESMIL</div>
                         <div class="cards-grid">
-                            <div class="card-mini" onclick="location.href='simulador.html?materia=matematicas_esmil'">
-                                <i class="fas fa-calculator"></i><span>Matemáticas</span>
-                            </div>
-                            <div class="card-mini" onclick="location.href='simulador.html?materia=sociales_esmil'">
-                                <i class="fas fa-landmark"></i><span>Sociales</span>
-                            </div>
-                            <div class="card-mini" onclick="location.href='simulador.html?materia=lengua_esmil'">
-                                <i class="fas fa-book"></i><span>Lenguaje</span>
-                            </div>
-                            <div class="card-mini" onclick="location.href='simulador.html?materia=ingles_esmil'">
-                                <i class="fas fa-language"></i><span>Inglés</span>
-                            </div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=matematicas_esmil'"><i class="fas fa-calculator"></i><span>Matemáticas</span></div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=sociales_esmil'"><i class="fas fa-landmark"></i><span>Sociales</span></div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=lengua_esmil'"><i class="fas fa-book"></i><span>Lenguaje</span></div>
+                            <div class="card-mini" onclick="location.href='simulador.html?materia=ingles_esmil'"><i class="fas fa-language"></i><span>Inglés</span></div>
                         </div>
-
                         <div class="sub-section-title">TEST INTELIGENCIA ESMIL</div>
                         <div class="cards-grid small-grid">
-                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_1'">
-                                <span>SIM 1</span>
-                            </div>
-                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_2'">
-                                <span>SIM 2</span>
-                            </div>
-                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_3'">
-                                <span>SIM 3</span>
-                            </div>
-                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_4'">
-                                <span>SIM 4</span>
-                            </div>
-                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_5'">
-                                <span>SIM 5</span>
-                            </div>
-                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_6'">
-                                <span>SIM 6</span>
-                            </div>
+                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_1'"><span>SIM 1</span></div>
+                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_2'"><span>SIM 2</span></div>
+                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_3'"><span>SIM 3</span></div>
+                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_4'"><span>SIM 4</span></div>
+                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_5'"><span>SIM 5</span></div>
+                            <div class="card-mini warning" onclick="location.href='simulador.html?materia=int_esmil_6'"><span>SIM 6</span></div>
                         </div>
-
                     </div>
                 </div>
 
                 <div class="accordion-item">
                     <button class="accordion-header" type="button">
-                        <div class="header-left">
-                            <i class="fas fa-brain icon-box"></i>
-                            <span>SIMULADORES PSICOSOMÉTRICOS</span>
-                        </div>
+                        <div class="header-left"><i class="fas fa-brain icon-box"></i><span>SIMULADORES PSICOSOMÉTRICOS</span></div>
                         <i class="fas fa-plus indicator"></i>
                     </button>
                     <div class="accordion-body">
                         <div class="cards-grid wide-grid">
-                            <div class="card-wide" onclick="location.href='simulador.html?materia=inteligencia'">
+                            <div class="card-wide featured" onclick="location.href='simulador.html?materia=inteligencia'">
                                 <div class="card-icon blue"><i class="fas fa-lightbulb"></i></div>
                                 <div class="card-text"><h4>INTELIGENCIA</h4><p>Evaluación General</p></div>
                             </div>
-                            <div class="card-wide" onclick="location.href='simulador.html?materia=personalidad'">
+                            <div class="card-wide featured" onclick="location.href='simulador.html?materia=personalidad'">
                                 <div class="card-icon blue"><i class="fas fa-user-check"></i></div>
                                 <div class="card-text"><h4>PERSONALIDAD</h4><p>Perfil Psicológico</p></div>
                             </div>
@@ -199,10 +140,7 @@
             const user = getUserInfo();
             if (user) {
                 document.getElementById('sidebar-name').textContent = user.nombre.split(' ')[0].toUpperCase();
-                // BOTÓN ADMIN APARTE
-                if (user.rol === 'admin') {
-                    document.getElementById('admin-panel-btn').style.display = 'flex';
-                }
+                if (user.rol === 'admin') document.getElementById('admin-panel-btn').style.display = 'flex';
             }
             setInterval(() => {
                 const now = new Date();
@@ -222,7 +160,6 @@
                     }
                 });
             });
-
             const first = document.getElementById('default-open');
             if(first) first.click();
         });
