@@ -35,7 +35,7 @@
     <main class="dashboard-stack">
         
         <div class="accordion-item">
-            <button class="accordion-header" id="btn-policia">
+            <button class="accordion-header" type="button">
                 <div class="header-left">
                     <i class="fas fa-shield-alt"></i>
                     <span>POLICÍA NACIONAL</span>
@@ -66,7 +66,7 @@
         </div>
 
         <div class="accordion-item">
-            <button class="accordion-header" id="btn-ffaa">
+            <button class="accordion-header" type="button">
                 <div class="header-left">
                     <i class="fas fa-jet-fighter"></i>
                     <span>FUERZAS ARMADAS</span>
@@ -95,7 +95,7 @@
         </div>
 
         <div class="accordion-item">
-            <button class="accordion-header" id="btn-general">
+            <button class="accordion-header" type="button">
                 <div class="header-left">
                     <i class="fas fa-globe"></i>
                     <span>GENERAL & CONTROL</span>
@@ -125,13 +125,47 @@
 
     </main>
 
-    <script src="JS/script-home.js"></script> 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // 1. Mostrar nombre del usuario
             const user = getUserInfo();
             if (user) {
                 document.getElementById('user-name-display').textContent = user.nombre.split(' ')[0].toUpperCase();
-                if (user.rol === 'admin') document.getElementById('admin-panel-card').style.display = 'flex';
+                if (user.rol === 'admin') {
+                    const adminCard = document.getElementById('admin-panel-card');
+                    if(adminCard) adminCard.style.display = 'flex';
+                }
+            }
+
+            // 2. Lógica del Acordeón (Abrir/Cerrar)
+            const headers = document.querySelectorAll('.accordion-header');
+
+            headers.forEach(header => {
+                header.addEventListener('click', () => {
+                    // Alternar la clase 'active' para girar la flecha
+                    header.classList.toggle('active');
+
+                    // Seleccionar el cuerpo del acordeón
+                    const body = header.nextElementSibling;
+
+                    // Si ya tiene altura, lo cerramos (null). Si no, lo abrimos (scrollHeight)
+                    if (body.style.maxHeight) {
+                        body.style.maxHeight = null;
+                    } else {
+                        // Opcional: Cerrar los otros si quieres que solo uno quede abierto
+                        closeAll(headers);
+                        
+                        body.style.maxHeight = body.scrollHeight + "px";
+                        header.classList.add('active'); // Asegurar que quede marcado
+                    }
+                });
+            });
+
+            function closeAll(items) {
+                items.forEach(item => {
+                    item.classList.remove('active');
+                    item.nextElementSibling.style.maxHeight = null;
+                });
             }
         });
     </script>
