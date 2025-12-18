@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sparta Academy - Ibarra</title>
-    <link rel="stylesheet" href="CSS/style.css">
+    
+    <link rel="stylesheet" href="CSS/style-home.css">
     
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Teko:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -31,19 +32,19 @@
     <main class="command-center">
         
         <div class="welcome-banner">
-            <h2>PANEL DE CONTROL ACADÉMICO</h2>
-            <p>Selecciona tu módulo de entrenamiento.</p>
+            <h2>PANEL DE CONTROL</h2>
+            <p>Sistema de Entrenamiento Táctico - Sede Ibarra</p>
         </div>
 
         <div class="grid-ibarra">
             
             <div class="card-ibarra" onclick="location.href='simulador.html?materia=sociales'">
                 <div class="card-content">
-                    <h3>ENTRENAMIENTO POR MATERIA</h3>
-                    <p>Focaliza tu estudio en áreas específicas.</p>
+                    <h3>POR MATERIA</h3>
+                    <p>Entrenamiento focalizado.</p>
                 </div>
                 <div class="card-icon">
-                    <i class="fas fa-atom"></i>
+                    <i class="fas fa-layer-group"></i>
                 </div>
                 <div class="card-decor"></div>
             </div>
@@ -51,10 +52,10 @@
             <div class="card-ibarra featured" onclick="location.href='simulador.html?materia=general'">
                 <div class="card-content">
                     <h3>SIMULADOR GENERAL</h3>
-                    <p>Evaluación completa. Todas las materias.</p>
+                    <p>Evaluación global completa.</p>
                 </div>
                 <div class="card-icon">
-                    <i class="fas fa-satellite-dish"></i>
+                    <i class="fas fa-globe-americas"></i>
                 </div>
                 <div class="card-decor"></div>
             </div>
@@ -62,10 +63,10 @@
             <div class="card-ibarra" onclick="location.href='simulador.html?materia=general_esmil'">
                 <div class="card-content">
                     <h3>ESPECIALISTAS ESMIL</h3>
-                    <p>Pruebas de admisión militar avanzada.</p>
+                    <p>Pruebas de alto mando.</p>
                 </div>
                 <div class="card-icon">
-                    <i class="fas fa-medal"></i>
+                    <i class="fas fa-shield-alt"></i>
                 </div>
                 <div class="card-decor"></div>
             </div>
@@ -73,10 +74,10 @@
             <div class="card-ibarra" onclick="location.href='simulador.html?materia=int_esmil_3'">
                 <div class="card-content">
                     <h3>INTELIGENCIA</h3>
-                    <p>Razonamiento lógico y abstracto.</p>
+                    <p>Razonamiento abstracto.</p>
                 </div>
                 <div class="card-icon">
-                    <i class="fas fa-chess-knight"></i>
+                    <i class="fas fa-brain"></i>
                 </div>
                 <div class="card-decor"></div>
             </div>
@@ -84,10 +85,10 @@
             <div class="card-ibarra admin-card" id="admin-panel-card" onclick="location.href='resultados.html'" style="display:none;">
                 <div class="card-content">
                     <h3>ADMINISTRACIÓN</h3>
-                    <p>Reportes y control de cadetes.</p>
+                    <p>Panel de control docente.</p>
                 </div>
                 <div class="card-icon">
-                    <i class="fas fa-user-secret"></i>
+                    <i class="fas fa-chart-line"></i>
                 </div>
                 <div class="card-decor"></div>
             </div>
@@ -95,8 +96,9 @@
         </div>
     </main>
 
+    <script src="JS/script-home.js"></script> 
     <script>
-        // Script simple para mostrar nombre y panel admin
+        // Pequeño script inline para el nombre y rol, por si script-home está vacío
         document.addEventListener('DOMContentLoaded', () => {
             const user = getUserInfo();
             if (user) {
