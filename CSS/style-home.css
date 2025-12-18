@@ -1,11 +1,12 @@
-/* --- DISEÑO IBARRA (ROJO) --- */
+/* --- DISEÑO IBARRA (ROJO SPARTA) --- */
 :root {
-    --primary: #d32f2f;       /* Rojo Ibarra */
-    --primary-dark: #b71c1c;
-    --dark: #2c3e50;          /* Azul oscuro (diferente al negro de Tulcan) */
-    --light: #f4f6f8;         /* Fondo gris claro */
+    --primary: #d32f2f;        /* ROJO INTENSO */
+    --primary-dark: #b71c1c;   /* ROJO OSCURO */
+    --dark: #222;              /* TEXTO OSCURO */
+    --light: #f4f4f4;          /* FONDO CLARO */
     --white: #ffffff;
-    --shadow: 0 10px 30px rgba(211, 47, 47, 0.1); /* Sombra rojiza */
+    --card-bg: #ffffff;        /* TARJETAS BLANCAS */
+    --shadow: 0 10px 30px rgba(211, 47, 47, 0.15); /* SOMBRA ROJIZA */
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -18,24 +19,24 @@ body {
     overflow-x: hidden; 
 }
 
-/* --- HEADER (ROJO) --- */
+/* --- HEADER ROJO --- */
 header { 
-    background: linear-gradient(to right, #b71c1c, #d32f2f); /* Degradado Rojo */
+    background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%); 
     color: var(--white); padding: 12px 5%; 
     display: flex; align-items: center; justify-content: space-between; 
     position: sticky; top: 0; z-index: 1000; 
-    box-shadow: 0 4px 20px rgba(211, 47, 47, 0.3); 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3); 
 }
 .header-main-link { display: flex; align-items: center; gap: 15px; text-decoration: none; color: white; }
-.header-logo img { height: 45px; background: white; border-radius: 50%; padding: 2px; } /* Logo con fondo blanco */
+.header-logo img { height: 45px; background: white; border-radius: 50%; padding: 2px; }
 .header-titulo h1 { font-family: 'Teko', sans-serif; font-size: 2rem; margin: 0; line-height: 1; letter-spacing: 1px; }
-.header-titulo h2 { font-family: 'Work Sans', sans-serif; font-size: 0.8rem; color: #ffcdd2; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+.header-titulo h2 { font-family: 'Work Sans', sans-serif; font-size: 0.8rem; color: #ffcccc; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
-/* Botones Escritorio */
+/* Botones Header */
 .desktop-menu { display: flex; align-items: center; gap: 15px; }
 .user-btn { 
-    background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); 
-    color: white; padding: 8px 16px; border-radius: 20px; cursor: pointer; /* Bordes redondos */
+    background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); 
+    color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; 
     font-size: 0.9rem; transition: 0.3s; display: flex; align-items: center; gap: 8px; text-decoration: none;
 }
 .user-btn:hover { background: white; color: var(--primary); }
@@ -47,7 +48,7 @@ header {
 .side-nav a { padding: 15px 30px; text-decoration: none; font-size: 1.2rem; color: var(--dark); display: block; border-bottom: 1px solid #eee; transition: 0.2s; }
 .side-nav a:hover { background: var(--primary); color: white; }
 .close-nav-btn { position: absolute; top: 15px; right: 25px; font-size: 36px; background: none; border: none; color: var(--primary); cursor: pointer; }
-.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; backdrop-filter: blur(3px); }
+.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1500; backdrop-filter: blur(3px); }
 
 /* --- CONTENIDO PRINCIPAL --- */
 main { 
@@ -63,11 +64,11 @@ main {
 
 .seleccion-container { width: 100%; z-index: 1; position: relative; }
 
-/* Banner Blanco (Diferente a Tulcan) */
+/* Banner Blanco con Borde Rojo */
 .nav-header {
-    background: var(--white);
-    padding: 40px; border-radius: 20px; color: var(--dark); margin-bottom: 40px;
-    box-shadow: var(--shadow); border-top: 10px solid var(--primary); /* Borde arriba en vez de izq */
+    background: white;
+    padding: 40px; border-radius: 15px; color: var(--dark); margin-bottom: 40px;
+    box-shadow: var(--shadow); border-top: 8px solid var(--primary);
     display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
 }
 .title-area h2 { font-family: 'Teko', sans-serif; font-size: 3.5rem; margin: 0; line-height: 0.9; text-transform: uppercase; color: var(--primary); }
@@ -87,62 +88,64 @@ main {
     padding-bottom: 40px;
 }
 
-/* Tarjeta Base (Blanca con sombra roja) */
+/* Tarjeta Base (Blanca) */
 .materia-card {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 50px 30px; border-radius: 20px; text-decoration: none; cursor: pointer;
+    padding: 50px 30px; border-radius: 15px; text-decoration: none; cursor: pointer;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
     position: relative; overflow: hidden; text-align: center;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-    background: var(--white);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     border: 1px solid #eee;
     min-height: 250px;
+    background: white;
 }
-.materia-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(211, 47, 47, 0.2); border-color: var(--primary); }
+.materia-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(211, 47, 47, 0.2); border-color: var(--primary); }
 
-/* TIPO INSTITUCIÓN (BLANCAS CON ICONO ROJO) */
+/* TIPO INSTITUCIÓN (Carpetas) */
+.card-folder {
+    background: white; 
+    color: var(--dark);
+    border-top: 5px solid #ccc;
+}
+.card-folder:hover { border-top-color: var(--primary); }
 .card-folder i {
     font-size: 4.5rem; margin-bottom: 25px; 
-    color: var(--primary); 
+    color: var(--primary); /* Ícono Rojo */
     transition: 0.3s;
 }
 .card-folder:hover i { transform: scale(1.1); }
-.card-folder h3 { font-family: 'Teko', sans-serif; font-size: 2.2rem; margin: 0; letter-spacing: 1px; font-weight: 500; color: var(--dark); }
-.card-folder p { color: #888; font-size: 1rem; margin-top: 5px; opacity: 0.8; }
+.card-folder h3 { font-family: 'Teko', sans-serif; font-size: 2.2rem; margin: 0; letter-spacing: 1px; font-weight: 500; }
+.card-folder p { color: #888; font-size: 1rem; margin-top: 5px; }
 
-/* TIPO ANCHO TOTAL (GENERAL - ROJA) */
+/* TIPO ANCHO TOTAL (General - ROJO COMPLETO) */
 .card-wide {
     grid-column: 1 / -1; 
     flex-direction: row; 
     justify-content: flex-start;
     padding: 40px 60px;
     
-    /* CAMBIO: Estilo Rojo */
-    background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+    background: linear-gradient(45deg, #d32f2f 0%, #b71c1c 100%); /* Fondo Rojo */
     color: white;
     border: none;
 }
-.card-wide:hover { box-shadow: 0 20px 40px rgba(211, 47, 47, 0.4); border: none; }
-
 .card-wide i { 
     font-size: 5rem; margin-right: 40px; margin-bottom: 0; 
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.8); /* Icono blanco */
 }
 .card-wide:hover i { transform: scale(1.1); color: white; }
-
 .card-wide .text-content { text-align: left; }
 .card-wide h3 { font-family: 'Teko', sans-serif; font-size: 3rem; margin: 0; color: white; line-height: 1; }
-.card-wide p { font-size: 1.2rem; color: #ffcdd2; margin-top: 10px; }
+.card-wide p { font-size: 1.2rem; color: #ffcccc; margin-top: 10px; }
 
-/* TIPO TEST (NORMAL - BLANCAS CON BORDE) */
-.card-test { background: white; border: 2px solid #eee; color: var(--dark); }
+/* TIPO TEST (Simuladores Normales) */
+.card-test { background: white; border: 2px solid #f0f0f0; color: var(--dark); }
 .card-test:hover { border-color: var(--primary); }
 .card-test i { font-size: 3rem; margin-bottom: 20px; color: var(--dark); }
 .card-test:hover i { color: var(--primary); }
 .card-test h3 { font-family: 'Teko', sans-serif; font-size: 1.8rem; margin: 0; color: var(--dark); }
 
 /* FOOTER */
-footer { background: var(--white); color: #666; text-align: center; padding: 30px; font-size: 0.9rem; margin-top: auto; border-top: 1px solid #eee; }
+footer { background: var(--dark); color: #ccc; text-align: center; padding: 30px; font-size: 0.9rem; margin-top: auto; }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
