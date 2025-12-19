@@ -40,29 +40,14 @@
                 <h1 id="lobby-titulo-materia" style="font-size: 2.5rem; color: #333;">CARGANDO...</h1>
                 <p>Sistema de Evaluación Académica</p>
             </div>
-            
             <div class="lobby-grid">
-                <div class="info-item">
-                    <i class="fas fa-book"></i>
-                    <div id="lobby-materia">...</div>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-list-ol"></i>
-                    <div id="lobby-preguntas">...</div>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-clock"></i>
-                    <div id="lobby-tiempo">...</div>
-                </div>
+                <div class="info-item"><i class="fas fa-book"></i><div id="lobby-materia">...</div></div>
+                <div class="info-item"><i class="fas fa-list-ol"></i><div id="lobby-preguntas">...</div></div>
+                <div class="info-item"><i class="fas fa-clock"></i><div id="lobby-tiempo">...</div></div>
             </div>
-
-            <button id="comenzar-btn" disabled>
-                <i class="fas fa-spinner fa-spin"></i> CARGANDO DATOS
-            </button>
+            <button id="comenzar-btn" disabled><i class="fas fa-spinner fa-spin"></i> CARGANDO...</button>
             <br><br>
-            <button id="btn-regresar-lobby" style="background:none; border:none; color:#777; cursor:pointer; text-decoration:underline;">
-                Cancelar y Volver
-            </button>
+            <button id="btn-regresar-lobby" style="background:none; border:none; color:#777; cursor:pointer; text-decoration:underline;">Cancelar</button>
         </div>
     </div>
 
@@ -70,22 +55,13 @@
         <div class="quiz-main">
             <div class="quiz-header-bar">
                 <span class="pregunta-tag" id="pregunta-numero">PREGUNTA 1</span>
-                <div class="timer-display">
-                    <i class="fas fa-stopwatch"></i>
-                    <span id="cronometro">00:00</span>
-                </div>
+                <div class="timer-display"><i class="fas fa-stopwatch"></i><span id="cronometro">00:00</span></div>
             </div>
-
             <div id="q-image-container" style="text-align:center; margin-bottom:20px;"></div>
             <div id="pregunta-texto" class="question-text">Cargando...</div>
-            
             <div id="opciones-container" class="options-grid"></div>
-
-            <button id="siguiente-btn" class="btn-next">
-                SIGUIENTE <i class="fas fa-chevron-right"></i>
-            </button>
+            <button id="siguiente-btn" class="btn-next">SIGUIENTE <i class="fas fa-chevron-right"></i></button>
         </div>
-
         <div class="quiz-sidebar">
             <div class="sidebar-title">NAVEGACIÓN</div>
             <div id="navegador-preguntas"></div>
@@ -95,24 +71,16 @@
 
     <div id="resultados-container" class="results-card" style="display:none;">
         <h2 style="font-family:'Teko'; font-size:2.5rem; margin:0;">RESULTADO FINAL</h2>
-        
         <div class="score-circle">
             <span id="puntaje-final">0</span>
             <span style="font-weight:bold; font-size:1.2rem;">PUNTOS</span>
         </div>
-
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:30px;">
-            <div style="background:#e8f5e9; padding:15px; border-radius:5px; color:#2e7d32;">
-                <i class="fas fa-check-circle"></i> Correctas: <strong id="stats-correctas">0</strong>
-            </div>
-            <div style="background:#ffebee; padding:15px; border-radius:5px; color:#c62828;">
-                <i class="fas fa-times-circle"></i> Incorrectas: <strong id="stats-incorrectas">0</strong>
-            </div>
+            <div style="background:#e8f5e9; padding:15px; border-radius:5px; color:#2e7d32;"><i class="fas fa-check-circle"></i> Correctas: <strong id="stats-correctas">0</strong></div>
+            <div style="background:#ffebee; padding:15px; border-radius:5px; color:#c62828;"><i class="fas fa-times-circle"></i> Incorrectas: <strong id="stats-incorrectas">0</strong></div>
         </div>
-
         <button id="retry-btn" class="btn-confirm" style="margin-right:10px;">REINTENTAR</button>
         <button id="reiniciar-btn" class="btn-cancel">SALIR AL MENÚ</button>
-
         <div id="revision-container" style="text-align:left; margin-top:40px;"></div>
     </div>
 
