@@ -1,9 +1,9 @@
-/* DISEÑO IBARRA - STYLE-HOME.CSS COMPLETO */
+/* DISEÑO IBARRA - FINAL CON HEADER IMPONENTE */
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500;700&display=swap');
 
 :root {
     --red-sparta: #D32F2F;
-    --dark-red: #9a0007;
+    --dark-red: #8b0000;
     --bg-tech: #f0f2f5;
     --text-dark: #2c3e50;
     --border-gray: #e0e0e0;
@@ -19,37 +19,69 @@ body {
     min-height: 100vh;
 }
 
-/* HEADER */
+/* --- HEADER PODEROSO (EL CAMBIO CLAVE) --- */
 .ibarra-header {
     background: linear-gradient(90deg, var(--red-sparta) 0%, var(--dark-red) 100%);
-    padding: 0 40px; 
-    height: 70px; 
+    padding: 0 30px; 
+    height: 85px; /* MÁS ALTO PARA QUE SE VEA BIEN */
     display: flex; justify-content: space-between; align-items: center;
-    box-shadow: 0 5px 15px rgba(154, 0, 7, 0.3); 
+    box-shadow: 0 6px 15px rgba(154, 0, 7, 0.4); 
     position: sticky; top: 0; z-index: 100;
-    clip-path: polygon(0 0, 100% 0, 100% 80%, 98% 100%, 2% 100%, 0 80%);
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 98% 100%, 2% 100%, 0 85%); /* Corte más agresivo */
 }
 
-.logo-zone { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
-.logo-zone img { height: 42px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
-.brand-text h1 { font-family: 'Teko'; font-size: 2rem; color: white; margin: 0; line-height: 0.8; letter-spacing: 1px; }
+.logo-zone { 
+    display: flex; align-items: center; gap: 20px; /* Más separación */
+    cursor: pointer; text-decoration: none;
+    margin-bottom: 5px;
+}
+
+.logo-zone img { 
+    height: 60px; /* LOGO MÁS GRANDE */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); 
+    transition: transform 0.3s;
+}
+.logo-zone:hover img { transform: scale(1.1); }
+
+.brand-text {
+    display: flex; flex-direction: column; justify-content: center;
+}
+
+.brand-text h1 { 
+    font-family: 'Teko'; 
+    font-size: 3rem; /* TEXTO SPARTA GIGANTE */
+    color: white; 
+    margin: 0; 
+    line-height: 0.8; 
+    letter-spacing: 2px; 
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+}
+
+.brand-text span { 
+    color: rgba(255,255,255,0.9); 
+    font-size: 0.85rem; 
+    letter-spacing: 4px; /* LETRAS SEPARADAS TIPO CINE */
+    font-weight: 700; 
+    text-transform: uppercase;
+    margin-top: 2px;
+}
 
 .user-zone { margin-bottom: 10px; }
 
 .btn-logout-ibarra {
     background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); 
-    color: white; width: 45px; height: 45px; border-radius: 50%; 
+    color: white; width: 50px; height: 50px; border-radius: 50%; /* Botón un poco más grande */
     cursor: pointer; transition: all 0.3s ease; 
-    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
 }
-.btn-logout-ibarra:hover { background: white; color: var(--red-sparta); transform: rotate(90deg); }
+.btn-logout-ibarra:hover { background: white; color: var(--red-sparta); transform: rotate(90deg); box-shadow: 0 0 15px white; }
 
-/* LAYOUT PC */
+/* LAYOUT PRINCIPAL */
 .main-grid-layout {
     display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 25px;
-    max-width: 1600px; width: 95%; margin: 30px auto; align-items: start;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+    max-width: 1600px; width: 95%; margin: 40px auto; align-items: start;
 }
 
 /* SIDEBAR */
@@ -63,11 +95,11 @@ body {
 }
 .profile-card { border-top: 5px solid var(--red-sparta); }
 .profile-avatar {
-    width: 90px; height: 90px; background: #eee; border-radius: 50%; margin: 0 auto 15px auto;
+    width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 15px auto;
     display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #aaa;
     border: 3px solid var(--red-sparta);
 }
-.profile-card h3 { margin: 0; font-family: 'Teko'; font-size: 1.8rem; color: #333; }
+.profile-card h3 { margin: 0; font-family: 'Teko'; font-size: 2rem; color: #333; }
 .badge { background: #333; color: white; padding: 2px 10px; font-size: 0.8rem; border-radius: 4px; display: inline-block; margin-bottom: 20px; }
 .stats-row { display: flex; justify-content: space-around; border-top: 1px solid #eee; padding-top: 15px; }
 .stat strong { display: block; font-size: 0.8rem; color: #777; }
@@ -82,20 +114,20 @@ body {
     font-family: 'Teko'; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
     clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%); transition: 0.3s;
 }
-.admin-sidebar-btn:hover { background: var(--red-sparta); }
+.admin-sidebar-btn:hover { background: var(--red-sparta); letter-spacing: 1px; }
 
 /* CONTENIDO */
-.dashboard-content { display: flex; flex-direction: column; gap: 15px; }
+.dashboard-content { display: flex; flex-direction: column; gap: 20px; }
 .hero-banner {
-    background: white; padding: 20px 40px; border-radius: 6px; border-left: 8px solid var(--red-sparta);
+    background: white; padding: 30px 40px; border-radius: 6px; border-left: 8px solid var(--red-sparta);
     display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
-.hero-text h2 { font-family: 'Teko'; font-size: 2.8rem; margin: 0; line-height: 1; }
-.hero-text p { margin: 5px 0 0 0; color: #666; font-size: 1.1rem; }
-.hero-icon { font-size: 3.5rem; color: #f0f0f0; }
+.hero-text h2 { font-family: 'Teko'; font-size: 3rem; margin: 0; line-height: 1; }
+.hero-text p { margin: 5px 0 0 0; color: #666; font-size: 1.2rem; }
+.hero-icon { font-size: 4rem; color: #f0f0f0; }
 
 /* ACORDEONES */
-.accordion-item { background: white; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-gray); margin-bottom: 10px; }
+.accordion-item { background: white; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-gray); margin-bottom: 15px; }
 .accordion-header {
     width: 100%; padding: 20px 30px; background: white; border: none; cursor: pointer;
     display: flex; justify-content: space-between; align-items: center; transition: 0.3s; border-left: 5px solid transparent;
@@ -103,30 +135,31 @@ body {
 .accordion-header:hover { background: #fdfdfd; padding-left: 35px; border-left-color: var(--red-sparta); }
 .accordion-header.active { background: #fff; border-left-color: var(--red-sparta); border-bottom: 1px solid #eee; }
 .header-left { display: flex; align-items: center; gap: 20px; }
-.header-left i { font-size: 1.5rem; color: #555; background: #f4f4f4; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 6px;}
+.header-left i { font-size: 1.5rem; color: #555; background: #f4f4f4; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 6px;}
 .accordion-header:hover .header-left i, .accordion-header.active .header-left i { background: var(--red-sparta); color: white; }
-.header-left span { font-family: 'Teko'; font-size: 1.6rem; color: #333; letter-spacing: 1px; }
+.header-left span { font-family: 'Teko'; font-size: 1.8rem; color: #333; letter-spacing: 1px; }
 .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fafafa; }
 
 .sub-section-title {
-    padding: 20px 30px 10px 30px; font-size: 0.9rem; font-weight: 700; color: var(--red-sparta); letter-spacing: 1px; border-bottom: 1px solid #eee;
+    padding: 20px 30px 10px 30px; font-size: 0.95rem; font-weight: 700; color: var(--red-sparta); letter-spacing: 2px; border-bottom: 1px solid #eee;
 }
 
-.cards-grid { padding: 25px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 25px; }
-.cards-grid.wide-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
-.cards-grid.small-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 20px; }
+/* CARDS */
+.cards-grid { padding: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px; }
+.cards-grid.wide-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+.cards-grid.small-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; }
 
 .card-mini {
     background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 25px 20px;
     cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03); text-align: center; justify-content: center; min-height: 140px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03); text-align: center; justify-content: center; min-height: 150px;
 }
 .card-mini:hover { transform: translateY(-5px); border-color: var(--red-sparta); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-.card-mini i { font-size: 2.2rem; color: #666; transition: 0.3s; }
+.card-mini i { font-size: 2.5rem; color: #666; transition: 0.3s; }
 .card-mini:hover i { color: var(--red-sparta); }
-.card-mini span { font-weight: 700; color: #333; font-size: 0.95rem; line-height: 1.2; transition: 0.3s; }
+.card-mini span { font-weight: 700; color: #333; font-size: 1rem; line-height: 1.2; transition: 0.3s; }
 
-/* WHITE OPS PARA PPNN */
+/* WHITE OPS PARA PPNN (Lo que te gustó) */
 .card-mini.dark { background: white; border: 1px solid #ccc; border-left: 5px solid #222; }
 .card-mini.dark i, .card-mini.dark span { color: #333; }
 .card-mini.dark:hover { background: #222; border-color: #222; }
@@ -149,30 +182,18 @@ body {
 .card-wide.featured p { color: #ccc; margin: 0; font-size: 0.9rem;}
 .card-wide.featured .card-icon { background: rgba(255,255,255,0.1); color: #3498db; }
 
-/* --- RESPONSIVE OPTIMIZADO CELULAR --- */
+/* RESPONSIVE MÓVIL */
 @media (max-width: 900px) {
-    /* Header sin huecos */
-    .ibarra-header { padding: 10px 20px; clip-path: none; height: auto; padding-bottom: 10px; flex-wrap: wrap; }
+    .ibarra-header { padding: 15px 20px; height: auto; flex-wrap: wrap; clip-path: none; justify-content: center; text-align: center; }
+    .logo-zone { margin-bottom: 10px; width: 100%; justify-content: center; }
+    .user-zone { position: absolute; top: 15px; right: 15px; } /* Botón salir flotante en móvil */
     
-    /* Layout Vertical */
-    .main-grid-layout { 
-        grid-template-columns: 1fr; /* Todo 100% ancho */
-        gap: 15px; margin-top: 15px;
-    }
-    
-    /* Sidebar Arriba y Ordenado */
-    .sidebar-profile { 
-        width: 100%; order: 1; /* Primero el perfil */
-        clip-path: none; flex-direction: column; 
-    }
-    
-    /* Botón Admin ordenado debajo del perfil */
-    .admin-sidebar-btn { margin-top: 10px; clip-path: none; border-radius: 8px; }
-    
-    /* Contenido Abajo */
-    .dashboard-content { order: 2; /* Luego los simuladores */ }
-    
-    /* Banner Ajustado */
-    .hero-banner { flex-direction: column; text-align: center; gap: 15px; }
+    .main-grid-layout { grid-template-columns: 1fr; gap: 20px; margin-top: 10px; }
+    .sidebar-profile { width: 100%; order: 1; clip-path: none; flex-direction: column; }
+    .admin-sidebar-btn { clip-path: none; border-radius: 8px; margin-top: 10px; }
+    .dashboard-content { order: 2; }
+    .hero-banner { flex-direction: column; text-align: center; gap: 15px; padding: 25px; }
     .hero-icon { display: none; }
+    .brand-text h1 { font-size: 2.5rem; }
+    .brand-text span { font-size: 0.8rem; letter-spacing: 2px; }
 }
