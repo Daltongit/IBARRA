@@ -1,4 +1,4 @@
-// JS/script-simulador.js - IBARRA (SIM 3 DETALLADO)
+// JS/script-simulador.js - IBARRA (MODO LINEAL ESTRICTO)
 
 const simuladorUrl = 'https://dgnfjzzwcdfbauyamutp.supabase.co';
 const simuladorKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnbmZqenp3Y2RmYmF1eWFtdXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNTk3ODAsImV4cCI6MjA4MTYzNTc4MH0.upcZkm8dYMOlWrbxEQEraUiNHOWyOOBAAqle8rbesNY';
@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let questions = [], phase1Data = [], phase2Blocks = [], userAnswers = [], tableAnswersText = {}, tableAnswersImg = {}; 
     let timerInterval, timeLeft = 3600, modeType = 'normal', carpetaEspecialID = null;
+    let currentIdx = 0; // Índice global para controlar el avance lineal
 
     const materias = {
         'sociales': 'Ciencias Sociales', 'matematicas': 'Matemáticas y Física', 'lengua': 'Lengua y Literatura', 'ingles': 'Inglés', 'general': 'General (Todas)',
@@ -81,9 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) { console.error(e); btnStart.innerHTML = "ERROR AL CARGAR"; btnStart.style.background = "#c0392b"; }
     }
 
+    // --- ARRANQUES ---
     function startQuiz() { 
         lobbyContainer.style.display = 'none'; simuladorContainer.style.display = 'grid'; 
-        userAnswers = new Array(questions.length).fill(null); renderNav(); showQ(0); startTimer();
+        userAnswers = new Array(questions.length).fill(null); 
+        currentIdx = 0; // Inicio en 0
+        renderNav(); showQ(currentIdx); startTimer();
     }
 
     function startPhase1() {
@@ -103,25 +107,68 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { document.getElementById('btn-trigger-modal-custom').onclick = openModal; }, 500);
     }
 
+    // --- LÓGICA LINEAL ESTRICTA ---
     function showQ(idx) {
+        currentIdx = idx; // Actualizar índice actual
+        renderNav(); // Actualizar bolitas (para mostrar en cuál voy)
+
         const q = questions[idx];
         document.getElementById('pregunta-numero').textContent = `Pregunta ${idx+1}`;
         document.getElementById('pregunta-texto').innerHTML = q.pregunta ? q.pregunta.replace(/\n/g, '<br>') : '';
         document.getElementById('q-image-container').innerHTML = q.imagen ? `<img src="${q.imagen}" style="max-width:100%; border-radius:10px;">` : '';
+        
         const opts = document.getElementById('opciones-container'); opts.innerHTML = '';
         if(q.opciones) q.opciones.forEach(op => {
             const btn = document.createElement('button'); btn.className = 'opcion-btn';
             if(userAnswers[idx] === op) btn.classList.add('selected'); btn.textContent = op;
-            btn.onclick = () => { userAnswers[idx] = op; renderNav(); showQ(idx); }; opts.appendChild(btn);
+            
+            // Al hacer clic en una opción, solo se marca, NO cambia de pregunta
+            btn.onclick = () => { 
+                userAnswers[idx] = op; 
+                // Actualizar visualmente la selección
+                Array.from(opts.children).forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                renderNav(); // Para marcar como respondida en el nav
+            }; 
+            opts.appendChild(btn);
         });
+
+        // BOTÓN SIGUIENTE (ÚNICA FORMA DE AVANZAR)
         const btnNext = document.getElementById('siguiente-btn');
         btnNext.textContent = idx === questions.length - 1 ? "FINALIZAR" : "SIGUIENTE";
-        btnNext.onclick = () => idx < questions.length - 1 ? showQ(idx + 1) : openModal();
+        
+        // Al dar clic en Siguiente:
+        btnNext.onclick = () => {
+            // Opcional: Validar si respondió (descomentar si quieres obligar a responder)
+            // if (!userAnswers[idx]) { alert("Debes seleccionar una respuesta."); return; }
+
+            if (idx < questions.length - 1) {
+                showQ(idx + 1); // Avanzar a la siguiente
+            } else {
+                openModal(); // Si es la última, abrir modal de fin
+            }
+        };
     }
 
+    // --- NAVEGACIÓN BLOQUEADA ---
     function renderNav() {
         const nav = document.getElementById('navegador-preguntas'); nav.innerHTML = '';
-        questions.forEach((_, i) => { const b = document.createElement('button'); b.className = 'nav-dot'; b.textContent = i+1; if(userAnswers[i]) b.classList.add('answered'); b.onclick = () => showQ(i); nav.appendChild(b); });
+        questions.forEach((_, i) => { 
+            const b = document.createElement('button'); 
+            b.className = 'nav-dot'; 
+            b.textContent = i+1; 
+            
+            // Estados visuales
+            if(userAnswers[i]) b.classList.add('answered'); // Respondida
+            if(i === currentIdx) b.classList.add('active-q'); // Pregunta Actual (Estilo diferente)
+
+            // BLOQUEO DE CLIC (ESTO HACE QUE SEA LINEAL)
+            b.disabled = true; 
+            b.style.pointerEvents = 'none'; // Asegura que no se pueda interactuar
+            b.style.cursor = 'default';
+
+            nav.appendChild(b); 
+        });
     }
 
     function startTimer() {
@@ -131,9 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
+    // --- FUNCIONES EXTRA ---
     window.selectPhase1 = (i,v,e) => { tableAnswersText[i]=v; e.parentElement.querySelectorAll('.vocab-option-cell').forEach(c=>c.classList.remove('vocab-selected')); e.classList.add('vocab-selected'); };
-    
-    // FASE 2
     window.goToPhase2 = () => { 
         window.scrollTo(0,0); 
         let html = `<div class="full-width-container"><h2>ABSTRACTO (FASE 2)</h2>`;
@@ -165,39 +211,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('revision-container').innerHTML = html; showStats(ok, questions.length);
     }
 
-    // --- RESULTADOS DETALLADOS SIM 3 ---
     function finishMultiPhase() {
         let ok1 = 0, ok2 = 0;
         let revHTML = '<div style="text-align:left;">';
-        
         revHTML += '<h3 style="color:#D32F2F; border-bottom:2px solid #eee; margin-top:20px;">FASE 1: VOCABULARIO</h3>';
         phase1Data.forEach((q, i) => {
-            const userAns = tableAnswersText[i];
-            const isCorrect = userAns === q.respuesta;
-            if (isCorrect) ok1++;
+            const userAns = tableAnswersText[i]; const isCorrect = userAns === q.respuesta; if (isCorrect) ok1++;
             revHTML += `<div style="border-bottom:1px solid #eee; padding:10px;"><p><strong>${i+1}. ${q.palabra}</strong></p><p>Tuya: <span style="color:${isCorrect?'green':'red'}">${userAns||'--'}</span> ${!isCorrect ? `<span style="color:green"> (Correcta: ${q.respuesta})</span>` : ''}</p></div>`;
         });
-
         revHTML += '<h3 style="color:#D32F2F; border-bottom:2px solid #eee; margin-top:30px;">FASE 2: ABSTRACTO</h3>';
         const letters = ['A','B','C','D','E','F'];
         phase2Blocks.forEach((bloque, bIdx) => {
             revHTML += `<div style="background:#f9f9f9; padding:10px; margin-top:15px; font-weight:bold;">BLOQUE ${bIdx+1}</div>`;
             bloque.respuestas_bloque.forEach((correctArr, i) => {
-                const qNum = bloque.rango_inicio + i;
-                const userArr = tableAnswersImg[qNum] || [];
-                const userStr = userArr.sort().map(idx => letters[idx]).join(', ');
-                const correctStr = correctArr.sort().map(idx => letters[idx]).join(', ');
-                
-                const isCorrect = JSON.stringify(userArr.sort()) === JSON.stringify(correctArr.sort());
-                if(isCorrect) ok2++;
-
+                const qNum = bloque.rango_inicio + i; const userArr = tableAnswersImg[qNum] || [];
+                const userStr = userArr.sort().map(idx => letters[idx]).join(', '); const correctStr = correctArr.sort().map(idx => letters[idx]).join(', ');
+                const isCorrect = JSON.stringify(userArr.sort()) === JSON.stringify(correctArr.sort()); if(isCorrect) ok2++;
                 revHTML += `<div style="border-bottom:1px solid #eee; padding:10px;"><p><strong>Pregunta ${qNum}</strong></p><p>Tuya: <span style="color:${isCorrect?'green':'red'}">${userStr||'--'}</span> ${!isCorrect ? `<span style="color:green"> (Correcta: ${correctStr})</span>` : ''}</p></div>`;
             });
         });
         revHTML += '</div>';
-
-        document.getElementById('revision-container').innerHTML = revHTML;
-        showStats(ok1+ok2, phase1Data.length + 20); 
+        document.getElementById('revision-container').innerHTML = revHTML; showStats(ok1+ok2, phase1Data.length + 20); 
     }
 
     function finishTableImg() {
