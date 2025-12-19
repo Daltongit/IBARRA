@@ -18,39 +18,22 @@
     <script> checkAuth(); </script>
 </head>
 <body>
-    <header>
-        <a href="index.html" class="header-main-link">
-            <div class="header-logo"><img src="logo.png" alt="Logo"></div>
-            <div class="header-titulo">
-                <h1>SPARTA ACADEMY</h1>
-                <h2>ADMINISTRACIÓN IBARRA</h2>
+    <header class="ibarra-header" style="background: linear-gradient(90deg, #D32F2F 0%, #8b0000 100%); padding: 0 40px; height: 70px; display: flex; justify-content: space-between; align-items: center;">
+        
+        <div onclick="location.href='index.html'" style="display:flex; align-items:center; gap:15px; cursor: pointer; text-decoration: none;">
+            <img src="logo.png" alt="Logo" style="height:42px;">
+            <div>
+                <h1 style="font-family:'Teko'; font-size:1.8rem; color:white; margin:0; line-height:0.9;">SPARTA ACADEMY</h1>
+                <h2 style="font-family:'Teko'; font-size:1rem; color:rgba(255,255,255,0.8); margin:0;">PANEL ADMIN</h2>
             </div>
-        </a>
+        </div>
         
         <div class="desktop-menu">
-            <button class="user-btn" onclick="location.href='index.html'">
-                <i class="fas fa-home"></i> Inicio
-            </button>
-            <button class="user-btn" onclick="logout()" style="background:#b71c1c; border-color:#b71c1c;">
+            <button class="user-btn" onclick="logout()" style="background:#b71c1c; border:1px solid rgba(255,255,255,0.3); color:white; padding:8px 15px; border-radius:5px; cursor:pointer;">
                 <i class="fas fa-sign-out-alt"></i> Salir
             </button>
         </div>
-
-        <button class="mobile-toggle" id="hamburger-btn">
-            <i class="fas fa-bars"></i>
-        </button>
     </header>
-
-    <div class="side-nav" id="side-nav">
-        <button class="close-nav-btn" id="close-nav-btn">&times;</button>
-        <div style="text-align:center; padding:20px;">
-            <img src="logo.png" width="80" style="margin-bottom:10px;">
-            <h3 style="color:#d32f2f; font-family:'Teko'; margin:0;">MENÚ</h3>
-        </div>
-        <a href="index.html"><i class="fas fa-home"></i> Volver al Inicio</a>
-        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
-    </div>
-    <div class="overlay" id="overlay"></div>
 
     <main class="resultados-main">
         <h1>REPORTE DE INTENTOS</h1>
@@ -92,19 +75,5 @@
     <canvas id="hidden-chart-canvas" width="400" height="200" style="display:none;"></canvas>
 
     <script src="JS/script-resultados.js"></script>
-    <script>
-        // Lógica del menú móvil
-        document.addEventListener('DOMContentLoaded', () => {
-            const btn = document.getElementById('hamburger-btn');
-            const nav = document.getElementById('side-nav');
-            const close = document.getElementById('close-nav-btn');
-            const overlay = document.getElementById('overlay');
-
-            if(btn) btn.onclick = () => { nav.classList.add('open'); overlay.style.display = "block"; };
-            const closeMenu = () => { nav.classList.remove('open'); overlay.style.display = "none"; };
-            if(close) close.onclick = closeMenu;
-            if(overlay) overlay.onclick = closeMenu;
-        });
-    </script>
 </body>
 </html>
