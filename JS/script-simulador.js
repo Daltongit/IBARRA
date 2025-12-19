@@ -1,6 +1,5 @@
-// JS/script-simulador.js - IBARRA (VERSIÓN ROBUSTA)
+// JS/script-simulador.js - IBARRA (COMPLETO Y ARREGLADO)
 
-// CONEXIÓN
 const simuladorUrl = 'https://dgnfjzzwcdfbauyamutp.supabase.co';
 const simuladorKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnbmZqenp3Y2RmYmF1eWFtdXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNTk3ODAsImV4cCI6MjA4MTYzNTc4MH0.upcZkm8dYMOlWrbxEQEraUiNHOWyOOBAAqle8rbesNY';
 const simuladorDB = window.supabase.createClient(simuladorUrl, simuladorKey);
@@ -24,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let modeType = 'normal'; 
     let carpetaEspecialID = null;
 
-    // --- CONFIG ---
     const materias = {
         'sociales': 'Ciencias Sociales', 'matematicas': 'Matemáticas y Física', 'lengua': 'Lengua y Literatura', 'ingles': 'Inglés', 'general': 'General (Todas)',
         'inteligencia': 'Inteligencia', 'personalidad': 'Personalidad', 'ppnn1': 'Cuestionario 1 PPNN', 'ppnn2': 'Cuestionario 2 PPNN', 'ppnn3': 'Cuestionario 3 PPNN', 'ppnn4': 'Cuestionario 4 PPNN',
@@ -47,10 +45,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let fetchUrl = '';
         
-        // Detección de Modo
-        if (materiaKey === 'int_esmil_3') { modeType = 'multi_phase'; fetchUrl = 'DATA/3/3.json'; timeLeft = 3600; } 
-        else if (materiaKey === 'int_esmil_2') { modeType = 'table_img'; carpetaEspecialID = '2'; fetchUrl = 'DATA/2/2.json'; timeLeft = 3600; }
-        else if (materiaKey.startsWith('int_esmil_')) { modeType = 'normal'; carpetaEspecialID = materiaKey.split('_')[2]; fetchUrl = `DATA/${carpetaEspecialID}/${carpetaEspecialID}.json`; timeLeft = 3600; } 
+        // CONFIGURACIÓN DE RUTAS
+        if (materiaKey === 'int_esmil_3') { 
+            modeType = 'multi_phase'; 
+            fetchUrl = 'DATA/3/3.json'; 
+            timeLeft = 3600; 
+        } 
+        else if (materiaKey === 'int_esmil_2') { 
+            modeType = 'table_img'; 
+            carpetaEspecialID = '2'; 
+            fetchUrl = 'DATA/2/2.json'; 
+            timeLeft = 3600; 
+        }
+        else if (materiaKey.startsWith('int_esmil_')) { 
+            modeType = 'normal'; 
+            carpetaEspecialID = materiaKey.split('_')[2]; 
+            fetchUrl = `DATA/${carpetaEspecialID}/${carpetaEspecialID}.json`; 
+            timeLeft = 3600; 
+        } 
         else if (materiaKey.includes('matematicas')) { timeLeft = 5400; fetchUrl = `DATA/preguntas_${materiaKey}.json`; }
         else if (materiaKey.includes('general')) { timeLeft = 10800; fetchUrl = `DATA/preguntas_${materiaKey}.json`; }
         else { timeLeft = 3600; fetchUrl = `DATA/preguntas_${materiaKey}.json`; }
@@ -67,13 +79,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const promises = filesToLoad.map(url => fetch(url).then(r => r.ok ? r.json() : null));
             const results = await Promise.all(promises);
             
-            // Cargar datos
+            // PROCESAMIENTO
             if (modeType === 'multi_phase') {
                 const data = results[0];
-                if (!data) throw new Error("Datos no encontrados");
+                if (!data) throw new Error("Datos vacíos Sim 3");
                 phase1Data = data.parte1;
-                phase2Blocks = data.parte2_bloques.map(b => { b.imagen_bloque = `DATA/3/IMAGES/${b.imagen_bloque}`; return b; });
-                questions = new Array(phase1Data.length + 20); 
+                // Ajustar rutas de imágenes
+                phase2Blocks = data.parte2_bloques.map(b => { 
+                    b.imagen_bloque = `DATA/3/IMAGES/${b.imagen_bloque}`; 
+                    return b; 
+                });
+                questions = new Array(phase1Data.length + 20); // Dummy array para length
             } 
             else if (modeType === 'table_img') {
                 let allQ = []; results.forEach(d => { if(d) allQ = allQ.concat(d); });
@@ -125,11 +141,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function startPhase1() {
         lobbyContainer.style.display = 'none';
         simuladorContainer.style.display = 'block'; 
-        let html = `<div class="full-width-container"><h2>VOCABULARIO</h2><div class="table-responsive-wrapper"><table class="vocab-table"><thead><tr><th>#</th><th>PALABRA</th><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead><tbody>`;
+        let html = `<div class="full-width-container"><h2>VOCABULARIO (FASE 1)</h2><div class="table-responsive-wrapper"><table class="vocab-table"><thead><tr><th>#</th><th>PALABRA</th><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead><tbody>`;
         phase1Data.forEach((q, i) => {
             html += `<tr id="row-p1-${i}"><td><strong>${i+1}</strong></td><td>${q.palabra}</td>${q.opciones.map(op => `<td class="vocab-option-cell" onclick="selectPhase1(${i}, '${op}', this)">${op}</td>`).join('')}</tr>`;
         });
-        html += `</tbody></table></div><button class="btn-finish-table" onclick="goToPhase2()">SIGUIENTE SECCIÓN</button></div>`;
+        html += `</tbody></table></div><button class="btn-finish-table" onclick="goToPhase2()">SIGUIENTE FASE <i class="fas fa-arrow-right"></i></button></div>`;
         simuladorContainer.innerHTML = html;
         startTimer();
     }
@@ -144,11 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         html += `</tbody></table></div><button class="btn-finish-table" id="btn-trigger-modal-custom">TERMINAR</button></div>`;
         simuladorContainer.innerHTML = html;
         startTimer();
-        
-        setTimeout(() => {
-            const b = document.getElementById('btn-trigger-modal-custom');
-            if(b) b.onclick = () => { document.getElementById('modal-mensaje').textContent = "¿Seguro que deseas terminar?"; document.getElementById('modal-overlay').style.display = 'flex'; };
-        }, 500);
+        setTimeout(() => { document.getElementById('btn-trigger-modal-custom').onclick = openModal; }, 500);
     }
 
     // --- LÓGICA PREGUNTAS ---
@@ -165,10 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.onclick = () => { userAnswers[idx] = op; renderNav(); showQ(idx); };
             opts.appendChild(btn);
         });
-        
         const btnNext = document.getElementById('siguiente-btn');
         btnNext.textContent = idx === questions.length - 1 ? "FINALIZAR" : "SIGUIENTE";
-        btnNext.onclick = () => idx < questions.length - 1 ? showQ(idx + 1) : document.getElementById('terminar-intento-btn').click();
+        btnNext.onclick = () => idx < questions.length - 1 ? showQ(idx + 1) : openModal();
     }
 
     function renderNav() {
@@ -185,20 +196,19 @@ document.addEventListener('DOMContentLoaded', () => {
             timeLeft--;
             const el = document.getElementById('cronometro');
             if(el) el.textContent = `${Math.floor(timeLeft/60).toString().padStart(2,'0')}:${(timeLeft%60).toString().padStart(2,'0')}`;
-            if(timeLeft<=0) EJECUTAR_CIERRE(); // Tiempo agotado
+            if(timeLeft<=0) EJECUTAR_CIERRE();
         }, 1000);
     }
 
     // --- FUNCIONES EXTRA ---
     window.selectPhase1 = (i,v,e) => { tableAnswersText[i]=v; e.parentElement.querySelectorAll('.vocab-option-cell').forEach(c=>c.classList.remove('vocab-selected')); e.classList.add('vocab-selected'); };
-    window.goToPhase2 = () => { window.scrollTo(0,0); startPhase2(); };
-    window.selectPhase2 = (q,v,e) => { let arr = tableAnswersImg[q] || []; if(arr.includes(v)) { arr=arr.filter(x=>x!==v); e.classList.remove('opt-selected'); } else { arr.push(v); e.classList.add('opt-selected'); } tableAnswersImg[q] = arr; };
-    window.selectImgCell = (i,v,e) => { tableAnswersImg[i]=v; e.parentElement.querySelectorAll('.img-table-cell').forEach(c=>c.classList.remove('img-selected')); e.classList.add('img-selected'); };
-
-    function startPhase2() {
-        let html = `<div class="full-width-container"><h2>ABSTRACTO</h2>`;
+    
+    // FASE 2 (SIM 3)
+    window.goToPhase2 = () => { 
+        window.scrollTo(0,0); 
+        let html = `<div class="full-width-container"><h2>ABSTRACTO (FASE 2)</h2>`;
         phase2Blocks.forEach((bloque) => {
-            html += `<div class="block-container"><img src="${bloque.imagen_bloque}" style="max-width:100%;"><table class="block-table"><thead><tr><th>#</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr></thead><tbody>`;
+            html += `<div class="block-container" style="margin-bottom:30px; border:1px solid #eee; padding:15px;"><div style="text-align:center; margin-bottom:15px;"><img src="${bloque.imagen_bloque}" style="max-width:100%;"></div><table class="block-table"><thead><tr><th>#</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr></thead><tbody>`;
             for (let q = bloque.rango_inicio; q <= bloque.rango_fin; q++) {
                 html += `<tr><td><strong>${q}</strong></td><td class="opt-cell" onclick="selectPhase2(${q},0,this)">A</td><td class="opt-cell" onclick="selectPhase2(${q},1,this)">B</td><td class="opt-cell" onclick="selectPhase2(${q},2,this)">C</td><td class="opt-cell" onclick="selectPhase2(${q},3,this)">D</td><td class="opt-cell" onclick="selectPhase2(${q},4,this)">E</td><td class="opt-cell" onclick="selectPhase2(${q},5,this)">F</td></tr>`;
             }
@@ -206,21 +216,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         html += `<button class="btn-finish-table" id="btn-trigger-modal-custom2">TERMINAR EXAMEN</button></div>`;
         simuladorContainer.innerHTML = html;
-        setTimeout(() => { document.getElementById('btn-trigger-modal-custom2').onclick = () => { document.getElementById('modal-mensaje').textContent = "¿Seguro que deseas terminar?"; document.getElementById('modal-overlay').style.display = 'flex'; }; }, 500);
+        setTimeout(() => { document.getElementById('btn-trigger-modal-custom2').onclick = openModal; }, 500);
+    };
+
+    window.selectPhase2 = (q,v,e) => { 
+        let arr = tableAnswersImg[q] || [];
+        if(arr.includes(v)) { arr=arr.filter(x=>x!==v); e.classList.remove('opt-selected'); } else { arr.push(v); e.classList.add('opt-selected'); }
+        tableAnswersImg[q] = arr; 
+    };
+    
+    window.selectImgCell = (i,v,e) => { tableAnswersImg[i]=v; e.parentElement.querySelectorAll('.img-table-cell').forEach(c=>c.classList.remove('img-selected')); e.classList.add('img-selected'); };
+
+    function openModal() {
+        document.getElementById('modal-overlay').style.display = 'flex';
     }
 
-    // --- FUNCIÓN MAESTRA DE CIERRE (AQUÍ ESTÁ LA SOLUCIÓN) ---
+    // --- MAESTRO DE CIERRE ---
     function EJECUTAR_CIERRE() {
-        // 1. Limpieza visual
         document.getElementById('modal-overlay').style.display = 'none';
         clearInterval(timerInterval);
         lobbyContainer.style.display = 'none';
         simuladorContainer.style.display = 'none';
-        
-        // 2. Mostrar Resultados
         resultadosContainer.style.display = 'block';
 
-        // 3. Calcular según modo
         if (modeType === 'multi_phase') finishMultiPhase();
         else if (modeType === 'table_img') finishTableImg();
         else finishNormal();
@@ -238,23 +256,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function finishMultiPhase() {
-        let ok = 0;
-        phase1Data.forEach((q, i) => { if(tableAnswersText[i] === q.respuesta) ok++; });
+        let ok1 = 0, ok2 = 0;
+        // Check Fase 1
+        phase1Data.forEach((q, i) => { if(tableAnswersText[i] === q.respuesta) ok1++; });
+        // Check Fase 2
         phase2Blocks.forEach(b => {
             b.respuestas_bloque.forEach((ans, i) => {
                 const qNum = b.rango_inicio + i;
                 const userArr = tableAnswersImg[qNum] || [];
-                if(JSON.stringify(userArr.sort()) === JSON.stringify(ans.sort())) ok++;
+                if(JSON.stringify(userArr.sort()) === JSON.stringify(ans.sort())) ok2++;
             });
         });
-        document.getElementById('revision-container').innerHTML = "<p>Revisión no disponible en este modo complejo.</p>";
-        showStats(ok, questions.length); 
+        let total = phase1Data.length + 20; // Aproximado del total fase 1 + 2
+        document.getElementById('revision-container').innerHTML = `<h3>Resumen</h3><p>Vocabulario Correctas: ${ok1}</p><p>Abstracto Correctas: ${ok2}</p>`;
+        showStats(ok1+ok2, total);
     }
 
     function finishTableImg() {
         let ok = 0;
         questions.forEach((q, i) => { if(tableAnswersImg[i] === q.respuesta_index) ok++; });
-        document.getElementById('revision-container').innerHTML = "<p>Revisión visual.</p>";
+        document.getElementById('revision-container').innerHTML = "<p>Revisión visual finalizada.</p>";
         showStats(ok, questions.length);
     }
 
@@ -275,23 +296,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- LISTENERS ---
-    const btnTerminar = document.getElementById('terminar-intento-btn');
-    if(btnTerminar) {
-        btnTerminar.onclick = () => {
-            let faltan = 0;
-            if(modeType === 'normal') faltan = userAnswers.filter(a => a === null).length;
-            document.getElementById('modal-mensaje').textContent = `Faltan ${faltan} preguntas. ¿Terminar?`;
-            document.getElementById('modal-overlay').style.display = 'flex';
-        };
-    }
+    // --- EVENTOS ---
+    const btnTerminarNormal = document.getElementById('terminar-intento-btn');
+    if(btnTerminarNormal) btnTerminarNormal.onclick = openModal;
 
-    // EL CLICK DEFINITIVO
     document.getElementById('confirmar-modal-btn').onclick = EJECUTAR_CIERRE;
     document.getElementById('cancelar-modal-btn').onclick = () => document.getElementById('modal-overlay').style.display = 'none';
-    
     document.getElementById('retry-btn').onclick = () => location.reload();
     document.getElementById('reiniciar-btn').onclick = () => location.href='index.html';
+    
+    if(document.getElementById('btn-regresar-lobby')) {
+        document.getElementById('btn-regresar-lobby').onclick = () => location.href='index.html';
+    }
 
     init();
 });
