@@ -1,4 +1,4 @@
-/* CSS/style-simulador.css - DISEÑO FINAL SPARTA (MÓVIL ARREGLADO) */
+/* CSS/style-simulador.css - FINAL SPARTA (MÓVIL + BORDES NITIDOS) */
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500;700&display=swap');
 
 :root {
@@ -18,7 +18,7 @@ body {
     min-height: 100vh;
 }
 
-/* --- HEADER PODEROSO --- */
+/* --- HEADER PODEROSO (PC) --- */
 .ibarra-header {
     background: linear-gradient(90deg, var(--red-sparta) 0%, var(--dark-red) 100%);
     padding: 0 30px; 
@@ -60,10 +60,10 @@ body {
     overflow-x: auto; /* SCROLL LATERAL CRÍTICO PARA MÓVIL */
     margin-bottom: 25px; 
     border: 1px solid #eee; 
-    -webkit-overflow-scrolling: touch; /* Suavidad en iPhone */
+    -webkit-overflow-scrolling: touch; 
 }
 
-.vocab-table, .block-table { width: 100%; border-collapse: collapse; min-width: 700px; /* Fuerza ancho mínimo para que no se apriete */ }
+.vocab-table, .block-table { width: 100%; border-collapse: collapse; min-width: 700px; }
 .vocab-table th, .block-table th { background: #333; color: white; padding: 12px; text-align: left; }
 .vocab-table td, .block-table td { border-bottom: 1px solid #eee; padding: 12px; }
 .vocab-table tr:hover, .block-table tr:hover { background: #f9f9f9; }
@@ -90,14 +90,42 @@ body {
 }
 .btn-next:hover, .btn-finish-table:hover { background: var(--dark-red); padding-right: 45px; }
 
-/* SIDEBAR */
+/* SIDEBAR & NAVEGACIÓN */
 .quiz-sidebar { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: sticky; top: 95px; }
 .sidebar-title { font-family: 'Teko'; font-size: 1.6rem; color: #333; border-bottom: 2px solid var(--red-sparta); display: inline-block; margin-bottom: 20px; }
-#navegador-preguntas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 30px; max-height: 400px; overflow-y: auto; }
-.nav-dot { height: 38px; background: #fff; border: 1px solid #ddd; color: #777; cursor: pointer; transition: 0.2s; font-weight: 700; }
-.nav-dot:hover { border-color: var(--red-sparta); color: var(--red-sparta); }
+
+#navegador-preguntas { 
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 12px; /* MÁS ESPACIO ENTRE BOLITAS */
+    margin-bottom: 30px; 
+    max-height: 400px; 
+    overflow-y: auto; 
+    padding: 5px; /* PADDING PARA QUE NO SE CORTE EL BORDE */
+}
+
+.nav-dot { 
+    height: 38px; 
+    background: #fff; 
+    border: 1px solid #ddd; 
+    color: #777; 
+    cursor: default; /* Bloqueado por defecto */
+    font-weight: 700; 
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px;
+}
+
 .nav-dot.answered { background: #333; color: white; border-color: #333; }
-.nav-dot.active-q { border: 2px solid var(--red-sparta); background: #fff; color: var(--red-sparta); transform: scale(1.1); box-shadow: 0 0 5px rgba(211, 47, 47, 0.5); }
+
+/* ARREGLO DE BORDES TAPADOS */
+.nav-dot.active-q { 
+    border: 2px solid var(--red-sparta); 
+    background: #fff; 
+    color: var(--red-sparta); 
+    transform: scale(1.1); 
+    box-shadow: none; /* QUITADA LA SOMBRA BORROSA */
+    z-index: 10;
+}
 
 #terminar-intento-btn { width: 100%; background: #333; color: white; padding: 15px; font-family: 'Teko'; font-size: 1.3rem; border: none; cursor: pointer; transition: 0.3s; }
 #terminar-intento-btn:hover { background: #000; color: var(--red-sparta); }
@@ -121,49 +149,49 @@ body {
 .score-circle { width: 200px; height: 200px; border-radius: 50%; border: 12px solid var(--red-sparta); display: flex; flex-direction: column; justify-content: center; margin: 0 auto 40px auto; }
 #puntaje-final { font-size: 4.5rem; font-family: 'Teko'; line-height: 0.8; }
 
-/* --- RESPONSIVE MÓVIL ARREGLADO (NO CENTRADO) --- */
+/* --- RESPONSIVE MÓVIL ARREGLADO (ENCABEZADO PERFECTO) --- */
 @media (max-width: 900px) {
-    /* HEADER: Logo Izquierda - Botón Derecha - Sin saltos */
+    /* HEADER LIMPIO - ALINEACIÓN LATERAL */
     .ibarra-header { 
         padding: 10px 15px; 
-        height: 70px; /* Altura controlada */
+        height: 70px; 
         clip-path: none; 
-        flex-wrap: nowrap; /* Fuerza una sola línea */
+        flex-wrap: nowrap; /* Fuerza a no romperse */
         justify-content: space-between; 
         align-items: center;
         text-align: left;
     }
     
     .logo-zone { 
-        width: auto; 
+        flex: 1; /* Ocupa el espacio */
         margin-bottom: 0; 
         justify-content: flex-start;
         gap: 10px;
-        flex: 1; 
+        min-width: 0; /* Permite encogerse si es necesario */
     }
     
-    .logo-zone img { height: 35px; } /* Logo ajustado */
+    .logo-zone img { height: 35px; } 
     
-    .brand-text { align-items: flex-start; justify-content: center; }
+    .brand-text { align-items: flex-start; }
     .brand-text h1 { font-size: 1.8rem; line-height: 1; margin: 0; }
     .brand-text span { 
         font-size: 0.55rem; 
         letter-spacing: 1px; 
         display: block; 
-        white-space: nowrap; /* Evita que el texto baje */
+        white-space: nowrap; 
     }
     
     .user-zone { 
         position: static; /* Ya no flota */
         margin-bottom: 0; 
         margin-left: 10px;
-        width: auto;
+        flex-shrink: 0; /* No se encoge */
     }
     
     .btn-logout-ibarra { width: 35px; height: 35px; font-size: 1rem; }
     
-    /* LAYOUT EXAMEN */
-    .quiz-layout { grid-template-columns: 1fr; gap: 20px; } 
-    .quiz-sidebar { order: 2; position: static; margin-top: 20px; } /* Navegación abajo */
+    /* Layout Vertical */
+    .quiz-layout { grid-template-columns: 1fr; } 
+    .quiz-sidebar { order: 2; position: static; margin-top: 25px; }
     .lobby-grid { grid-template-columns: 1fr; }
 }
