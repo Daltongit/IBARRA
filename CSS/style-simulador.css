@@ -1,4 +1,4 @@
-/* CSS/style-simulador.css - FINAL SPARTA */
+/* CSS/style-simulador.css - RESPONSIVE OK */
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500;700&display=swap');
 
 :root {
@@ -18,7 +18,7 @@ body {
     min-height: 100vh;
 }
 
-/* --- HEADER IDENTICO AL HOME --- */
+/* HEADER UNIFICADO */
 .ibarra-header {
     background: linear-gradient(90deg, var(--red-sparta) 0%, var(--dark-red) 100%);
     padding: 0 40px; height: 70px; display: flex; justify-content: space-between; align-items: center;
@@ -36,20 +36,18 @@ body {
 }
 .btn-logout-ibarra:hover { background: white; color: var(--red-sparta); transform: rotate(90deg); }
 
-/* --- CONTENEDORES --- */
-.quiz-layout, .lobby-layout, .container-box {
-    max-width: 1400px; width: 95%; margin: 30px auto;
-}
+/* CONTENEDORES */
+.quiz-layout, .lobby-layout, .container-box { max-width: 1400px; width: 95%; margin: 30px auto; }
 
-/* --- TABLAS RESPONSIVAS (SIMULADOR 3) --- */
+/* --- TABLAS RESPONSIVAS (SIM 3) --- */
 .full-width-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 .full-width-container h2 { font-family: 'Teko'; font-size: 2rem; color: var(--red-sparta); margin-top: 0; }
 
 .table-responsive-wrapper {
-    width: 100%; overflow-x: auto; /* SCROLL HORIZONTAL */
+    width: 100%; overflow-x: auto; /* PERMITE SCROLL LATERAL */
     margin-bottom: 20px; border: 1px solid #eee;
 }
-.vocab-table, .block-table { width: 100%; border-collapse: collapse; min-width: 600px; /* Ancho mínimo forzado */ }
+.vocab-table, .block-table { width: 100%; border-collapse: collapse; min-width: 600px; } /* Ancho mínimo */
 .vocab-table th, .block-table th { background: #333; color: white; padding: 10px; text-align: left; }
 .vocab-table td, .block-table td { border-bottom: 1px solid #eee; padding: 10px; }
 .vocab-table tr:hover, .block-table tr:hover { background: #f9f9f9; }
@@ -58,7 +56,7 @@ body {
 .vocab-selected, .opt-selected, .img-selected { background: var(--red-sparta) !important; color: white !important; font-weight: bold; }
 .block-container { margin-bottom: 30px; border: 1px solid #ccc; padding: 15px; border-radius: 8px; }
 
-/* --- LAYOUT GRID --- */
+/* GRID LAYOUT */
 .quiz-layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start; }
 .quiz-main { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 .quiz-header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px; }
@@ -106,9 +104,10 @@ body {
 .score-circle { width: 180px; height: 180px; border-radius: 50%; border: 10px solid var(--red-sparta); display: flex; flex-direction: column; justify-content: center; margin: 0 auto 30px auto; }
 #puntaje-final { font-size: 4rem; font-family: 'Teko'; line-height: 0.8; }
 
-/* RESPONSIVE (ARREGLO CELULAR) */
+/* RESPONSIVE MÓVIL OPTIMIZADO */
 @media (max-width: 900px) {
     .quiz-layout { grid-template-columns: 1fr; } /* Columna única */
     .quiz-sidebar { order: 2; position: static; margin-top: 20px; } /* Sidebar abajo */
-    .ibarra-header { padding: 0 20px; clip-path: none; height: auto; padding-bottom: 10px; }
+    .ibarra-header { padding: 0 20px; clip-path: none; height: auto; padding-bottom: 10px; flex-wrap: wrap; }
+    .lobby-grid { grid-template-columns: 1fr; }
 }
