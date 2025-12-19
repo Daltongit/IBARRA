@@ -1,4 +1,4 @@
-/* DISEÑO IBARRA - FINAL PULIDO */
+/* DISEÑO IBARRA - STYLE-HOME.CSS COMPLETO */
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500;700&display=swap');
 
 :root {
@@ -27,7 +27,7 @@ body {
     display: flex; justify-content: space-between; align-items: center;
     box-shadow: 0 5px 15px rgba(154, 0, 7, 0.3); 
     position: sticky; top: 0; z-index: 100;
-    clip-path: polygon(0 0, 100% 0, 100% 80%, 98% 100%, 2% 100%, 0 80%); /* El corte que te gusta */
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 98% 100%, 2% 100%, 0 80%);
 }
 
 .logo-zone { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
@@ -36,12 +36,12 @@ body {
 
 .user-zone { margin-bottom: 10px; }
 
-/* --- NUEVO BOTÓN DE SALIR (REDONDO Y ELEGANTE) --- */
+/* BOTÓN DE SALIR (REDONDO) */
 .btn-logout-ibarra {
     background: rgba(255,255,255,0.15); 
     border: 1px solid rgba(255,255,255,0.3); 
     color: white; 
-    width: 45px; height: 45px; /* Redondo */
+    width: 45px; height: 45px; 
     border-radius: 50%; 
     cursor: pointer; 
     transition: all 0.3s ease; 
@@ -52,10 +52,10 @@ body {
     background: white; 
     color: var(--red-sparta); 
     box-shadow: 0 0 15px rgba(255,255,255,0.5);
-    transform: rotate(90deg); /* Pequeña animación al pasar el mouse */
+    transform: rotate(90deg);
 }
 
-/* LAYOUT */
+/* LAYOUT PRINCIPAL */
 .main-grid-layout {
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -63,7 +63,7 @@ body {
     max-width: 1600px; width: 95%; margin: 30px auto; align-items: start;
 }
 
-/* SIDEBAR */
+/* SIDEBAR IZQUIERDA */
 .sidebar-profile {
     display: flex; flex-direction: column; gap: 20px;
     clip-path: polygon(0 0, 100% 0, 100% 98%, 92% 100%, 0 100%);
@@ -120,38 +120,44 @@ body {
 
 /* SUB-SECCIONES */
 .sub-section-title {
-    padding: 20px 30px 10px 30px; /* Más espacio arriba */
+    padding: 20px 30px 10px 30px;
     font-size: 0.9rem; font-weight: 700; color: var(--red-sparta); letter-spacing: 1px;
     border-bottom: 1px solid #eee;
 }
 
-/* --- ARREGLO DE GRILLAS (MÁS ESPACIO) --- */
+/* CARDS */
 .cards-grid {
-    padding: 25px 30px; /* Más padding general */
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
-    gap: 25px; /* AUMENTADO EL GAP para que no se vean amachucadas */
+    padding: 25px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 25px;
 }
 .cards-grid.wide-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
 .cards-grid.small-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 20px; }
 
 .card-mini {
-    background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 25px 20px; /* Más padding interno */
+    background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 25px 20px;
     cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03); text-align: center; justify-content: center; min-height: 140px; /* Altura mínima asegurada */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03); text-align: center; justify-content: center; min-height: 140px;
 }
 .card-mini:hover { transform: translateY(-5px); border-color: var(--red-sparta); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-.card-mini i { font-size: 2.2rem; color: #666; }
+.card-mini i { font-size: 2.2rem; color: #666; transition: 0.3s; }
 .card-mini:hover i { color: var(--red-sparta); }
-.card-mini span { font-weight: 700; color: #333; font-size: 0.95rem; line-height: 1.2; }
+.card-mini span { font-weight: 700; color: #333; font-size: 0.95rem; line-height: 1.2; transition: 0.3s; }
 
-/* Tarjetas Oscuras (PPNN) - Mejoradas */
-.card-mini.dark { background: #2c3e50; border: none; }
-.card-mini.dark i { color: #3498db; }
-.card-mini.dark span { color: #ecf0f1; }
-.card-mini.dark:hover { background: var(--red-sparta); }
+/* --- AQUÍ ESTÁ EL CAMBIO PARA CUESTIONARIOS PPNN (White Ops) --- */
+.card-mini.dark { 
+    background: white; 
+    border: 1px solid #ccc;
+    border-left: 5px solid #222; /* Detalle negro lateral */
+}
+.card-mini.dark i { color: #222; }
+.card-mini.dark span { color: #222; }
+
+.card-mini.dark:hover { 
+    background: #222; /* Fondo negro al hover */
+    border-color: #222;
+}
 .card-mini.dark:hover i, .card-mini.dark:hover span { color: white; }
 
+/* Tarjetas Warning (Inteligencia) */
 .card-mini.warning { border-left: 4px solid #d35400; }
 .card-mini.warning:hover { background: #d35400; border-color: #d35400; }
 .card-mini.warning:hover span { color: white; }
