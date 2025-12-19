@@ -1,4 +1,4 @@
-/* CSS/style-home.css - DISEÑO SPARTA FINAL */
+/* DISEÑO IBARRA - STYLE-HOME.CSS COMPLETO */
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Teko:wght@300;500;700&display=swap');
 
 :root {
@@ -19,7 +19,7 @@ body {
     min-height: 100vh;
 }
 
-/* --- HEADER --- */
+/* HEADER */
 .ibarra-header {
     background: linear-gradient(90deg, var(--red-sparta) 0%, var(--dark-red) 100%);
     padding: 0 40px; 
@@ -44,7 +44,7 @@ body {
 }
 .btn-logout-ibarra:hover { background: white; color: var(--red-sparta); transform: rotate(90deg); }
 
-/* LAYOUT */
+/* LAYOUT PC */
 .main-grid-layout {
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -76,6 +76,7 @@ body {
 .system-logs { list-style: none; padding: 0; margin: 0; text-align: left; }
 .system-logs li { margin-bottom: 10px; font-size: 0.9rem; color: #555; display: flex; align-items: center; gap: 10px; }
 .system-logs i { color: #27ae60; }
+
 .admin-sidebar-btn {
     background: #2c3e50; color: white; border: none; padding: 15px; width: 100%;
     font-family: 'Teko'; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -83,7 +84,7 @@ body {
 }
 .admin-sidebar-btn:hover { background: var(--red-sparta); }
 
-/* CONTENIDO DERECHA */
+/* CONTENIDO */
 .dashboard-content { display: flex; flex-direction: column; gap: 15px; }
 .hero-banner {
     background: white; padding: 20px 40px; border-radius: 6px; border-left: 8px solid var(--red-sparta);
@@ -107,12 +108,10 @@ body {
 .header-left span { font-family: 'Teko'; font-size: 1.6rem; color: #333; letter-spacing: 1px; }
 .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fafafa; }
 
-/* SUB-SECCIONES */
 .sub-section-title {
     padding: 20px 30px 10px 30px; font-size: 0.9rem; font-weight: 700; color: var(--red-sparta); letter-spacing: 1px; border-bottom: 1px solid #eee;
 }
 
-/* CARDS */
 .cards-grid { padding: 25px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 25px; }
 .cards-grid.wide-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
 .cards-grid.small-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 20px; }
@@ -127,15 +126,12 @@ body {
 .card-mini:hover i { color: var(--red-sparta); }
 .card-mini span { font-weight: 700; color: #333; font-size: 0.95rem; line-height: 1.2; transition: 0.3s; }
 
-/* --- CUESTIONARIOS PPNN (WHITE OPS) --- */
-.card-mini.dark { 
-    background: white; border: 1px solid #ccc; border-left: 5px solid #222; 
-}
+/* WHITE OPS PARA PPNN */
+.card-mini.dark { background: white; border: 1px solid #ccc; border-left: 5px solid #222; }
 .card-mini.dark i, .card-mini.dark span { color: #333; }
 .card-mini.dark:hover { background: #222; border-color: #222; }
 .card-mini.dark:hover i, .card-mini.dark:hover span { color: white; }
 
-/* Tarjetas Warning */
 .card-mini.warning { border-left: 4px solid #d35400; }
 .card-mini.warning:hover { background: #d35400; border-color: #d35400; }
 .card-mini.warning:hover span { color: white; }
@@ -153,10 +149,30 @@ body {
 .card-wide.featured p { color: #ccc; margin: 0; font-size: 0.9rem;}
 .card-wide.featured .card-icon { background: rgba(255,255,255,0.1); color: #3498db; }
 
-/* RESPONSIVE */
+/* --- RESPONSIVE OPTIMIZADO CELULAR --- */
 @media (max-width: 900px) {
-    .main-grid-layout { grid-template-columns: 1fr; } 
-    .sidebar-profile { clip-path: none; flex-direction: row; gap: 15px; }
-    .admin-sidebar-btn { clip-path: none; border-radius: 8px; }
-    .ibarra-header { padding: 0 20px; clip-path: none; height: auto; padding-bottom: 10px; }
+    /* Header sin huecos */
+    .ibarra-header { padding: 10px 20px; clip-path: none; height: auto; padding-bottom: 10px; flex-wrap: wrap; }
+    
+    /* Layout Vertical */
+    .main-grid-layout { 
+        grid-template-columns: 1fr; /* Todo 100% ancho */
+        gap: 15px; margin-top: 15px;
+    }
+    
+    /* Sidebar Arriba y Ordenado */
+    .sidebar-profile { 
+        width: 100%; order: 1; /* Primero el perfil */
+        clip-path: none; flex-direction: column; 
+    }
+    
+    /* Botón Admin ordenado debajo del perfil */
+    .admin-sidebar-btn { margin-top: 10px; clip-path: none; border-radius: 8px; }
+    
+    /* Contenido Abajo */
+    .dashboard-content { order: 2; /* Luego los simuladores */ }
+    
+    /* Banner Ajustado */
+    .hero-banner { flex-direction: column; text-align: center; gap: 15px; }
+    .hero-icon { display: none; }
 }
