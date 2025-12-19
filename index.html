@@ -41,6 +41,11 @@
                     <div class="stat"><strong>SEDE</strong><span>IBARRA</span></div>
                 </div>
             </div>
+            
+            <button id="admin-panel-btn" class="admin-sidebar-btn" onclick="location.href='resultados.html'" style="display:none;">
+                <i class="fas fa-user-shield"></i> PANEL ADMIN
+            </button>
+
             <div class="info-widget">
                 <h4>ESTADO</h4>
                 <ul class="system-logs">
@@ -48,9 +53,6 @@
                     <li><i class="fas fa-clock"></i> <span id="clock-display">00:00</span></li>
                 </ul>
             </div>
-            <button id="admin-panel-btn" class="admin-sidebar-btn" onclick="location.href='resultados.html'" style="display:none;">
-                <i class="fas fa-user-shield"></i> PANEL ADMIN
-            </button>
         </aside>
 
         <main class="dashboard-content">
@@ -135,6 +137,7 @@
         </main>
     </div>
 
+    <script src="JS/script-home.js"></script> 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const user = getUserInfo();
