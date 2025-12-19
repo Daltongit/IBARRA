@@ -16,7 +16,7 @@
 <body>
 
     <header class="ibarra-header">
-        <div class="logo-zone">
+        <div class="logo-zone" onclick="location.href='index.html'" style="cursor: pointer;">
             <img src="logo.png" alt="Sparta Logo">
             <div class="brand-text">
                 <h1>SPARTA</h1>
@@ -67,7 +67,7 @@
             <div class="accordion-container">
                 
                 <div class="accordion-item">
-                    <button class="accordion-header" type="button" id="default-open">
+                    <button class="accordion-header" type="button">
                         <div class="header-left"><i class="fas fa-shield-alt icon-box"></i><span>POLICÍA NACIONAL</span></div>
                         <i class="fas fa-plus indicator"></i>
                     </button>
@@ -163,8 +163,8 @@
                     }
                 });
             });
-            const first = document.getElementById('default-open');
-            if(first) first.click();
+            
+            // ELIMINADO EL CÓDIGO QUE ABRÍA AUTOMÁTICAMENTE EL PRIMER ELEMENTO
         });
     </script>
 </body>
